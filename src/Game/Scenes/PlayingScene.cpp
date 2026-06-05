@@ -14,52 +14,6 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font) {
 	Clock clock;
 	std::queue<Entity> renderQueue;
 
-	// entity instantiation
-	Entity player = makePlayer
-	(
-		sf::Vector2f
-		(
-			{
-				window.getSize().x / 2.f,
-				window.getSize().y / 2.f
-			}
-		),
-		sf::Vector2f
-		(
-			{
-				40.f,
-				40.f
-			}
-		),
-		sf::Vector2f
-		(
-			{
-				-300.f,
-				-300.f
-			}
-		),
-		sf::Vector2f
-		(
-			{
-				300.f,
-				300.f
-			}
-		),
-		sf::Vector2f
-		(
-			{
-				500.f,
-				500.f
-			}
-		),
-		sf::Vector2f
-		(
-			{
-				50.f,
-				50.f
-			}
-		)
-	);
 
 	// onstart systems
 	setTextSystem(font); // font system is limited to one font
@@ -79,7 +33,6 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font) {
 		}
 
 		// systems
-		playerControlSystem(player, dt);
 		moveSystem(dt);
 		dragSystem(dt);
 

@@ -82,20 +82,12 @@ struct CZIndex
 
 struct CVelocity
 {
-	float x = 0.f, y = 0.f, minX = 0.f, minY = 0.f, maxX = 0.f, maxY = 0.f;
-
-	CVelocity() = default;
-	CVelocity(float minX, float minY, float maxX, float maxY) :
-		minX(minX), minY(minY), maxX(maxX), maxY(maxY) {};
+	float x = 0.f, y = 0.f;
 };
 
 struct CSpeed
 {
-	float x = 0.f, y = 0.f;
-
-	CSpeed() = default;
-	CSpeed(float x, float y) :
-		x(x), y(y) {};
+	float amount = 0.f;
 };
 
 struct CPlayerController
@@ -111,6 +103,11 @@ struct CDrag
 	CDrag(float x, float y) :
 		x(x), y(y) {
 	};
+};
+
+struct CXBounds
+{
+	float min = 0.f, max = 0.f;
 };
 
 #endif

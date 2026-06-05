@@ -16,25 +16,22 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 	bool buttonClicked = false;
 
 	// entity instantiation
-	Entity playButton = makeButton
+	Entity moving = makeMoving
 	(
-		sf::Vector2f
-		(
-			{
-				window.getSize().x / 2.f,
-				window.getSize().y / 2.f
-			}
-		),
-		sf::Vector2f
-		(
-			{
-				200.f,
-				100.f
-			}
-		),
-		Scene::PLAYING,
-		"Play",
-		font
+		
+		{
+			window.getSize().x / 2.f,
+			window.getSize().y / 2.f
+		},
+		{
+			30.f,
+			30.f
+		},
+		{
+			0,
+			800
+		},
+		100
 	);
 
 	// onstart systems
@@ -63,8 +60,9 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		}
 
 		// update systems
-		buttonClickedSystem(sf::Vector2i(worldPos.x, worldPos.y), buttonClicked, dt);
-		nextSceneSystem(window, font);
+		moving_Update(moving);
+
+		moveSystem(dt);
 
 		window.clear();
 		// render systems

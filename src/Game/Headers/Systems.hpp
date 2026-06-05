@@ -19,7 +19,9 @@ void setShapeOriginSystem();
 // -------------------------------------------------------
 void buttonClickedSystem(sf::Vector2i& mouseVector, bool& buttonClicked, const DeltaTime dt);
 void nextSceneSystem(sf::RenderWindow& window, sf::Font& font);
-void playerControlSystem(const Entity player, DeltaTime dt);
+
+void moving_Update(Entity moving);
+
 void moveSystem(const DeltaTime dt);
 void dragSystem(const DeltaTime dt);
 

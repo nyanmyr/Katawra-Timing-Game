@@ -1,5 +1,6 @@
 #include "Headers/Systems.hpp"
 
+#include <iostream>
 #include <SFML/Graphics.hpp>
 
 NacreCoordinator& systemsNC = NacreCoordinator::getInstance();
@@ -245,76 +246,25 @@ void nextSceneSystem(sf::RenderWindow& window, sf::Font& font)
         window.close();
     }
 }
-void playerControlSystem(const Entity player, DeltaTime dt)
-// controlling seems buggy, first you move slow then you speed up suddenly
+
+void moving_Update(Entity moving)
 {
-    auto& velocities = systemsNC.getComponentArray<CVelocity>();
-    auto& speeds = systemsNC.getComponentArray<CSpeed>();
-    auto& playerControllers = systemsNC.getComponentArray<CPlayerController>();
+    const CPosition& pos = systemsNC.getComponentArray<CPosition>()->getData(moving);
+    const CXBounds& xBounds = systemsNC.getComponentArray<CXBounds>()->getData(moving);
+    const CSpeed& speed = systemsNC.getComponentArray<CSpeed>()->getData(moving);
+    CVelocity& vel = systemsNC.getComponentArray<CVelocity>()->getData(moving);
 
-    if 
-    (
-        !velocities->hasData(player) ||
-        !speeds->hasData(player) ||
-        !playerControllers->hasData(player)
-    )
+    vel.x = vel.x < 0 ? -speed.amount : speed.amount;
+
+    //std::cout << "speed.amount: " << speed.amount << "\n";
+    //std::cout << "vel.x: " << vel.x << "\n";
+
+    if (pos.x > xBounds.max || pos.x < xBounds.min)
     {
-        return;
+        vel.x = -vel.x;
     }
-
-    const CPlayerController playerController = playerControllers->getData(player);
-    const CSpeed speed = speeds->getData(player);
-    CVelocity& velocity = velocities->getData(player);
-
-    if (!playerController.enabled)
-    {
-        return;
-    }
-
-    float newSpeedX = 0.f;
-    float newSpeedY = 0.f;
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))
-    {
-        newSpeedY = -speed.y;
-    } 
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S))
-    {
-        newSpeedY = speed.y;
-    }
-
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))
-    {
-        newSpeedX = -speed.x;
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D))
-    {
-        newSpeedX = speed.x;
-    }
-
-    // applies the speed (even if there aren't any changes)
-    velocity.x += (newSpeedX * dt);
-    velocity.y += (newSpeedY * dt);
-
-    if (velocity.x > velocity.maxX)
-    {
-        velocity.x = velocity.maxX;
-    }
-    else if (velocity.x < velocity.minX)
-    {
-        velocity.x = velocity.minX;
-    }
-
-    if (velocity.y > velocity.maxY)
-    {
-        velocity.y = velocity.maxY;
-    }
-    else if (velocity.y < velocity.minY)
-    {
-        velocity.y = velocity.minY;
-    }
-
 }
+
 void moveSystem(const DeltaTime dt)
 {
     auto& velocities = systemsNC.getComponentArray<CVelocity>();

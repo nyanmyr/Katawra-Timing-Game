@@ -5,89 +5,7 @@
 
 NacreCoordinator& entityMakerNC = NacreCoordinator::getInstance();
 
-Entity& makePlayer(sf::Vector2f pos, sf::Vector2f size, sf::Vector2f minVelocity, sf::Vector2f maxVelocity, sf::Vector2f speed, sf::Vector2f drag)
-{
-	Entity entity = entityMakerNC.createEntity();
-
-	entityMakerNC.addComponent
-	(
-		entity,
-		CPosition
-		{ 
-			pos.x,
-			pos.y
-		}
-	);
-
-	sf::RectangleShape rect(sf::Vector2f(size.x, size.y));
-	rect.setFillColor(sf::Color::Green);
-
-	entityMakerNC.addComponent
-	(
-		entity,
-		CShape{
-			rect
-		}
-	);
-	entityMakerNC.addComponent
-	(
-		entity,
-		CZIndex
-		{
-			1,
-			true
-		}
-	);
-	entityMakerNC.addComponent
-	(
-		entity,
-		COrigin
-		{
-			size.x / 2.f,
-			size.y / 2.f
-		}
-	);
-	entityMakerNC.addComponent
-	(
-		entity,
-		CVelocity
-		{
-			minVelocity.x,
-			minVelocity.y,
-			maxVelocity.x,
-			maxVelocity.y
-		}
-	);
-	entityMakerNC.addComponent
-	(
-		entity,
-		CSpeed
-		{
-			speed.x,
-			speed.y
-		}
-	);
-	entityMakerNC.addComponent
-	(
-		entity,
-		CDrag
-		{
-			drag.x,
-			drag.y
-		}
-	);
-	entityMakerNC.addComponent
-	(
-		entity,
-		CPlayerController
-		{
-			true
-		}
-	);
-
-	return entity;
-}
-
+// delete these
 Entity& makeButton(sf::Vector2f pos, sf::Vector2f size, Scene scene, std::string str, sf::Font& font)
 {
 	Entity entity = entityMakerNC.createEntity();
@@ -166,6 +84,77 @@ Entity& makeButton(sf::Vector2f pos, sf::Vector2f size, Scene scene, std::string
 		{
 			1,
 			true
+		}
+	);
+
+	return entity;
+}
+
+Entity& makeMoving
+(
+	sf::Vector2f pos,
+	sf::Vector2f size,
+	sf::Vector2f xBounds,
+	float speed
+)
+{
+	Entity entity = entityMakerNC.createEntity();
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CPosition
+		{
+			pos.x,
+			pos.y
+		}
+	);
+
+	sf::RectangleShape rect(sf::Vector2f(size.x, size.y));
+	rect.setFillColor(sf::Color::Green);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CShape{
+			rect
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CZIndex
+		{
+			1,
+			true
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		COrigin
+		{
+			size.x / 2.f,
+			size.y / 2.f
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CVelocity{}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSpeed{ speed }
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CXBounds
+		{
+			xBounds.x,
+			xBounds.y
 		}
 	);
 
