@@ -90,12 +90,78 @@ Entity& makeButton(sf::Vector2f pos, sf::Vector2f size, Scene scene, std::string
 	return entity;
 }
 
-Entity& makeMoving
+Entity& makeIndicator
 (
 	sf::Vector2f pos,
 	sf::Vector2f size,
-	sf::Vector2f xBounds,
 	float speed
+)
+{
+	Entity entity = entityMakerNC.createEntity();
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CPosition
+		{
+			pos.x,
+			pos.y
+		}
+	);
+
+	sf::RectangleShape rect(sf::Vector2f(size.x, size.y));
+	rect.setFillColor(sf::Color::White);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CShape{
+			rect
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CZIndex
+		{
+			2,
+			true
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		COrigin
+		{
+			size.x / 2.f,
+			size.y / 2.f
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CVelocity{}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSpeed{ speed }
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CIndicator{ }
+	);
+
+	return entity;
+}
+
+Entity& makeSlider
+(
+	sf::Vector2f pos,
+	sf::Vector2f size,
+	sf::Vector2f slider
 )
 {
 	Entity entity = entityMakerNC.createEntity();
@@ -143,18 +209,24 @@ Entity& makeMoving
 		entity,
 		CVelocity{}
 	);
-	entityMakerNC.addComponent
-	(
-		entity,
-		CSpeed{ speed }
-	);
+
 	entityMakerNC.addComponent
 	(
 		entity,
 		CXBounds
 		{
-			xBounds.x,
-			xBounds.y
+			pos.x - (size.x / 2.f),
+			pos.x + (size.x / 2.f)
+		}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSlider
+		{
+			slider.x,
+			slider.y
 		}
 	);
 

@@ -110,4 +110,14 @@ struct CXBounds
 	float min = 0.f, max = 0.f;
 };
 
+struct CIndicator
+{
+	float current;
+};
+
+struct CSlider
+{
+	float min = 0.f, max = 0.f;
+};
+
 #endif

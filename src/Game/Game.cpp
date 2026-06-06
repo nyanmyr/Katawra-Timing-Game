@@ -35,6 +35,8 @@ void main() {
 	nc.registerComponent<CPlayerController>();
 	nc.registerComponent<CDrag>();
 	nc.registerComponent<CXBounds>();
+	nc.registerComponent<CIndicator>();
+	nc.registerComponent<CSlider>();
 
 	sf::Font font;
 	if (!font.openFromFile(FONT_FILEPATH))

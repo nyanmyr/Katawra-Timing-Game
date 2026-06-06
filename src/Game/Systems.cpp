@@ -6,6 +6,19 @@
 NacreCoordinator& systemsNC = NacreCoordinator::getInstance();
 
 // -------------------------------------------------------
+// auxiliary systems
+// -------------------------------------------------------
+float inverseLerp_Auxiliary
+(
+    float min,
+    float max,
+    float current
+)
+{
+    return (current - min) / (max - min);
+}
+
+// -------------------------------------------------------
 // start systems
 // -------------------------------------------------------
 void setTextSystem(sf::Font& font)
@@ -247,12 +260,28 @@ void nextSceneSystem(sf::RenderWindow& window, sf::Font& font)
     }
 }
 
-void moving_Update(Entity moving)
+// TODO: rename systems to start with lowercase
+void Hit_Control // TODO: make functional
+(
+    Entity indicator,
+    Entity slider
+)
 {
-    const CPosition& pos = systemsNC.getComponentArray<CPosition>()->getData(moving);
-    const CXBounds& xBounds = systemsNC.getComponentArray<CXBounds>()->getData(moving);
-    const CSpeed& speed = systemsNC.getComponentArray<CSpeed>()->getData(moving);
-    CVelocity& vel = systemsNC.getComponentArray<CVelocity>()->getData(moving);
+
+}
+
+void moveIndicator_Update
+(
+    Entity indicator,
+    Entity slider
+)
+{
+    const CPosition& pos = systemsNC.getComponentArray<CPosition>()->getData(indicator);
+    const CXBounds& xBounds = systemsNC.getComponentArray<CXBounds>()->getData(slider);
+    const CSlider& slid = systemsNC.getComponentArray<CSlider>()->getData(slider);
+    const CSpeed& speed = systemsNC.getComponentArray<CSpeed>()->getData(indicator);
+    CVelocity& vel = systemsNC.getComponentArray<CVelocity>()->getData(indicator);
+    CIndicator& indic = systemsNC.getComponentArray<CIndicator>()->getData(indicator);
 
     vel.x = vel.x < 0 ? -speed.amount : speed.amount;
 
@@ -263,6 +292,24 @@ void moving_Update(Entity moving)
     {
         vel.x = -vel.x;
     }
+
+    indic.current = inverseLerp_Auxiliary
+    (
+        xBounds.min,
+        xBounds.max,
+        pos.x
+    );
+
+    indic.current *= slid.max;
+    //std::cout << "current indicator: " << indic.current << "\n";
+}
+
+void spawnHitbox
+(
+
+)
+{
+
 }
 
 void moveSystem(const DeltaTime dt)

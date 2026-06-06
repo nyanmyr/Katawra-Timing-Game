@@ -20,7 +20,11 @@ void setShapeOriginSystem();
 void buttonClickedSystem(sf::Vector2i& mouseVector, bool& buttonClicked, const DeltaTime dt);
 void nextSceneSystem(sf::RenderWindow& window, sf::Font& font);
 
-void moving_Update(Entity moving);
+void moveIndicator_Update
+(
+	Entity indicator,
+	Entity slider
+);
 
 void moveSystem(const DeltaTime dt);
 void dragSystem(const DeltaTime dt);

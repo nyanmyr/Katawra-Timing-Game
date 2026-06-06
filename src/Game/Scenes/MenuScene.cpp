@@ -1,3 +1,4 @@
+#include <iostream>
 #include <SFML/Graphics.hpp>
 #include "../src/Game/Headers/GameManager.hpp"
 #include "../src/Game/Headers/Scenes.hpp"
@@ -16,7 +17,7 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 	bool buttonClicked = false;
 
 	// entity instantiation
-	Entity moving = makeMoving
+	Entity indicator = makeIndicator
 	(
 		
 		{
@@ -27,12 +28,31 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 			30.f,
 			30.f
 		},
-		{
-			0,
-			800
-		},
-		100
+		100 // starting speed
 	);
+
+	Entity slider = makeSlider
+	(
+
+		{
+			window.getSize().x / 2.f,
+			window.getSize().y / 2.f
+		},
+		{ // xbounds is tied to size
+			window.getSize().x / 2.f,
+			10.f
+		},
+		{ // slider min/ max
+			0.f,
+			100.f
+		}
+	);
+
+	float tempX = window.getSize().x / 2.f;
+
+	std::cout << "boundX min: " << tempX - (tempX / 2.f) << "\n";
+	std::cout << "boundX max: " << tempX + (tempX / 2.f) << "\n\n";
+
 
 	// onstart systems
 	setTextSystem(font); // font system is limited to one font
@@ -53,14 +73,18 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 				window.close();
 			}
 
-			if (const auto& mousePress = event->getIf<sf::Event::MouseButtonPressed>())
+			if (const auto& buttonPress = event->getIf<sf::Event::KeyReleased>())
 			{
-				buttonClicked = true;
+
 			}
 		}
 
 		// update systems
-		moving_Update(moving);
+		moveIndicator_Update
+		(
+			indicator,
+			slider
+		);
 
 		moveSystem(dt);
 
