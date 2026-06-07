@@ -21,4 +21,11 @@ Entity& makeSlider
 	sf::Vector2f slider
 );
 
+Entity& makeHitbox
+(
+	Entity slider,
+	float startSize,
+	float minSize
+);
+
 #endif

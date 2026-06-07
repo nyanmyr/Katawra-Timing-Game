@@ -108,9 +108,18 @@ Entity& makeIndicator
 			pos.y
 		}
 	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CTransform
+		{
+			size.x,
+			size.y
+		}
+	);
 
 	sf::RectangleShape rect(sf::Vector2f(size.x, size.y));
-	rect.setFillColor(sf::Color::White);
+	rect.setFillColor(sf::Color::Blue);
 
 	entityMakerNC.addComponent
 	(
@@ -124,7 +133,7 @@ Entity& makeIndicator
 		entity,
 		CZIndex
 		{
-			2,
+			3,
 			true
 		}
 	);
@@ -173,6 +182,15 @@ Entity& makeSlider
 		{
 			pos.x,
 			pos.y
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CTransform
+		{
+			size.x,
+			size.y
 		}
 	);
 
@@ -227,6 +245,92 @@ Entity& makeSlider
 		{
 			slider.x,
 			slider.y
+		}
+	);
+
+	return entity;
+}
+
+Entity& makeHitbox
+(
+	Entity slider,
+	float startSize,
+	float minSize
+)
+{
+	Entity entity = entityMakerNC.createEntity();
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CPosition
+		{
+			0.f,
+			0.f
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CTransform
+		{
+			0.f,
+			0.f
+		}
+	);
+
+	sf::RectangleShape rect(sf::Vector2f(0.f, 0.f));
+	rect.setFillColor(sf::Color::White);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CShape{
+			rect
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CZIndex
+		{
+			2,
+			true
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		COrigin
+		{
+			0.f,
+			0.f
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CVelocity{}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CXBounds
+		{
+			0.f,
+			0.f
+		}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CHitbox
+		{
+			slider,
+			startSize,
+			minSize
 		}
 	);
 

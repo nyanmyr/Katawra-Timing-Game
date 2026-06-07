@@ -25,6 +25,11 @@ void moveIndicator_Update
 	Entity indicator,
 	Entity slider
 );
+void spawnHitbox
+(
+	Entity hitbox,
+	Entity slider
+);
 
 void moveSystem(const DeltaTime dt);
 void dragSystem(const DeltaTime dt);

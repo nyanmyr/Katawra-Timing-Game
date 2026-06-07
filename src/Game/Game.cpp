@@ -37,6 +37,7 @@ void main() {
 	nc.registerComponent<CXBounds>();
 	nc.registerComponent<CIndicator>();
 	nc.registerComponent<CSlider>();
+	nc.registerComponent<CHitbox>();
 
 	sf::Font font;
 	if (!font.openFromFile(FONT_FILEPATH))

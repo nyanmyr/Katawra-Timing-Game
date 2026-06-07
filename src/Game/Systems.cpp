@@ -306,10 +306,40 @@ void moveIndicator_Update
 
 void spawnHitbox
 (
-
+    Entity hitbox,
+    Entity slider
 )
 {
+    const CXBounds& xBounds = systemsNC.getComponentArray<CXBounds>()->getData(slider);
+    const CSlider& slid = systemsNC.getComponentArray<CSlider>()->getData(slider);
+    const CPosition& slidPos = systemsNC.getComponentArray<CPosition>()->getData(slider);
+    const CTransform& slidTrans = systemsNC.getComponentArray<CTransform>()->getData(slider);
 
+    CHitbox& hit = systemsNC.getComponentArray<CHitbox>()->getData(hitbox);
+    CPosition& hitPos = systemsNC.getComponentArray<CPosition>()->getData(hitbox);
+    CShape& hitRect = systemsNC.getComponentArray<CShape>()->getData(hitbox);
+    COrigin& hirOrig = systemsNC.getComponentArray<COrigin>()->getData(hitbox);
+
+    if (hit.spawned)
+    {
+        return;
+    }
+
+    hitPos.x = slidPos.x;
+    hitPos.y = slidPos.y;
+
+    hitRect.rect.setSize
+    (
+        {
+            hit.startSize,
+            slidTrans.height
+        }
+    );
+
+    hirOrig.offsetX = hit.startSize / 2.f;
+    hirOrig.offsetY = slidTrans.height / 2.f;
+
+    hit.spawned = true;
 }
 
 void moveSystem(const DeltaTime dt)

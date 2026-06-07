@@ -120,4 +120,16 @@ struct CSlider
 	float min = 0.f, max = 0.f;
 };
 
+struct CHitbox
+{
+	Entity slider;
+	float startSize = 0.f, minSize = 0.f;
+	bool spawned = false;
+};
+
+struct CScore // TODO: make functional
+{
+	int count = 0;
+};
+
 #endif

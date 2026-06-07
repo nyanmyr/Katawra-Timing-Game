@@ -3,6 +3,8 @@
 #include "../src/Game/Headers/GameManager.hpp"
 #include "../src/Game/Headers/Scenes.hpp"
 
+// TODO: make movement slow as it nears the edge
+
 using sf::RenderWindow;
 using sf::Clock;
 using sf::Event;
@@ -25,27 +27,33 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 			window.getSize().y / 2.f
 		},
 		{
-			30.f,
-			30.f
+			10.f,
+			20.f
 		},
 		100 // starting speed
 	);
 
 	Entity slider = makeSlider
 	(
-
 		{
 			window.getSize().x / 2.f,
 			window.getSize().y / 2.f
 		},
 		{ // xbounds is tied to size
 			window.getSize().x / 2.f,
-			10.f
+			20.f
 		},
 		{ // slider min/ max
 			0.f,
 			100.f
 		}
+	);
+
+	Entity hitbox = makeHitbox
+	(
+		slider,
+		100.f,
+		0
 	);
 
 	float tempX = window.getSize().x / 2.f;
@@ -57,7 +65,6 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 	// onstart systems
 	setTextSystem(font); // font system is limited to one font
 	setTextOriginSystem();
-	setShapeOriginSystem();
 
 	while (window.isOpen())
 	{
@@ -80,6 +87,12 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		}
 
 		// update systems
+		setShapeOriginSystem();
+		spawnHitbox
+		(
+			hitbox,
+			slider
+		);
 		moveIndicator_Update
 		(
 			indicator,
