@@ -38,6 +38,7 @@ void main() {
 	nc.registerComponent<CIndicator>();
 	nc.registerComponent<CSlider>();
 	nc.registerComponent<CHitbox>();
+	nc.registerComponent<CScore>();
 
 	sf::Font font;
 	if (!font.openFromFile(FONT_FILEPATH))

@@ -52,8 +52,9 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 	Entity hitbox = makeHitbox
 	(
 		slider,
-		100.f,
-		0
+		100.f, // start size
+		10.f, // min size
+		10.f // size decrease
 	);
 
 	float tempX = window.getSize().x / 2.f;
@@ -82,7 +83,14 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 
 			if (const auto& buttonPress = event->getIf<sf::Event::KeyReleased>())
 			{
-
+				if (buttonPress->scancode == sf::Keyboard::Scancode::Space)
+				{
+					Hit_Control
+					(
+						indicator,
+						hitbox
+					);
+				}
 			}
 		}
 
@@ -91,7 +99,8 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		spawnHitbox
 		(
 			hitbox,
-			slider
+			slider,
+			dt
 		);
 		moveIndicator_Update
 		(

@@ -25,7 +25,8 @@ Entity& makeHitbox
 (
 	Entity slider,
 	float startSize,
-	float minSize
+	float minSize,
+	float sizeDecrease
 );
 
 #endif

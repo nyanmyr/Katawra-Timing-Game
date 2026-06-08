@@ -1,6 +1,8 @@
 #include "Headers/Systems.hpp"
 
 #include <iostream>
+#include <random>
+
 #include <SFML/Graphics.hpp>
 
 NacreCoordinator& systemsNC = NacreCoordinator::getInstance();
@@ -261,13 +263,32 @@ void nextSceneSystem(sf::RenderWindow& window, sf::Font& font)
 }
 
 // TODO: rename systems to start with lowercase
-void Hit_Control // TODO: make functional
+void Hit_Control
 (
     Entity indicator,
-    Entity slider
+    Entity hitbox
 )
 {
+    const CPosition& indicPos = systemsNC.getComponentArray<CPosition>()->getData(indicator);
 
+    const CPosition& hitPos = systemsNC.getComponentArray<CPosition>()->getData(hitbox);
+    const CTransform& hitTrans = systemsNC.getComponentArray<CTransform>()->getData(hitbox);
+    CScore& score = systemsNC.getComponentArray<CScore>()->getData(hitbox);
+    CHitbox& hit = systemsNC.getComponentArray<CHitbox>()->getData(hitbox);
+
+    std::cout << "x:" << indicPos.x << "\n";
+    std::cout << "min:" << hitPos.x - (hitTrans.width / 2.f) << " max:" << hitPos.x + (hitTrans.width / 2.f) << "\n\n";
+
+    if 
+    (
+        indicPos.x > hitPos.x - (hitTrans.width / 2.f) &&
+        indicPos.x < hitPos.x + (hitTrans.width / 2.f)
+    )
+    {
+        std::cout << "Hit!" << "\n";
+        ++score.count;
+        hit.spawned = false;
+    }
 }
 
 void moveIndicator_Update
@@ -307,7 +328,8 @@ void moveIndicator_Update
 void spawnHitbox
 (
     Entity hitbox,
-    Entity slider
+    Entity slider,
+    DeltaTime dt
 )
 {
     const CXBounds& xBounds = systemsNC.getComponentArray<CXBounds>()->getData(slider);
@@ -315,9 +337,11 @@ void spawnHitbox
     const CPosition& slidPos = systemsNC.getComponentArray<CPosition>()->getData(slider);
     const CTransform& slidTrans = systemsNC.getComponentArray<CTransform>()->getData(slider);
 
+    const CScore& score = systemsNC.getComponentArray<CScore>()->getData(hitbox);
     CHitbox& hit = systemsNC.getComponentArray<CHitbox>()->getData(hitbox);
     CPosition& hitPos = systemsNC.getComponentArray<CPosition>()->getData(hitbox);
     CShape& hitRect = systemsNC.getComponentArray<CShape>()->getData(hitbox);
+    CTransform& hitTrans = systemsNC.getComponentArray<CTransform>()->getData(hitbox);
     COrigin& hirOrig = systemsNC.getComponentArray<COrigin>()->getData(hitbox);
 
     if (hit.spawned)
@@ -325,18 +349,37 @@ void spawnHitbox
         return;
     }
 
-    hitPos.x = slidPos.x;
+    float spawnSize = hit.startSize - (hit.sizeDecrease * score.count);
+    if (spawnSize < hit.minSize)
+    {
+        spawnSize = hit.minSize;
+    }
+
+    std::hash<DeltaTime> hasher;
+    uint32_t hashValue = hasher(dt);
+
+    std::mt19937 gen(hashValue);
+
+    float minSpawnX = xBounds.min + (spawnSize / 2.f);
+    float maxSpawnX = xBounds.max - (spawnSize / 2.f);
+
+    std::uniform_real_distribution<> distrib(minSpawnX, maxSpawnX);
+
+    hitPos.x = distrib(gen);
     hitPos.y = slidPos.y;
 
     hitRect.rect.setSize
     (
         {
-            hit.startSize,
+            spawnSize,
             slidTrans.height
         }
     );
 
-    hirOrig.offsetX = hit.startSize / 2.f;
+    hitTrans.width = spawnSize;
+    hitTrans.height = slidTrans.height;
+
+    hirOrig.offsetX = spawnSize / 2.f;
     hirOrig.offsetY = slidTrans.height / 2.f;
 
     hit.spawned = true;

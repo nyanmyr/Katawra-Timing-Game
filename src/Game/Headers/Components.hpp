@@ -110,12 +110,13 @@ struct CXBounds
 	float min = 0.f, max = 0.f;
 };
 
-struct CIndicator
+// TODO: retire these
+struct CIndicator // LEGACY: USE GLOBAL COORDS INSTEAD
 {
 	float current;
 };
 
-struct CSlider
+struct CSlider // LEGACY: USE GLOBAL COORDS INSTEAD
 {
 	float min = 0.f, max = 0.f;
 };
@@ -123,7 +124,7 @@ struct CSlider
 struct CHitbox
 {
 	Entity slider;
-	float startSize = 0.f, minSize = 0.f;
+	float startSize = 0.f, minSize = 0.f, sizeDecrease = 0.f;
 	bool spawned = false;
 };
 

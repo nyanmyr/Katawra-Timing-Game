@@ -255,7 +255,8 @@ Entity& makeHitbox
 (
 	Entity slider,
 	float startSize,
-	float minSize
+	float minSize,
+	float sizeDecrease
 )
 {
 	Entity entity = entityMakerNC.createEntity();
@@ -330,8 +331,15 @@ Entity& makeHitbox
 		{
 			slider,
 			startSize,
-			minSize
+			minSize,
+			sizeDecrease
 		}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CScore{}
 	);
 
 	return entity;
