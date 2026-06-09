@@ -32,11 +32,10 @@ void main() {
 	nc.registerComponent<CZIndex>();
 	nc.registerComponent<CVelocity>();
 	nc.registerComponent<CSpeed>();
+	nc.registerComponent<CSpeedIncrease>();
 	nc.registerComponent<CPlayerController>();
 	nc.registerComponent<CDrag>();
 	nc.registerComponent<CXBounds>();
-	nc.registerComponent<CIndicator>();
-	nc.registerComponent<CSlider>();
 	nc.registerComponent<CHitbox>();
 	nc.registerComponent<CScore>();
 

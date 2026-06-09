@@ -4,14 +4,20 @@
 #include <SFML/Graphics.hpp>
 #include "Scenes.hpp"
 
-// could prolly use some Vector2fs
+Entity makeUIText
+(
+	sf::Vector2f pos,
+	sf::Font& font
+);
+
 Entity& makeButton(sf::Vector2f pos, sf::Vector2f size, Scene scene, std::string str, sf::Font& font);
 
 Entity& makeIndicator
 (
 	sf::Vector2f pos,
 	sf::Vector2f size,
-	float speed
+	float speed,
+	float speedIncrease
 );
 
 Entity& makeSlider

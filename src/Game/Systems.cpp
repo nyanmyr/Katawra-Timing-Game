@@ -276,8 +276,8 @@ void Hit_Control
     CScore& score = systemsNC.getComponentArray<CScore>()->getData(hitbox);
     CHitbox& hit = systemsNC.getComponentArray<CHitbox>()->getData(hitbox);
 
-    std::cout << "x:" << indicPos.x << "\n";
-    std::cout << "min:" << hitPos.x - (hitTrans.width / 2.f) << " max:" << hitPos.x + (hitTrans.width / 2.f) << "\n\n";
+    //std::cout << "x:" << indicPos.x << "\n";
+    //std::cout << "min:" << hitPos.x - (hitTrans.width / 2.f) << " max:" << hitPos.x + (hitTrans.width / 2.f) << "\n\n";
 
     if 
     (
@@ -287,6 +287,12 @@ void Hit_Control
     {
         std::cout << "Hit!" << "\n";
         ++score.count;
+        hit.spawned = false;
+    }
+    else
+    {
+        std::cout << "Missed!" << "\n";
+        score.count = 0;
         hit.spawned = false;
     }
 }
@@ -299,10 +305,8 @@ void moveIndicator_Update
 {
     const CPosition& pos = systemsNC.getComponentArray<CPosition>()->getData(indicator);
     const CXBounds& xBounds = systemsNC.getComponentArray<CXBounds>()->getData(slider);
-    const CSlider& slid = systemsNC.getComponentArray<CSlider>()->getData(slider);
     const CSpeed& speed = systemsNC.getComponentArray<CSpeed>()->getData(indicator);
     CVelocity& vel = systemsNC.getComponentArray<CVelocity>()->getData(indicator);
-    CIndicator& indic = systemsNC.getComponentArray<CIndicator>()->getData(indicator);
 
     vel.x = vel.x < 0 ? -speed.amount : speed.amount;
 
@@ -313,16 +317,6 @@ void moveIndicator_Update
     {
         vel.x = -vel.x;
     }
-
-    indic.current = inverseLerp_Auxiliary
-    (
-        xBounds.min,
-        xBounds.max,
-        pos.x
-    );
-
-    indic.current *= slid.max;
-    //std::cout << "current indicator: " << indic.current << "\n";
 }
 
 void spawnHitbox
@@ -333,7 +327,6 @@ void spawnHitbox
 )
 {
     const CXBounds& xBounds = systemsNC.getComponentArray<CXBounds>()->getData(slider);
-    const CSlider& slid = systemsNC.getComponentArray<CSlider>()->getData(slider);
     const CPosition& slidPos = systemsNC.getComponentArray<CPosition>()->getData(slider);
     const CTransform& slidTrans = systemsNC.getComponentArray<CTransform>()->getData(slider);
 
@@ -385,6 +378,19 @@ void spawnHitbox
     hit.spawned = true;
 }
 
+void indicatorSpeed
+(
+    Entity indicator,
+    Entity hitbox
+)
+{
+    const CSpeedIncrease& speedIncrease = systemsNC.getComponentArray<CSpeedIncrease>()->getData(indicator);
+    CSpeed& speed = systemsNC.getComponentArray<CSpeed>()->getData(indicator);
+    CScore& hitScore = systemsNC.getComponentArray<CScore>()->getData(hitbox);
+
+    speed.amount = speed.original + (speedIncrease.increase * hitScore.count);
+}
+
 void moveSystem(const DeltaTime dt)
 {
     auto& velocities = systemsNC.getComponentArray<CVelocity>();
@@ -422,6 +428,18 @@ void dragSystem(const DeltaTime dt)
         velocity.y = velocity.y < -0.1f ? velocity.y + (drag.y * dt) :
             velocity.y > 0.1f ? velocity.y - (drag.y * dt) : 0.f;
     }
+}
+
+void displayScore
+(
+    Entity score,
+    Entity hitbox
+)
+{
+    CText& scoreText = systemsNC.getComponentArray<CText>()->getData(score);
+    CScore& hitScore = systemsNC.getComponentArray<CScore>()->getData(hitbox);
+
+    scoreText.box->setString("Score: " + std::to_string(hitScore.count));
 }
 
 // -------------------------------------------------------

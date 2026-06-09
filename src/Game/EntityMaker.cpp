@@ -5,7 +5,50 @@
 
 NacreCoordinator& entityMakerNC = NacreCoordinator::getInstance();
 
-// delete these
+Entity makeUIText
+(
+	sf::Vector2f pos,
+	sf::Font& font
+)
+{
+	Entity entity = entityMakerNC.createEntity();
+
+	entityMakerNC.addComponent(
+		entity,
+		CPosition
+		{
+			pos.x,
+			pos.y
+		}
+	);
+
+	sf::Text text(font);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CText
+		{
+			text,
+			"testing",
+			32,
+			sf::Color::White,
+			TextFormat::MIDDLE
+		}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CZIndex
+		{
+			4,
+			true
+		}
+	);
+
+	return entity;
+}
+
 Entity& makeButton(sf::Vector2f pos, sf::Vector2f size, Scene scene, std::string str, sf::Font& font)
 {
 	Entity entity = entityMakerNC.createEntity();
@@ -94,7 +137,8 @@ Entity& makeIndicator
 (
 	sf::Vector2f pos,
 	sf::Vector2f size,
-	float speed
+	float speed,
+	float speedIncrease
 )
 {
 	Entity entity = entityMakerNC.createEntity();
@@ -156,11 +200,10 @@ Entity& makeIndicator
 		entity,
 		CSpeed{ speed }
 	);
-
 	entityMakerNC.addComponent
 	(
 		entity,
-		CIndicator{ }
+		CSpeedIncrease{ speedIncrease }
 	);
 
 	return entity;
@@ -235,16 +278,6 @@ Entity& makeSlider
 		{
 			pos.x - (size.x / 2.f),
 			pos.x + (size.x / 2.f)
-		}
-	);
-
-	entityMakerNC.addComponent
-	(
-		entity,
-		CSlider
-		{
-			slider.x,
-			slider.y
 		}
 	);
 

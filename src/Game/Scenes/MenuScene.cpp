@@ -4,6 +4,7 @@
 #include "../src/Game/Headers/Scenes.hpp"
 
 // TODO: make movement slow as it nears the edge
+// TODO: bonus score if hasn't hit the edge twice?
 
 using sf::RenderWindow;
 using sf::Clock;
@@ -30,7 +31,8 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 			10.f,
 			20.f
 		},
-		100 // starting speed
+		100.f, // starting speed
+		25.f // speed increase
 	);
 
 	Entity slider = makeSlider
@@ -57,10 +59,14 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		10.f // size decrease
 	);
 
-	float tempX = window.getSize().x / 2.f;
-
-	std::cout << "boundX min: " << tempX - (tempX / 2.f) << "\n";
-	std::cout << "boundX max: " << tempX + (tempX / 2.f) << "\n\n";
+	Entity score = makeUIText
+	(
+		{
+			25.f,
+			25.f
+		},
+		font
+	);
 
 
 	// onstart systems
@@ -107,8 +113,17 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 			indicator,
 			slider
 		);
-
+		indicatorSpeed
+		(
+			indicator,
+			hitbox
+		);
 		moveSystem(dt);
+		displayScore
+		(
+			score,
+			hitbox
+		);
 
 		window.clear();
 		// render systems

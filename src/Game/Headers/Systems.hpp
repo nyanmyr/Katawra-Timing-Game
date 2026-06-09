@@ -37,8 +37,20 @@ void spawnHitbox
 	DeltaTime dt
 );
 
+void indicatorSpeed
+(
+	Entity indicator,
+	Entity hitbox
+);
+
 void moveSystem(const DeltaTime dt);
 void dragSystem(const DeltaTime dt);
+
+void displayScore
+(
+	Entity score,
+	Entity hitbox
+);
 
 // make edge collision system here
 

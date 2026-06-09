@@ -87,7 +87,17 @@ struct CVelocity
 
 struct CSpeed
 {
-	float amount = 0.f;
+	float amount = 0.f, original = 0.f;
+
+	CSpeed() = default;
+	CSpeed(float amount) :
+		amount(amount), original(amount) {
+	};
+};
+
+struct CSpeedIncrease
+{
+	float increase = 0.f;
 };
 
 struct CPlayerController
@@ -106,17 +116,6 @@ struct CDrag
 };
 
 struct CXBounds
-{
-	float min = 0.f, max = 0.f;
-};
-
-// TODO: retire these
-struct CIndicator // LEGACY: USE GLOBAL COORDS INSTEAD
-{
-	float current;
-};
-
-struct CSlider // LEGACY: USE GLOBAL COORDS INSTEAD
 {
 	float min = 0.f, max = 0.f;
 };
