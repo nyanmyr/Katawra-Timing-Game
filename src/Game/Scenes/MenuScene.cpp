@@ -115,6 +115,7 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		);
 		indicatorSpeed
 		(
+			slider,
 			indicator,
 			hitbox
 		);

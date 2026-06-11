@@ -5,6 +5,8 @@
 
 #include <SFML/Graphics.hpp>
 
+const float E = 2.1781828f;
+
 NacreCoordinator& systemsNC = NacreCoordinator::getInstance();
 
 // -------------------------------------------------------
@@ -378,17 +380,41 @@ void spawnHitbox
     hit.spawned = true;
 }
 
+const float MINIMUM_SCALED_FACTOR = 0.5f;
+
 void indicatorSpeed
 (
+    Entity slider,
     Entity indicator,
     Entity hitbox
 )
 {
+    const CXBounds& xBounds = systemsNC.getComponentArray<CXBounds>()->getData(slider);
     const CSpeedIncrease& speedIncrease = systemsNC.getComponentArray<CSpeedIncrease>()->getData(indicator);
+    const CPosition& pos = systemsNC.getComponentArray<CPosition>()->getData(indicator);
     CSpeed& speed = systemsNC.getComponentArray<CSpeed>()->getData(indicator);
     CScore& hitScore = systemsNC.getComponentArray<CScore>()->getData(hitbox);
 
+    float scaledSpeed = std::abs
+    (
+        inverseLerp_Auxiliary
+        (
+            (xBounds.min + xBounds.max) / 2.f,
+            xBounds.max,
+            pos.x
+        )
+    );
+
+
+    if ((1.f - scaledSpeed) < MINIMUM_SCALED_FACTOR)
+    {
+        scaledSpeed = (1.f - MINIMUM_SCALED_FACTOR);
+    }
+
+    std::cout << "where: " << (1.f - scaledSpeed) << "\n";
+
     speed.amount = speed.original + (speedIncrease.increase * hitScore.count);
+    speed.amount *= (1.f - scaledSpeed);
 }
 
 void moveSystem(const DeltaTime dt)

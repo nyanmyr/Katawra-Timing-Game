@@ -39,10 +39,10 @@ void spawnHitbox
 
 void indicatorSpeed
 (
+	Entity slider,
 	Entity indicator,
 	Entity hitbox
 );
-
 void moveSystem(const DeltaTime dt);
 void dragSystem(const DeltaTime dt);
 
