@@ -305,9 +305,9 @@ void moveIndicator_Update
     Entity slider
 )
 {
-    const CPosition& pos = systemsNC.getComponentArray<CPosition>()->getData(indicator);
     const CXBounds& xBounds = systemsNC.getComponentArray<CXBounds>()->getData(slider);
     const CSpeed& speed = systemsNC.getComponentArray<CSpeed>()->getData(indicator);
+    CPosition& pos = systemsNC.getComponentArray<CPosition>()->getData(indicator);
     CVelocity& vel = systemsNC.getComponentArray<CVelocity>()->getData(indicator);
 
     vel.x = vel.x < 0 ? -speed.amount : speed.amount;
@@ -315,9 +315,20 @@ void moveIndicator_Update
     //std::cout << "speed.amount: " << speed.amount << "\n";
     //std::cout << "vel.x: " << vel.x << "\n";
 
+    //FIX: if the screen hangs and the indicator moves out of the slider bounds
+    // they get stuck!
     if (pos.x > xBounds.max || pos.x < xBounds.min)
     {
         vel.x = -vel.x;
+    }
+
+    if (pos.x > xBounds.max)
+    {
+        pos.x = xBounds.max;
+    }
+    else if (pos.x < xBounds.min)
+    {
+        pos.x = xBounds.min;
     }
 }
 
@@ -380,7 +391,8 @@ void spawnHitbox
     hit.spawned = true;
 }
 
-const float MINIMUM_SCALED_FACTOR = 0.5f;
+const float MINIMUM_SCALED_FACTOR = 0.25f;
+const float CENTER_OFFSET = 175.f;
 
 void indicatorSpeed
 (
@@ -392,19 +404,38 @@ void indicatorSpeed
     const CXBounds& xBounds = systemsNC.getComponentArray<CXBounds>()->getData(slider);
     const CSpeedIncrease& speedIncrease = systemsNC.getComponentArray<CSpeedIncrease>()->getData(indicator);
     const CPosition& pos = systemsNC.getComponentArray<CPosition>()->getData(indicator);
+    const CVelocity& vel = systemsNC.getComponentArray<CVelocity>()->getData(indicator);
     CSpeed& speed = systemsNC.getComponentArray<CSpeed>()->getData(indicator);
     CScore& hitScore = systemsNC.getComponentArray<CScore>()->getData(hitbox);
 
-    float scaledSpeed = std::abs
-    (
-        inverseLerp_Auxiliary
-        (
-            (xBounds.min + xBounds.max) / 2.f,
-            xBounds.max,
-            pos.x
-        )
-    );
+    float scaledSpeed = 0.f;
 
+    float center = (xBounds.min + xBounds.max) / 2.;
+
+    if (pos.x > center + CENTER_OFFSET && vel.x > 0.f)
+    {
+        scaledSpeed = std::abs
+        (
+            inverseLerp_Auxiliary
+            (
+                center + CENTER_OFFSET,
+                xBounds.max,
+                pos.x
+            )
+        );
+    }
+    else if (pos.x < center - CENTER_OFFSET && vel.x < 0.f)
+    {
+        scaledSpeed = std::abs
+        (
+            inverseLerp_Auxiliary
+            (
+                center - CENTER_OFFSET,
+                xBounds.min,
+                pos.x
+            )
+        );
+    }
 
     if ((1.f - scaledSpeed) < MINIMUM_SCALED_FACTOR)
     {
