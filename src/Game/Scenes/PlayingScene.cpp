@@ -13,16 +13,67 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font) {
 	// game state variables
 	Clock clock;
 	std::queue<Entity> renderQueue;
+	bool buttonClicked = false;
 
+	// entity instantiation
+	Entity indicator = makeIndicator
+	(
+
+		{
+			window.getSize().x / 2.f,
+			window.getSize().y / 2.f
+		},
+		{
+			10.f,
+			20.f
+		},
+		100.f, // starting speed
+		25.f // speed increase
+	);
+
+	Entity slider = makeSlider
+	(
+		{
+			window.getSize().x / 2.f,
+			window.getSize().y / 2.f
+		},
+		{ // xbounds is tied to size
+			window.getSize().x / 2.f,
+			20.f
+		},
+		{ // slider min/ max
+			0.f,
+			100.f
+		}
+	);
+
+	Entity hitbox = makeHitbox
+	(
+		slider,
+		100.f, // start size
+		10.f, // min size
+		10.f // size decrease
+	);
+
+	Entity score = makeUIText
+	(
+		{
+			25.f,
+			25.f
+		},
+		font
+	);
 
 	// onstart systems
 	setTextSystem(font); // font system is limited to one font
 	setTextOriginSystem();
-	setShapeOriginSystem();
 
 	while (window.isOpen())
 	{
 		DeltaTime dt = clock.restart().asSeconds();
+
+		auto& pixelPos = sf::Mouse::getPosition(window);
+		auto& worldPos = window.mapPixelToCoords(pixelPos);
 
 		while (const std::optional event = window.pollEvent())
 		{
@@ -30,11 +81,45 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font) {
 			{
 				window.close();
 			}
+
+			if (const auto& buttonPress = event->getIf<sf::Event::KeyReleased>())
+			{
+				if (buttonPress->scancode == sf::Keyboard::Scancode::Space)
+				{
+					Hit_Control
+					(
+						indicator,
+						hitbox
+					);
+				}
+			}
 		}
 
-		// systems
+		// update systems
+		setShapeOriginSystem();
+		spawnHitbox
+		(
+			hitbox,
+			slider,
+			dt
+		);
+		moveIndicator_Update
+		(
+			indicator,
+			slider
+		);
+		indicatorSpeed
+		(
+			slider,
+			indicator,
+			hitbox
+		);
 		moveSystem(dt);
-		dragSystem(dt);
+		displayScore
+		(
+			score,
+			hitbox
+		);
 
 		window.clear();
 		// render systems
