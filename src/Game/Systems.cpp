@@ -243,9 +243,26 @@ void nextSceneSystem(sf::RenderWindow& window, sf::Font& font)
 
     bool playNext = false;
     Scene playNextScene;
+    Difficulty diff;
 
     for (auto& [entity, nextScene] : nextScenes->getAll())
     {
+        if (!systemsNC.getComponentArray<CMode>()->hasData(entity))
+        {
+            continue;
+        }
+
+        switch (systemsNC.getComponentArray<CMode>()->getData(entity).selected)
+        {
+            case DIFFICULTY_HARD:
+                diff = Difficulty::DIFFICULTY_HARD;
+                break;
+            case DIFFICULTY_NORMAL:
+            default:
+                diff = Difficulty::DIFFICULTY_NORMAL;
+                break;
+        }
+
         // buttons must have a shape, origin, and text
         if (nextScene.active)
         {
@@ -259,7 +276,7 @@ void nextSceneSystem(sf::RenderWindow& window, sf::Font& font)
     if (playNext)
     {
         systemsNC.destroyAll();
-        playScene(window, playNextScene, font);
+        playScene(window, playNextScene, font, diff);
         window.close();
     }
 }
@@ -442,7 +459,7 @@ void indicatorSpeed
         scaledSpeed = (1.f - MINIMUM_SCALED_FACTOR);
     }
 
-    std::cout << "where: " << (1.f - scaledSpeed) << "\n";
+    //std::cout << "where: " << (1.f - scaledSpeed) << "\n";
 
     speed.amount = speed.original + (speedIncrease.increase * hitScore.count);
     speed.amount *= (1.f - scaledSpeed);

@@ -3,8 +3,6 @@
 #include "../src/Game/Headers/GameManager.hpp"
 #include "../src/Game/Headers/Scenes.hpp"
 
-// TODO: bonus score if hasn't hit the edge twice?
-
 using sf::RenderWindow;
 using sf::Clock;
 using sf::Event;
@@ -19,13 +17,13 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 	bool buttonClicked = false;
 
 	// entity instantiation
-	Entity playButton = makeButton
+	Entity normalMode = makeButton
 	(
 		sf::Vector2f
 		(
 			{
 				window.getSize().x / 2.f,
-				window.getSize().y / 2.f
+				window.getSize().y / 2.f - 100.f
 			}
 		),
 		sf::Vector2f
@@ -36,8 +34,41 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 			}
 		),
 		Scene::PLAYING,
-		"Play",
+		"Normal",
 		font
+	);
+
+	nc.addComponent
+	(
+		normalMode,
+		CMode{ GameMode::MODE_NORMAL }
+	);
+
+	Entity hardMode = makeButton
+	(
+		sf::Vector2f
+		(
+			{
+				window.getSize().x / 2.f,
+				window.getSize().y / 2.f + 100.f
+			}
+		),
+		sf::Vector2f
+		(
+			{
+				200.f,
+				100.f
+			}
+		),
+		Scene::PLAYING,
+		"Hard",
+		font
+	);
+
+	nc.addComponent
+	(
+		hardMode,
+		CMode{ GameMode::MODE_HARD }
 	);
 
 	// onstart systems

@@ -127,9 +127,20 @@ struct CHitbox
 	bool spawned = false;
 };
 
-struct CScore // TODO: make functional
+struct CScore
 {
 	int count = 0;
+};
+
+enum GameMode
+{
+	MODE_NORMAL,
+	MODE_HARD
+};
+
+struct CMode
+{
+	GameMode selected;
 };
 
 #endif

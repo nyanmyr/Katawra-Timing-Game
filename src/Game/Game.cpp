@@ -38,6 +38,7 @@ void main() {
 	nc.registerComponent<CXBounds>();
 	nc.registerComponent<CHitbox>();
 	nc.registerComponent<CScore>();
+	nc.registerComponent<CMode>();
 
 	sf::Font font;
 	if (!font.openFromFile(FONT_FILEPATH))
@@ -45,5 +46,5 @@ void main() {
 		throw std::runtime_error("Font not found.");
 	}
 
-	playScene(window, Scene::MENU, font);
+	playScene(window, Scene::MENU, font, Difficulty::DIFFICULTY_NORMAL);
 }
