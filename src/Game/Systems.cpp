@@ -281,6 +281,8 @@ void nextSceneSystem(sf::RenderWindow& window, sf::Font& font)
     }
 }
 
+const float HIT_SCORE = 100.f;
+
 // TODO: rename systems to start with lowercase
 void Hit_Control
 (
@@ -300,20 +302,34 @@ void Hit_Control
 
     if 
     (
-        indicPos.x > hitPos.x - (hitTrans.width / 2.f) &&
-        indicPos.x < hitPos.x + (hitTrans.width / 2.f)
+        indicPos.x < hitPos.x - (hitTrans.width / 2.f) ||
+        indicPos.x > hitPos.x + (hitTrans.width / 2.f)
     )
     {
-        std::cout << "Hit!" << "\n";
-        ++score.count;
-        hit.spawned = false;
-    }
-    else
-    {
-        std::cout << "Missed!" << "\n";
+        //std::cout << "Missed!" << "\n";
         score.count = 0;
+        score.hits = 0;
         hit.spawned = false;
+        return;
     }
+
+    //std::cout << "Hit!" << "\n";
+
+    float dist = 1.f - std::abs
+    (
+        inverseLerp_Auxiliary
+        (
+            hitPos.x,
+            hitPos.x + (hitTrans.width / 2.f),
+            indicPos.x
+        )
+    );
+
+    score.count += HIT_SCORE + (HIT_SCORE * dist);
+    ++score.hits;
+    hit.spawned = false;
+
+    //std::cout << "distance: " << dist << "\n";
 }
 
 void moveIndicator_Update
@@ -372,7 +388,7 @@ void spawnHitbox
         return;
     }
 
-    float spawnSize = hit.startSize - (hit.sizeDecrease * score.count);
+    float spawnSize = hit.startSize - (hit.sizeDecrease * score.hits);
     if (spawnSize < hit.minSize)
     {
         spawnSize = hit.minSize;
@@ -461,7 +477,7 @@ void indicatorSpeed
 
     //std::cout << "where: " << (1.f - scaledSpeed) << "\n";
 
-    speed.amount = speed.original + (speedIncrease.increase * hitScore.count);
+    speed.amount = speed.original + (speedIncrease.increase * hitScore.hits);
     speed.amount *= (1.f - scaledSpeed);
 }
 

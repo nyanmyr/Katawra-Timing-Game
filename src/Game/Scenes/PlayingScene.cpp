@@ -9,7 +9,6 @@ using sf::Event;
 using sf::Keyboard::Scancode;
 
 // TODO: bonus score if hasn't hit the edge twice?
-// TODO: scaled score, based on how close to middle?
 
 void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficulty) {
 	NacreCoordinator& nc = NacreCoordinator::getInstance();

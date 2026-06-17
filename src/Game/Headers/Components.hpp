@@ -130,6 +130,7 @@ struct CHitbox
 struct CScore
 {
 	int count = 0;
+	int hits = 0;
 };
 
 enum GameMode
