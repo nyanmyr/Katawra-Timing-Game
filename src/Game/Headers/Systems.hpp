@@ -28,7 +28,8 @@ void Hit_Control
 void moveIndicator_Update
 (
 	Entity indicator,
-	Entity slider
+	Entity slider,
+	Entity hitbox
 );
 void spawnHitbox
 (

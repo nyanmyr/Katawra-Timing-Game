@@ -282,6 +282,7 @@ void nextSceneSystem(sf::RenderWindow& window, sf::Font& font)
 }
 
 const float HIT_SCORE = 100.f;
+const float BOUNCE_BONUS = 50.f;
 
 // TODO: rename systems to start with lowercase
 void Hit_Control
@@ -309,6 +310,8 @@ void Hit_Control
         //std::cout << "Missed!" << "\n";
         score.count = 0;
         score.hits = 0;
+
+        score.bounces = 0;
         hit.spawned = false;
         return;
     }
@@ -325,8 +328,15 @@ void Hit_Control
         )
     );
 
+    if (score.bounces < 2)
+    {
+        score.count  += BOUNCE_BONUS;
+    }
+
     score.count += HIT_SCORE + (HIT_SCORE * dist);
     ++score.hits;
+
+    score.bounces = 0;
     hit.spawned = false;
 
     //std::cout << "distance: " << dist << "\n";
@@ -335,24 +345,25 @@ void Hit_Control
 void moveIndicator_Update
 (
     Entity indicator,
-    Entity slider
+    Entity slider,
+    Entity hitbox
 )
 {
     const CXBounds& xBounds = systemsNC.getComponentArray<CXBounds>()->getData(slider);
     const CSpeed& speed = systemsNC.getComponentArray<CSpeed>()->getData(indicator);
     CPosition& pos = systemsNC.getComponentArray<CPosition>()->getData(indicator);
     CVelocity& vel = systemsNC.getComponentArray<CVelocity>()->getData(indicator);
+    CScore& score = systemsNC.getComponentArray<CScore>()->getData(hitbox);
 
     vel.x = vel.x < 0 ? -speed.amount : speed.amount;
 
     //std::cout << "speed.amount: " << speed.amount << "\n";
     //std::cout << "vel.x: " << vel.x << "\n";
 
-    //FIX: if the screen hangs and the indicator moves out of the slider bounds
-    // they get stuck!
     if (pos.x > xBounds.max || pos.x < xBounds.min)
     {
         vel.x = -vel.x;
+        ++score.bounces;
     }
 
     if (pos.x > xBounds.max)

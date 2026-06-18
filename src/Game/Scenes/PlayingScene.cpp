@@ -8,7 +8,11 @@ using sf::Clock;
 using sf::Event;
 using sf::Keyboard::Scancode;
 
-// TODO: bonus score if hasn't hit the edge twice?
+// TODO: add shaking
+// TODO: add sprites
+// TODO: rename window
+// TODO: make window and application logo
+// TODO: publish
 
 void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficulty) {
 	NacreCoordinator& nc = NacreCoordinator::getInstance();
@@ -137,7 +141,8 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		moveIndicator_Update
 		(
 			indicator,
-			slider
+			slider,
+			hitbox
 		);
 		indicatorSpeed
 		(

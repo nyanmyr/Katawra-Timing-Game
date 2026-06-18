@@ -131,6 +131,7 @@ struct CScore
 {
 	int count = 0;
 	int hits = 0;
+	int bounces = 0;
 };
 
 enum GameMode
