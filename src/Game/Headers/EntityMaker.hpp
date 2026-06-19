@@ -35,4 +35,6 @@ Entity& makeHitbox
 	float sizeDecrease
 );
 
+Entity makeCameraShake();
+
 #endif

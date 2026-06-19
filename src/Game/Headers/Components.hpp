@@ -145,4 +145,10 @@ struct CMode
 	GameMode selected;
 };
 
+struct CCameraShake
+{
+	float intensity = 0.f;
+	float timer = 0.f;
+};
+
 #endif

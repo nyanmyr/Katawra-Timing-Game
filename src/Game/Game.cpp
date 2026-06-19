@@ -39,6 +39,7 @@ void main() {
 	nc.registerComponent<CHitbox>();
 	nc.registerComponent<CScore>();
 	nc.registerComponent<CMode>();
+	nc.registerComponent<CCameraShake>();
 
 	sf::Font font;
 	if (!font.openFromFile(FONT_FILEPATH))

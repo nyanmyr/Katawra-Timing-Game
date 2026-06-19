@@ -23,7 +23,8 @@ void nextSceneSystem(sf::RenderWindow& window, sf::Font& font);
 void Hit_Control
 (
 	Entity indicator,
-	Entity hitbox
+	Entity hitbox,
+	Entity cameraShake
 );
 void moveIndicator_Update
 (
@@ -53,7 +54,12 @@ void displayScore
 	Entity hitbox
 );
 
-// make edge collision system here
+void shakeCamera_UpdateSystem
+(
+	Entity cameraShake,
+	sf::RenderWindow& window,
+	DeltaTime dt
+);
 
 // -------------------------------------------------------
 // rendering systems

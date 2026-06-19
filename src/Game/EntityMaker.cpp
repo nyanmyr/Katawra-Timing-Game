@@ -377,3 +377,16 @@ Entity& makeHitbox
 
 	return entity;
 }
+
+Entity makeCameraShake()
+{
+	Entity entity = entityMakerNC.createEntity();
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CCameraShake{}
+	);
+
+	return entity;
+}

@@ -284,11 +284,18 @@ void nextSceneSystem(sf::RenderWindow& window, sf::Font& font)
 const float HIT_SCORE = 100.f;
 const float BOUNCE_BONUS = 50.f;
 
+const float HIT_INTENSITY = 10.f;
+const float HIT_SHAKE_TIMER = 0.15f;
+
+const float FAIL_INTENSITY = 30.f;
+const float FAIL_SHAKE_TIMER = 0.1f;
+
 // TODO: rename systems to start with lowercase
 void Hit_Control
 (
     Entity indicator,
-    Entity hitbox
+    Entity hitbox,
+    Entity cameraShake
 )
 {
     const CPosition& indicPos = systemsNC.getComponentArray<CPosition>()->getData(indicator);
@@ -297,6 +304,8 @@ void Hit_Control
     const CTransform& hitTrans = systemsNC.getComponentArray<CTransform>()->getData(hitbox);
     CScore& score = systemsNC.getComponentArray<CScore>()->getData(hitbox);
     CHitbox& hit = systemsNC.getComponentArray<CHitbox>()->getData(hitbox);
+
+    CCameraShake& shakeCam = systemsNC.getComponentArray<CCameraShake>()->getData(cameraShake);
 
     //std::cout << "x:" << indicPos.x << "\n";
     //std::cout << "min:" << hitPos.x - (hitTrans.width / 2.f) << " max:" << hitPos.x + (hitTrans.width / 2.f) << "\n\n";
@@ -307,6 +316,15 @@ void Hit_Control
         indicPos.x > hitPos.x + (hitTrans.width / 2.f)
     )
     {
+        if (shakeCam.intensity <= FAIL_INTENSITY)
+        {
+            shakeCam.intensity = FAIL_INTENSITY;
+        }
+        if (shakeCam.timer <= FAIL_SHAKE_TIMER)
+        {
+            shakeCam.timer = FAIL_SHAKE_TIMER;
+        }
+
         //std::cout << "Missed!" << "\n";
         score.count = 0;
         score.hits = 0;
@@ -316,7 +334,14 @@ void Hit_Control
         return;
     }
 
-    //std::cout << "Hit!" << "\n";
+    if (shakeCam.intensity <= HIT_INTENSITY)
+    {
+        shakeCam.intensity = HIT_INTENSITY;
+    }
+    if (shakeCam.timer <= HIT_SHAKE_TIMER)
+    {
+        shakeCam.timer = HIT_SHAKE_TIMER;
+    }
 
     float dist = 1.f - std::abs
     (
@@ -541,6 +566,62 @@ void displayScore
     CScore& hitScore = systemsNC.getComponentArray<CScore>()->getData(hitbox);
 
     scoreText.box->setString("Score: " + std::to_string(hitScore.count));
+}
+
+void shakeCamera_UpdateSystem
+(
+    Entity cameraShake,
+    sf::RenderWindow& window,
+    DeltaTime dt
+)
+{
+    CCameraShake& shakeCam = systemsNC.getComponentArray<CCameraShake>()->getData(cameraShake);
+
+    sf::View view = window.getView();
+
+    //std::cout << "before:" << "\n";
+    //std::cout << "intensity: " << shakeCam.intensity << "\n";
+    //std::cout << "timer: " << shakeCam.timer << "\n\n";
+
+    if (shakeCam.timer <= 0)
+    {
+        shakeCam.intensity = 0.f;
+        shakeCam.timer = 0.f;
+        view.setCenter
+        (
+            {
+                window.getDefaultView().getSize().x / 2.f,
+                window.getDefaultView().getSize().y / 2.f
+            }
+        );
+        window.setView(view);
+        return;
+    }
+
+    //std::cout << "after:" << "\n";
+    //std::cout << "intensity: " << shakeCam.intensity << "\n";
+    //std::cout << "timer: " << shakeCam.timer << "\n\n\n";
+
+    shakeCam.timer -= dt;
+
+    std::hash<DeltaTime> hasher;
+    uint32_t hashValue = hasher(dt);
+
+    std::mt19937 gen(hashValue);
+    std::uniform_real_distribution<> distrib(0, shakeCam.intensity);
+
+    //std::cout << "x: " << cam.currentPos.x << "y: " << cam.currentPos.y << "\n";
+    view.setCenter
+    (
+        {
+            (window.getDefaultView().getSize().x / 2.f) + (float)distrib(gen),
+            (window.getDefaultView().getSize().y / 2.f) + (float)distrib(gen)
+        }
+    );
+
+    //shakeCam.intensity -= dt;
+
+    window.setView(view);
 }
 
 // -------------------------------------------------------

@@ -8,8 +8,10 @@ using sf::Clock;
 using sf::Event;
 using sf::Keyboard::Scancode;
 
-// TODO: add shaking
+
+// TODO: show how much score got
 // TODO: add sprites
+// TODO: add sounds
 // TODO: rename window
 // TODO: make window and application logo
 // TODO: publish
@@ -99,6 +101,8 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		font
 	);
 
+	Entity cameraShake = makeCameraShake();
+
 	// onstart systems
 	setTextSystem(font); // font system is limited to one font
 	setTextOriginSystem();
@@ -124,7 +128,8 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 					Hit_Control
 					(
 						indicator,
-						hitbox
+						hitbox,
+						cameraShake
 					);
 				}
 			}
@@ -155,6 +160,12 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		(
 			score,
 			hitbox
+		);
+		shakeCamera_UpdateSystem
+		(
+			cameraShake,
+			window,
+			dt
 		);
 
 		window.clear();
