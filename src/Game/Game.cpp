@@ -40,6 +40,8 @@ void main() {
 	nc.registerComponent<CScore>();
 	nc.registerComponent<CMode>();
 	nc.registerComponent<CCameraShake>();
+	nc.registerComponent<CScoreFeed>();
+	nc.registerComponent<CScoreLog>();
 
 	sf::Font font;
 	if (!font.openFromFile(FONT_FILEPATH))

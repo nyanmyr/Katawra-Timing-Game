@@ -8,8 +8,9 @@ using sf::Clock;
 using sf::Event;
 using sf::Keyboard::Scancode;
 
-
-// TODO: show how much score got
+// TODO: animate score changing
+// TODO: rename scoreFeed to just feed
+// TODO: add fail log to 'just feed'
 // TODO: add sprites
 // TODO: add sounds
 // TODO: rename window
@@ -98,17 +99,20 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			25.f,
 			25.f
 		},
-		font
+		font,
+		"Test"
 	);
 
 	Entity cameraShake = makeCameraShake();
-
-	// onstart systems
-	setTextSystem(font); // font system is limited to one font
-	setTextOriginSystem();
+	Entity scoreFeed = makeScoreFeed();
 
 	while (window.isOpen())
 	{
+		// in this case the extra baggage is afforable :p
+		setTextSystem(font); // font system is limited to one font
+		setTextOriginSystem();
+		setShapeOriginSystem();
+
 		DeltaTime dt = clock.restart().asSeconds();
 
 		auto& pixelPos = sf::Mouse::getPosition(window);
@@ -127,16 +131,17 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 				{
 					Hit_Control
 					(
+						font,
 						indicator,
 						hitbox,
-						cameraShake
+						cameraShake,
+						scoreFeed
 					);
 				}
 			}
 		}
 
 		// update systems
-		setShapeOriginSystem();
 		spawnHitbox
 		(
 			hitbox,
@@ -166,6 +171,15 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			cameraShake,
 			window,
 			dt
+		);
+		doScoreFeed
+		(
+			{
+				window.getSize().x / 2.f,
+				25.f
+			},
+			dt,
+			scoreFeed
 		);
 
 		window.clear();

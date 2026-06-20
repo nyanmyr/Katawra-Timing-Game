@@ -8,7 +8,8 @@ NacreCoordinator& entityMakerNC = NacreCoordinator::getInstance();
 Entity makeUIText
 (
 	sf::Vector2f pos,
-	sf::Font& font
+	sf::Font& font,
+	std::string str
 )
 {
 	Entity entity = entityMakerNC.createEntity();
@@ -29,7 +30,7 @@ Entity makeUIText
 		CText
 		{
 			text,
-			"testing",
+			str,
 			32,
 			sf::Color::White,
 			TextFormat::MIDDLE
@@ -43,6 +44,64 @@ Entity makeUIText
 		{
 			4,
 			true
+		}
+	);
+
+	return entity;
+}
+
+Entity makeScoreLog
+(
+	sf::Vector2f pos,
+	sf::Font& font,
+	std::string str,
+	float timer,
+	float fadeSet
+)
+{
+	Entity entity = entityMakerNC.createEntity();
+
+	entityMakerNC.addComponent(
+		entity,
+		CPosition
+		{
+			pos.x,
+			pos.y
+		}
+	);
+
+	sf::Text text(font);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CText
+		{
+			text,
+			str,
+			32,
+			sf::Color::White,
+			TextFormat::MIDDLE
+		}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CZIndex
+		{
+			4,
+			true
+		}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CScoreLog
+		{
+			timer,
+			fadeSet,
+			fadeSet
 		}
 	);
 
@@ -386,6 +445,19 @@ Entity makeCameraShake()
 	(
 		entity,
 		CCameraShake{}
+	);
+
+	return entity;
+}
+
+Entity makeScoreFeed()
+{
+	Entity entity = entityMakerNC.createEntity();
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CScoreFeed{}
 	);
 
 	return entity;

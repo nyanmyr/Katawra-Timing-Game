@@ -5,6 +5,7 @@
 #include "Scenes.hpp"
 #include <optional>
 #include <string>
+#include <queue>
 
 enum TextFormat
 {
@@ -149,6 +150,19 @@ struct CCameraShake
 {
 	float intensity = 0.f;
 	float timer = 0.f;
+};
+
+struct CScoreFeed
+{
+	std::queue<Entity> feed;
+	bool positionsSet = false;
+};
+
+struct CScoreLog
+{
+	float timer = 0.f;
+	float fadeSet = 0.f;
+	float fadeTimer = 0.f;
 };
 
 #endif

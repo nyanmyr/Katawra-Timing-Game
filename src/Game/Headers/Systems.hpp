@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "../../Engine/NacreCoordinator.hpp"
 #include "Components.hpp"
+#include "EntityMaker.hpp"
 
 // oughta make some of these parameters as consts
 
@@ -22,9 +23,11 @@ void nextSceneSystem(sf::RenderWindow& window, sf::Font& font);
 
 void Hit_Control
 (
+	sf::Font& font,
 	Entity indicator,
 	Entity hitbox,
-	Entity cameraShake
+	Entity cameraShake,
+	Entity scoreFeed
 );
 void moveIndicator_Update
 (
@@ -59,6 +62,12 @@ void shakeCamera_UpdateSystem
 	Entity cameraShake,
 	sf::RenderWindow& window,
 	DeltaTime dt
+);
+void doScoreFeed
+(
+	sf::Vector2f startPos,
+	DeltaTime dt,
+	Entity scoreFeed
 );
 
 // -------------------------------------------------------

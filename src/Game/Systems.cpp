@@ -281,8 +281,8 @@ void nextSceneSystem(sf::RenderWindow& window, sf::Font& font)
     }
 }
 
-const float HIT_SCORE = 100.f;
-const float BOUNCE_BONUS = 50.f;
+const int HIT_SCORE = 100.f;
+const int BOUNCE_BONUS = 50.f;
 
 const float HIT_INTENSITY = 10.f;
 const float HIT_SHAKE_TIMER = 0.15f;
@@ -290,12 +290,17 @@ const float HIT_SHAKE_TIMER = 0.15f;
 const float FAIL_INTENSITY = 30.f;
 const float FAIL_SHAKE_TIMER = 0.1f;
 
+const float LOG_TIMER = .24f;
+const float FADE_TIMER = .12f;
+
 // TODO: rename systems to start with lowercase
 void Hit_Control
 (
+    sf::Font& font,
     Entity indicator,
     Entity hitbox,
-    Entity cameraShake
+    Entity cameraShake,
+    Entity scoreFeed
 )
 {
     const CPosition& indicPos = systemsNC.getComponentArray<CPosition>()->getData(indicator);
@@ -306,6 +311,7 @@ void Hit_Control
     CHitbox& hit = systemsNC.getComponentArray<CHitbox>()->getData(hitbox);
 
     CCameraShake& shakeCam = systemsNC.getComponentArray<CCameraShake>()->getData(cameraShake);
+    CScoreFeed& feedScore = systemsNC.getComponentArray<CScoreFeed>()->getData(scoreFeed);
 
     //std::cout << "x:" << indicPos.x << "\n";
     //std::cout << "min:" << hitPos.x - (hitTrans.width / 2.f) << " max:" << hitPos.x + (hitTrans.width / 2.f) << "\n\n";
@@ -353,13 +359,61 @@ void Hit_Control
         )
     );
 
-    if (score.bounces < 2)
-    {
-        score.count  += BOUNCE_BONUS;
-    }
+    ++score.hits;
 
     score.count += HIT_SCORE + (HIT_SCORE * dist);
-    ++score.hits;
+    // hit score
+    feedScore.feed.push
+    (
+        makeScoreLog
+        (
+            {
+                50,
+                50
+            },
+            font,
+            "+" + std::to_string(HIT_SCORE) + " SCORE",
+            LOG_TIMER,
+            FADE_TIMER
+        )
+    );
+    // bonus hitscore
+    feedScore.feed.push
+    (
+        makeScoreLog
+        (
+            {
+                50,
+                50
+            },
+            font,
+            "+" + std::to_string((int)(HIT_SCORE * dist)) + " CENTER",
+            LOG_TIMER,
+            FADE_TIMER
+        )
+    );
+
+    if (score.bounces < 2)
+    {
+        score.count += BOUNCE_BONUS;
+        // bonus bounce
+        feedScore.feed.push
+        (
+            makeScoreLog
+            (
+                {
+                    50,
+                    50
+                },
+                font,
+                "+" + std::to_string(BOUNCE_BONUS) + " BONUS",
+                LOG_TIMER,
+                FADE_TIMER
+            )
+        );
+    }
+
+    feedScore.positionsSet = false;
 
     score.bounces = 0;
     hit.spawned = false;
@@ -622,6 +676,85 @@ void shakeCamera_UpdateSystem
     //shakeCam.intensity -= dt;
 
     window.setView(view);
+}
+
+const float LOG_SPACING_Y = 40.f;
+
+void doScoreFeed
+(
+    sf::Vector2f startPos,
+    DeltaTime dt,
+    Entity scoreFeed
+)
+{
+    CScoreFeed& feedScore = systemsNC.getComponentArray<CScoreFeed>()->getData(scoreFeed);
+    
+    if (feedScore.feed.empty())
+    {
+        return;
+    }
+
+    if (!feedScore.positionsSet)
+    {
+        std::queue<Entity> temp;
+
+        int count = 0;
+
+        while (!feedScore.feed.empty())
+        {
+            CPosition& pos = systemsNC.getComponentArray<CPosition>()->getData(feedScore.feed.front());
+            pos.x = startPos.x;
+            pos.y = startPos.y + (LOG_SPACING_Y * count);
+            ++count;
+
+            temp.push(feedScore.feed.front());
+            feedScore.feed.pop();
+        }
+
+        while (!temp.empty())
+        {
+            feedScore.feed.push(temp.front());
+            temp.pop();
+        }
+
+        feedScore.positionsSet = true;
+    }
+
+    CScoreLog& scoreLog = systemsNC.getComponentArray<CScoreLog>()->getData(feedScore.feed.front());
+    CText& scoreText = systemsNC.getComponentArray<CText>()->getData(feedScore.feed.front());
+
+    if (scoreLog.timer > 0.f)
+    {
+        scoreLog.timer -= dt;
+        //std::cout << "timer: " << scoreLog.timer << "\n";
+        return;
+    }
+
+    if (scoreLog.fadeTimer > 0.f)
+    {
+        scoreLog.fadeTimer -= dt;
+        //std::cout << "fadeTimer: " << scoreLog.fadeTimer << "\n";
+        scoreText.box.value().setFillColor
+        (
+            sf::Color
+            (
+                scoreText.box.value().getFillColor().r,
+                scoreText.box.value().getFillColor().g,
+                scoreText.box.value().getFillColor().b,
+                inverseLerp_Auxiliary
+                (
+                    0.f,
+                    scoreLog.fadeSet,
+                    scoreLog.fadeTimer
+                ) * 255
+            )
+        );
+        return;
+    }
+
+    feedScore.positionsSet = false;
+    systemsNC.deleteEntity(feedScore.feed.front());
+    feedScore.feed.pop();
 }
 
 // -------------------------------------------------------

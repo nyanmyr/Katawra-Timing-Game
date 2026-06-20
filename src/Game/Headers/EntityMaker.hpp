@@ -7,7 +7,17 @@
 Entity makeUIText
 (
 	sf::Vector2f pos,
-	sf::Font& font
+	sf::Font& font,
+	std::string str
+);
+
+Entity makeScoreLog
+(
+	sf::Vector2f pos,
+	sf::Font& font,
+	std::string str,
+	float timer,
+	float fadeSet
 );
 
 Entity& makeButton(sf::Vector2f pos, sf::Vector2f size, Scene scene, std::string str, sf::Font& font);
@@ -36,5 +46,6 @@ Entity& makeHitbox
 );
 
 Entity makeCameraShake();
+Entity makeScoreFeed();
 
 #endif
