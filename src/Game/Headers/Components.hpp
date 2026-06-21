@@ -133,6 +133,8 @@ struct CScore
 	int count = 0;
 	int hits = 0;
 	int bounces = 0;
+	int unaccounted = 0;
+	float fillTimer = 0.f;
 };
 
 enum GameMode

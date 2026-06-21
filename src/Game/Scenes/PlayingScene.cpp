@@ -8,7 +8,6 @@ using sf::Clock;
 using sf::Event;
 using sf::Keyboard::Scancode;
 
-// TODO: animate score changing
 // TODO: rename scoreFeed to just feed
 // TODO: add fail log to 'just feed'
 // TODO: add sprites
@@ -164,7 +163,8 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		displayScore
 		(
 			score,
-			hitbox
+			hitbox,
+			dt
 		);
 		shakeCamera_UpdateSystem
 		(

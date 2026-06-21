@@ -293,6 +293,8 @@ const float FAIL_SHAKE_TIMER = 0.1f;
 const float LOG_TIMER = .24f;
 const float FADE_TIMER = .12f;
 
+const float FILL_TIMER = 1.f;
+
 // TODO: rename systems to start with lowercase
 void Hit_Control
 (
@@ -334,8 +336,10 @@ void Hit_Control
         //std::cout << "Missed!" << "\n";
         score.count = 0;
         score.hits = 0;
-
         score.bounces = 0;
+        score.unaccounted = 0;
+        score.fillTimer = 0;
+
         hit.spawned = false;
         return;
     }
@@ -361,7 +365,7 @@ void Hit_Control
 
     ++score.hits;
 
-    score.count += HIT_SCORE + (HIT_SCORE * dist);
+    score.unaccounted += HIT_SCORE + (HIT_SCORE * dist);
     // hit score
     feedScore.feed.push
     (
@@ -395,7 +399,7 @@ void Hit_Control
 
     if (score.bounces < 2)
     {
-        score.count += BOUNCE_BONUS;
+        score.unaccounted += BOUNCE_BONUS;
         // bonus bounce
         feedScore.feed.push
         (
@@ -414,6 +418,12 @@ void Hit_Control
     }
 
     feedScore.positionsSet = false;
+
+    // resets the fill timer when not already ticking
+    if (score.fillTimer <= 0.f)
+    {
+        score.fillTimer = FILL_TIMER;
+    }
 
     score.bounces = 0;
     hit.spawned = false;
@@ -613,13 +623,37 @@ void dragSystem(const DeltaTime dt)
 void displayScore
 (
     Entity score,
-    Entity hitbox
+    Entity hitbox,
+    DeltaTime dt
 )
 {
     CText& scoreText = systemsNC.getComponentArray<CText>()->getData(score);
     CScore& hitScore = systemsNC.getComponentArray<CScore>()->getData(hitbox);
 
     scoreText.box->setString("Score: " + std::to_string(hitScore.count));
+
+
+    if (hitScore.fillTimer <= 0.f)
+    {
+        return;
+    }
+
+    float fillPercent = 1.f - inverseLerp_Auxiliary
+    (
+        0.f,
+        FILL_TIMER,
+        hitScore.fillTimer
+    );
+
+    int fillAdd = std::ceil(hitScore.unaccounted * fillPercent);
+
+    //std::cout << "hitScore.unaccounted: " << hitScore.unaccounted << "\n";
+    //std::cout << "fillAdd: " << fillAdd << "\n";
+
+    hitScore.count += fillAdd;
+    hitScore.unaccounted -= fillAdd;
+
+    hitScore.fillTimer -= dt;
 }
 
 void shakeCamera_UpdateSystem

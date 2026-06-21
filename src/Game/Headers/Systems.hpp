@@ -54,7 +54,8 @@ void dragSystem(const DeltaTime dt);
 void displayScore
 (
 	Entity score,
-	Entity hitbox
+	Entity hitbox,
+	DeltaTime dt
 );
 
 void shakeCamera_UpdateSystem
