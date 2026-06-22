@@ -11,10 +11,11 @@ Entity makeUIText
 	std::string str
 );
 
-Entity makeScoreLog
+Entity makeLog
 (
 	sf::Vector2f pos,
 	sf::Font& font,
+	sf::Color col,
 	std::string str,
 	float timer,
 	float fadeSet
@@ -46,6 +47,6 @@ Entity& makeHitbox
 );
 
 Entity makeCameraShake();
-Entity makeScoreFeed();
+Entity makeFeed();
 
 #endif

@@ -8,12 +8,11 @@ using sf::Clock;
 using sf::Event;
 using sf::Keyboard::Scancode;
 
-// TODO: rename scoreFeed to just feed
-// TODO: add fail log to 'just feed'
 // TODO: add sprites
 // TODO: add sounds
 // TODO: rename window
 // TODO: make window and application logo
+// TODO: bug fixing
 // TODO: publish
 
 void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficulty) {
@@ -103,7 +102,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 	);
 
 	Entity cameraShake = makeCameraShake();
-	Entity scoreFeed = makeScoreFeed();
+	Entity feed = makeFeed();
 
 	while (window.isOpen())
 	{
@@ -134,7 +133,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 						indicator,
 						hitbox,
 						cameraShake,
-						scoreFeed
+						feed
 					);
 				}
 			}
@@ -172,14 +171,14 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			window,
 			dt
 		);
-		doScoreFeed
+		doFeed
 		(
 			{
 				window.getSize().x / 2.f,
 				25.f
 			},
 			dt,
-			scoreFeed
+			feed
 		);
 
 		window.clear();

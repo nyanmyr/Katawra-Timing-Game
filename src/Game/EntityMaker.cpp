@@ -50,10 +50,11 @@ Entity makeUIText
 	return entity;
 }
 
-Entity makeScoreLog
+Entity makeLog
 (
 	sf::Vector2f pos,
 	sf::Font& font,
+	sf::Color col,
 	std::string str,
 	float timer,
 	float fadeSet
@@ -79,7 +80,7 @@ Entity makeScoreLog
 			text,
 			str,
 			32,
-			sf::Color::White,
+			col,
 			TextFormat::MIDDLE
 		}
 	);
@@ -97,7 +98,7 @@ Entity makeScoreLog
 	entityMakerNC.addComponent
 	(
 		entity,
-		CScoreLog
+		CLog
 		{
 			timer,
 			fadeSet,
@@ -450,14 +451,14 @@ Entity makeCameraShake()
 	return entity;
 }
 
-Entity makeScoreFeed()
+Entity makeFeed()
 {
 	Entity entity = entityMakerNC.createEntity();
 
 	entityMakerNC.addComponent
 	(
 		entity,
-		CScoreFeed{}
+		CFeed{}
 	);
 
 	return entity;

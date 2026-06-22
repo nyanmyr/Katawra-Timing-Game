@@ -154,13 +154,13 @@ struct CCameraShake
 	float timer = 0.f;
 };
 
-struct CScoreFeed
+struct CFeed
 {
 	std::queue<Entity> feed;
 	bool positionsSet = false;
 };
 
-struct CScoreLog
+struct CLog
 {
 	float timer = 0.f;
 	float fadeSet = 0.f;

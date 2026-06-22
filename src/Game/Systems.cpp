@@ -295,6 +295,9 @@ const float FADE_TIMER = .12f;
 
 const float FILL_TIMER = 1.f;
 
+const sf::Color SCORE_COLOR = sf::Color::White;
+const sf::Color FAIL_COLOR = sf::Color::Red;
+
 // TODO: rename systems to start with lowercase
 void Hit_Control
 (
@@ -313,7 +316,7 @@ void Hit_Control
     CHitbox& hit = systemsNC.getComponentArray<CHitbox>()->getData(hitbox);
 
     CCameraShake& shakeCam = systemsNC.getComponentArray<CCameraShake>()->getData(cameraShake);
-    CScoreFeed& feedScore = systemsNC.getComponentArray<CScoreFeed>()->getData(scoreFeed);
+    CFeed& feed = systemsNC.getComponentArray<CFeed>()->getData(scoreFeed);
 
     //std::cout << "x:" << indicPos.x << "\n";
     //std::cout << "min:" << hitPos.x - (hitTrans.width / 2.f) << " max:" << hitPos.x + (hitTrans.width / 2.f) << "\n\n";
@@ -341,6 +344,23 @@ void Hit_Control
         score.fillTimer = 0;
 
         hit.spawned = false;
+
+        feed.feed.push
+        (
+            makeLog
+            (
+                {
+                    50,
+                    50
+                },
+                font,
+                FAIL_COLOR,
+                "FAIL!",
+                LOG_TIMER,
+                FADE_TIMER
+            )
+        );
+
         return;
     }
 
@@ -367,30 +387,32 @@ void Hit_Control
 
     score.unaccounted += HIT_SCORE + (HIT_SCORE * dist);
     // hit score
-    feedScore.feed.push
+    feed.feed.push
     (
-        makeScoreLog
+        makeLog
         (
             {
                 50,
                 50
             },
             font,
+            SCORE_COLOR,
             "+" + std::to_string(HIT_SCORE) + " SCORE",
             LOG_TIMER,
             FADE_TIMER
         )
     );
     // bonus hitscore
-    feedScore.feed.push
+    feed.feed.push
     (
-        makeScoreLog
+        makeLog
         (
             {
                 50,
                 50
             },
             font,
+            SCORE_COLOR,
             "+" + std::to_string((int)(HIT_SCORE * dist)) + " CENTER",
             LOG_TIMER,
             FADE_TIMER
@@ -401,15 +423,16 @@ void Hit_Control
     {
         score.unaccounted += BOUNCE_BONUS;
         // bonus bounce
-        feedScore.feed.push
+        feed.feed.push
         (
-            makeScoreLog
+            makeLog
             (
                 {
                     50,
                     50
                 },
                 font,
+                SCORE_COLOR,
                 "+" + std::to_string(BOUNCE_BONUS) + " BONUS",
                 LOG_TIMER,
                 FADE_TIMER
@@ -417,7 +440,7 @@ void Hit_Control
         );
     }
 
-    feedScore.positionsSet = false;
+    feed.positionsSet = false;
 
     // resets the fill timer when not already ticking
     if (score.fillTimer <= 0.f)
@@ -714,14 +737,14 @@ void shakeCamera_UpdateSystem
 
 const float LOG_SPACING_Y = 40.f;
 
-void doScoreFeed
+void doFeed
 (
     sf::Vector2f startPos,
     DeltaTime dt,
-    Entity scoreFeed
+    Entity feed
 )
 {
-    CScoreFeed& feedScore = systemsNC.getComponentArray<CScoreFeed>()->getData(scoreFeed);
+    CFeed& feedScore = systemsNC.getComponentArray<CFeed>()->getData(feed);
     
     if (feedScore.feed.empty())
     {
@@ -754,7 +777,7 @@ void doScoreFeed
         feedScore.positionsSet = true;
     }
 
-    CScoreLog& scoreLog = systemsNC.getComponentArray<CScoreLog>()->getData(feedScore.feed.front());
+    CLog& scoreLog = systemsNC.getComponentArray<CLog>()->getData(feedScore.feed.front());
     CText& scoreText = systemsNC.getComponentArray<CText>()->getData(feedScore.feed.front());
 
     if (scoreLog.timer > 0.f)

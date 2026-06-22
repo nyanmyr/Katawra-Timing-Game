@@ -64,11 +64,11 @@ void shakeCamera_UpdateSystem
 	sf::RenderWindow& window,
 	DeltaTime dt
 );
-void doScoreFeed
+void doFeed
 (
 	sf::Vector2f startPos,
 	DeltaTime dt,
-	Entity scoreFeed
+	Entity feed
 );
 
 // -------------------------------------------------------
