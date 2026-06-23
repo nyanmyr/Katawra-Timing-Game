@@ -10,6 +10,8 @@ using sf::Keyboard::Scancode;
 
 // TODO: add sprites
 // TODO: add sounds
+// TODO: time it right intro
+// TODO: dark mode
 // TODO: rename window
 // TODO: make window and application logo
 // TODO: bug fixing
@@ -103,6 +105,10 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 
 	Entity cameraShake = makeCameraShake();
 	Entity feed = makeFeed();
+	Entity loadedTextures = makeLoadedTexturesContainer();
+
+	loadTextures_StartSystem(loadedTextures);
+	loadSprites_StartSystem(loadedTextures);
 
 	while (window.isOpen())
 	{
@@ -110,6 +116,8 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		setTextSystem(font); // font system is limited to one font
 		setTextOriginSystem();
 		setShapeOriginSystem();
+
+		setSpriteOrigins_StartSystem();
 
 		DeltaTime dt = clock.restart().asSeconds();
 

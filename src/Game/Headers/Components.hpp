@@ -19,11 +19,6 @@ struct CPosition
 	float x, y;
 };
 
-struct CShape
-{
-	sf::RectangleShape rect;
-};
-
 struct CTransform
 {
 	float width = 0.f, height = 0.f;
@@ -165,6 +160,36 @@ struct CLog
 	float timer = 0.f;
 	float fadeSet = 0.f;
 	float fadeTimer = 0.f;
+};
+
+struct CSprite
+{
+	std::optional<sf::Sprite> body;
+};
+
+// might reorganize this later
+enum TextureEnum
+{
+	INDICATOR,
+	BAR,
+	FILL,
+	BACKGROUND,
+	TEXTURE_PLACEHOLDER_PLACEHOLDER
+};
+
+struct CTexture
+{
+	TextureEnum data;
+
+	CTexture() = default;
+	CTexture(TextureEnum texture) :
+		data(texture) {
+	};
+};
+
+struct CTexturesContainer
+{
+	std::unordered_map<TextureEnum, sf::Texture> map;
 };
 
 #endif

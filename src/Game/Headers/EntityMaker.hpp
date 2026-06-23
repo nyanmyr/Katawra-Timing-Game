@@ -48,5 +48,6 @@ Entity& makeHitbox
 
 Entity makeCameraShake();
 Entity makeFeed();
+Entity makeLoadedTexturesContainer();
 
 #endif

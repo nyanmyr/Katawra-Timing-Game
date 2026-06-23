@@ -102,6 +102,87 @@ void setShapeOriginSystem()
     }
 }
 
+void loadTextures_StartSystem(Entity loadedTextures)
+{
+    auto& texturesContainerArray = systemsNC.getComponentArray<CTexturesContainer>();
+
+    if (!texturesContainerArray->hasData(loadedTextures))
+    {
+        return;
+    }
+
+    CTexturesContainer& container = texturesContainerArray->getData(loadedTextures);
+
+    container.map.emplace(TextureEnum::INDICATOR, sf::Texture(SPRITES_PATH "indicator_texture.png"));
+    container.map.emplace(TextureEnum::BAR, sf::Texture(SPRITES_PATH "bar_texture.png"));
+    container.map.emplace(TextureEnum::FILL, sf::Texture(SPRITES_PATH "fill_texture.jpg"));
+    container.map.emplace(TextureEnum::BACKGROUND, sf::Texture(SPRITES_PATH "background_texture.jpg"));
+    container.map.emplace(TextureEnum::TEXTURE_PLACEHOLDER_PLACEHOLDER, sf::Texture(SPRITES_PATH "placeholder_placeholder.jpg"));
+}
+
+void loadSprites_StartSystem(Entity loadedTextures)
+{
+    auto& spriteArray = systemsNC.getComponentArray<CSprite>();
+    auto& transformArray = systemsNC.getComponentArray<CTransform>();
+    auto& textureArray = systemsNC.getComponentArray<CTexture>();
+    auto& texturesContainerArray = systemsNC.getComponentArray<CTexturesContainer>();
+
+    if (!texturesContainerArray->hasData(loadedTextures))
+    {
+        return;
+    }
+
+    CTexturesContainer& container = texturesContainerArray->getData(loadedTextures);
+
+    for (auto& [entity, sprite] : spriteArray->getAll())
+    {
+        if
+            (
+                !transformArray->hasData(entity) ||
+                !textureArray->hasData(entity)
+                )
+        {
+            continue;
+        }
+
+        CTexture& texture = textureArray->getData(entity);
+        CTransform& transform = transformArray->getData(entity);
+
+        sprite.body.emplace(container.map[texture.data]);
+        sprite.body->setScale
+        (
+            {
+                transform.width / sprite.body->getGlobalBounds().size.x,
+                transform.height / sprite.body->getGlobalBounds().size.y
+            }
+        );
+    }
+}
+void setSpriteOrigins_StartSystem()
+{
+    auto& originArray = systemsNC.getComponentArray<COrigin>();
+    auto& spriteArray = systemsNC.getComponentArray<CSprite>();
+
+    for (auto& [entity, sprite] : spriteArray->getAll())
+    {
+        if (!originArray->hasData(entity))
+        {
+            continue;
+        }
+
+        COrigin& origin = originArray->getData(entity);
+
+        sprite.body->setOrigin
+        (
+            {
+                origin.offsetX / sprite.body->getScale().x,
+                origin.offsetY / sprite.body->getScale().y
+            }
+        );
+
+    }
+}
+
 // -------------------------------------------------------
 // update systems
 // -------------------------------------------------------

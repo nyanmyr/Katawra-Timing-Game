@@ -463,3 +463,16 @@ Entity makeFeed()
 
 	return entity;
 }
+
+Entity makeLoadedTexturesContainer()
+{
+	Entity entity = entityMakerNC.createEntity();
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CTexturesContainer{}
+	);
+
+	return entity;
+}

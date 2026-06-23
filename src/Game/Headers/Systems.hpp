@@ -15,6 +15,11 @@ void setTextSystem(sf::Font& font);
 void setTextOriginSystem();
 void setShapeOriginSystem();
 
+void loadTextures_StartSystem(Entity loadedTextures);
+
+void loadSprites_StartSystem(Entity loadedTextures);
+void setSpriteOrigins_StartSystem();
+
 // -------------------------------------------------------
 // update systems
 // -------------------------------------------------------

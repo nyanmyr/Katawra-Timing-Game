@@ -42,6 +42,9 @@ void main() {
 	nc.registerComponent<CCameraShake>();
 	nc.registerComponent<CFeed>();
 	nc.registerComponent<CLog>();
+	nc.registerComponent<CSprite>();
+	nc.registerComponent<CTexture>();
+	nc.registerComponent<CTexturesContainer>();
 
 	sf::Font font;
 	if (!font.openFromFile(FONT_FILEPATH))
