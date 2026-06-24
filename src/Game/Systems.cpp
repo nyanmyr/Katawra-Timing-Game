@@ -79,28 +79,6 @@ void setTextOriginSystem()
         );
     }
 }
-void setShapeOriginSystem()
-{
-    auto& origins = systemsNC.getComponentArray<COrigin>();
-    auto& shapes = systemsNC.getComponentArray<CShape>();
-
-    for (auto& [entity, shape] : shapes->getAll())
-    {
-        if (!origins->hasData(entity))
-        {
-            continue;
-        }
-
-        COrigin& origin = origins->getData(entity);
-        shape.rect.setOrigin
-        (
-            {
-                origin.offsetX,
-                origin.offsetY
-            }
-        );
-    }
-}
 
 void loadTextures_StartSystem(Entity loadedTextures)
 {
@@ -179,7 +157,6 @@ void setSpriteOrigins_StartSystem()
                 origin.offsetY / sprite.body->getScale().y
             }
         );
-
     }
 }
 
@@ -195,48 +172,96 @@ const float HOVER_SCALE_Y = 1.1f;
 const float CLICKED_SCALE_X = 0.9f;
 const float CLICKED_SCALE_Y = 0.9f;
 
-void buttonClickedSystem(sf::Vector2i& mouseVector, bool& buttonClicked, const DeltaTime dt)
+void buttonClicks_UpdateSystem(sf::Vector2i mouseVector)
 {
-    //auto& shapes = systemsNC.getComponentArray<CShape>();
-    auto& shapes = systemsNC.getComponentArray<CShape>();
-    auto& buttons = systemsNC.getComponentArray<CButton>();
-    auto& origins = systemsNC.getComponentArray<COrigin>();
-    auto& texts = systemsNC.getComponentArray<CText>();
-    auto& nextScenes = systemsNC.getComponentArray<CNextScene>();
-    auto& transforms = systemsNC.getComponentArray<CTransform>();
-    auto& positions = systemsNC.getComponentArray<CPosition>();
+    auto& spriteArray = systemsNC.getComponentArray<CSprite>();
+    auto& buttonArray = systemsNC.getComponentArray<CButton>();
+    auto& originArray = systemsNC.getComponentArray<COrigin>();
+    auto& transformArray = systemsNC.getComponentArray<CTransform>();
+    auto& positionArray = systemsNC.getComponentArray<CPosition>();
 
-    for (auto& [entity, button] : buttons->getAll())
+    for (auto& [entity, button] : buttonArray->getAll())
     {
         if (!button.enabled)
         {
             continue;
         }
 
-        // buttons must have a shape, origin, and text
-        if (origins->hasData(entity) &&
-            texts->hasData(entity) &&
-            positions->hasData(entity) &&
-            shapes->hasData(entity))
+        // buttonArray must have a shape, origin, and text
+        if 
+        (
+            originArray->hasData(entity) &&
+            positionArray->hasData(entity) &&
+            spriteArray->hasData(entity)
+        )
         {
-            //std::cout << "button.top: " << button.top << "\n";
-            //std::cout << "button.left: " << button.left << "\n";
-            COrigin& origin = origins->getData(entity);
-            CText& text = texts->getData(entity);
-            CTransform& transform = transforms->getData(entity);
-            CPosition& position = positions->getData(entity);
-            CShape& shape = shapes->getData(entity);
+            ////std::cout << "button.top: " << button.top << "\n";
+            ////std::cout << "button.left: " << button.left << "\n";
+            COrigin& origin = originArray->getData(entity);
+            CTransform& transform = transformArray->getData(entity);
+            CPosition& position = positionArray->getData(entity);
+            CSprite& sprite = spriteArray->getData(entity);
 
-            button.clicked = false; // reset
+            if 
+            (
+                mouseVector.x > position.x - origin.offsetX &&
+                mouseVector.x < position.x + transform.width - origin.offsetX &&
+                mouseVector.y > position.y - origin.offsetY &&
+                mouseVector.y < position.y + transform.height - origin.offsetY
+            )
+            {
+                button.clickedTimer = button.clickedDuration;
+            }
+        }
+    }
+}
+void button_Update
+(
+    sf::Vector2i mouseVector,
+    DeltaTime dt
+)
+{
+    auto& spriteArray = systemsNC.getComponentArray<CSprite>();
+    auto& buttonArray = systemsNC.getComponentArray<CButton>();
+    auto& originArray = systemsNC.getComponentArray<COrigin>();
+    auto& textArray = systemsNC.getComponentArray<CText>();
+    auto& nextSceneArray = systemsNC.getComponentArray<CNextScene>();
+    auto& transformArray = systemsNC.getComponentArray<CTransform>();
+    auto& positionArray = systemsNC.getComponentArray<CPosition>();
+
+    for (auto& [entity, button] : buttonArray->getAll())
+    {
+        if (!button.enabled)
+        {
+            continue;
+        }
+
+        // buttonArray must have a shape, origin, and text
+        if
+        (
+            originArray->hasData(entity) &&
+            textArray->hasData(entity) &&
+            positionArray->hasData(entity) &&
+            spriteArray->hasData(entity)
+        )
+        {
+            ////std::cout << "button.top: " << button.top << "\n";
+            ////std::cout << "button.left: " << button.left << "\n";
+            COrigin& origin = originArray->getData(entity);
+            CText& text = textArray->getData(entity);
+            CTransform& transform = transformArray->getData(entity);
+            CPosition& position = positionArray->getData(entity);
+            CSprite& sprite = spriteArray->getData(entity);
+
 
             if (button.clickedTimer <= 0)
             {
-                shape.rect.setScale
+                sprite.body->setScale
                 (
                     sf::Vector2f
                     (
-                        DEFAULT_SCALE_X,
-                        DEFAULT_SCALE_Y
+                        DEFAULT_SCALE_X * (transform.width / sprite.body->getTexture().getSize().x),
+                        DEFAULT_SCALE_Y * (transform.height / sprite.body->getTexture().getSize().y)
                     )
                 );
                 text.box.value().setScale
@@ -247,37 +272,39 @@ void buttonClickedSystem(sf::Vector2i& mouseVector, bool& buttonClicked, const D
                         DEFAULT_SCALE_Y
                     )
                 );
+                button.clicked = false; // reset
             }
             else
             {
                 button.clickedTimer -= dt;
-
                 if (button.clickedTimer <= 0)
                 {
                     button.clicked = true;
-
-                    if (nextScenes->hasData(entity))
+                    if (nextSceneArray->hasData(entity))
                     {
-                        //std::cout << "starting next scene." << "\n";
-                        CNextScene& nextScene = nextScenes->getData(entity);
+                        ////std::cout << "starting next scene." << "\n";
+                        CNextScene& nextScene = nextSceneArray->getData(entity);
                         nextScene.active = true;
                     }
                 }
             }
 
             // button hovering
-            if (mouseVector.x > position.x - origin.offsetX &&
+            if
+            (
+                mouseVector.x > position.x - origin.offsetX &&
                 mouseVector.x < position.x + transform.width - origin.offsetX &&
                 mouseVector.y > position.y - origin.offsetY &&
                 mouseVector.y < position.y + transform.height - origin.offsetY &&
-                button.clickedTimer <= 0)
+                button.clickedTimer <= 0
+            )
             {
-                shape.rect.setScale
+                sprite.body->setScale
                 (
                     sf::Vector2f
                     (
-                        HOVER_SCALE_X,
-                        HOVER_SCALE_Y
+                        HOVER_SCALE_X * (transform.width / sprite.body->getTexture().getSize().x),
+                        HOVER_SCALE_Y * (transform.height / sprite.body->getTexture().getSize().y)
                     )
                 );
                 text.box.value().setScale
@@ -288,22 +315,17 @@ void buttonClickedSystem(sf::Vector2i& mouseVector, bool& buttonClicked, const D
                         HOVER_SCALE_Y
                     )
                 );
-
-                if (buttonClicked)
-                {
-                    button.clickedTimer = button.clickedDuration;
-                }
             }
 
             // button clicking
             if (button.clickedTimer > 0)
             {
-                shape.rect.setScale
+                sprite.body->setScale
                 (
                     sf::Vector2f
                     (
-                        CLICKED_SCALE_X,
-                        CLICKED_SCALE_Y
+                        CLICKED_SCALE_X * (transform.width / sprite.body->getTexture().getSize().x),
+                        CLICKED_SCALE_Y * (transform.height / sprite.body->getTexture().getSize().y)
                     )
                 );
                 text.box.value().setScale
@@ -569,6 +591,8 @@ void moveIndicator_Update
     }
 }
 
+const float HITBOX_HEIGHT = 11.5f;
+
 void spawnHitbox
 (
     Entity hitbox,
@@ -583,7 +607,7 @@ void spawnHitbox
     const CScore& score = systemsNC.getComponentArray<CScore>()->getData(hitbox);
     CHitbox& hit = systemsNC.getComponentArray<CHitbox>()->getData(hitbox);
     CPosition& hitPos = systemsNC.getComponentArray<CPosition>()->getData(hitbox);
-    CShape& hitRect = systemsNC.getComponentArray<CShape>()->getData(hitbox);
+    CSprite& hitSprite = systemsNC.getComponentArray<CSprite>()->getData(hitbox);
     CTransform& hitTrans = systemsNC.getComponentArray<CTransform>()->getData(hitbox);
     COrigin& hirOrig = systemsNC.getComponentArray<COrigin>()->getData(hitbox);
 
@@ -611,19 +635,23 @@ void spawnHitbox
     hitPos.x = distrib(gen);
     hitPos.y = slidPos.y;
 
-    hitRect.rect.setSize
+    hitTrans.width = spawnSize;
+    hitTrans.height = HITBOX_HEIGHT;
+
+    hirOrig.offsetX = hitTrans.width / 2.f;
+    hirOrig.offsetY = HITBOX_HEIGHT / 2.f;
+
+    //std::cout << "slidTrans.height: " << slidTrans.height << "\n";
+    //std::cout << "TexX: " << hitSprite.body->getTexture().getSize().x << "\n";
+    //std::cout << "TexY: " << hitSprite.body->getTexture().getSize().y << "\n";
+
+    hitSprite.body->setScale
     (
         {
-            spawnSize,
-            slidTrans.height
+            spawnSize / hitSprite.body->getTexture().getSize().x,
+            HITBOX_HEIGHT / hitSprite.body->getTexture().getSize().y
         }
     );
-
-    hitTrans.width = spawnSize;
-    hitTrans.height = slidTrans.height;
-
-    hirOrig.offsetX = spawnSize / 2.f;
-    hirOrig.offsetY = slidTrans.height / 2.f;
 
     hit.spawned = true;
 }
@@ -914,42 +942,50 @@ void zIndexSystem(std::queue<Entity>& renderQueue)
         renderQueue.push(entity);
     }
 }
-void renderSystem(sf::RenderWindow& window, std::queue<Entity>& renderQueue)
+void renderSystem
+(
+    sf::RenderWindow& window,
+    std::queue<Entity>& renderQueue
+)
+
 {
-    auto& shapes = systemsNC.getComponentArray<CShape>();
-    auto& positions = systemsNC.getComponentArray<CPosition>();
-    auto& texts = systemsNC.getComponentArray<CText>();
+    auto& spriteArray = systemsNC.getComponentArray<CSprite>();
+    auto& positionArray = systemsNC.getComponentArray<CPosition>();
+    auto& textArray = systemsNC.getComponentArray<CText>();
 
     while (!renderQueue.empty())
     {
         Entity& popped = renderQueue.front();
-        //std::cout << "popped: " << popped << "\n";
+        ////std::cout << "popped: " << popped << "\n";
 
-        if (!positions->hasData(popped))
+        if
+            (
+                !positionArray->hasData(popped)
+                )
         {
             // this means the entity does not have a position component
             continue;
         }
 
-        CPosition& pos = positions->getData(popped);
+        CPosition& pos = positionArray->getData(popped);
 
-        if (shapes->hasData(popped))
+        if (spriteArray->hasData(popped))
         {
-            CShape& shape = shapes->getData(popped);
+            CSprite& sprite = spriteArray->getData(popped);
 
-            shape.rect.setPosition
+            sprite.body->setPosition
             (
                 {
                     pos.x,
                     pos.y
                 }
             );
-            window.draw(shape.rect);
+            window.draw(sprite.body.value());
         }
 
-        if (texts->hasData(popped))
+        if (textArray->hasData(popped))
         {
-            CText& text = texts->getData(popped);
+            CText& text = textArray->getData(popped);
 
             text.box.value().setPosition
             (

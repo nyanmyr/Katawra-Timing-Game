@@ -109,7 +109,15 @@ Entity makeLog
 	return entity;
 }
 
-Entity& makeButton(sf::Vector2f pos, sf::Vector2f size, Scene scene, std::string str, sf::Font& font)
+Entity& makeButton
+(
+	sf::Vector2f pos,
+	sf::Vector2f size,
+	TextureEnum texture,
+	std::string str,
+	sf::Font& font,
+	Scene scene
+)
 {
 	Entity entity = entityMakerNC.createEntity();
 
@@ -130,15 +138,19 @@ Entity& makeButton(sf::Vector2f pos, sf::Vector2f size, Scene scene, std::string
 			size.y
 		}
 	);
-	sf::RectangleShape rect(sf::Vector2f(size.x, size.y));
+
 	entityMakerNC.addComponent
 	(
 		entity,
-		CShape
-		{
-			rect
-		}
+		CTexture{ texture }
 	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSprite{}
+	);
+
 	entityMakerNC.addComponent
 	(
 		entity,
@@ -195,6 +207,7 @@ Entity& makeButton(sf::Vector2f pos, sf::Vector2f size, Scene scene, std::string
 
 Entity& makeIndicator
 (
+	TextureEnum texture,
 	sf::Vector2f pos,
 	sf::Vector2f size,
 	float speed,
@@ -222,16 +235,18 @@ Entity& makeIndicator
 		}
 	);
 
-	sf::RectangleShape rect(sf::Vector2f(size.x, size.y));
-	rect.setFillColor(sf::Color::Blue);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CTexture{ texture }
+	);
 
 	entityMakerNC.addComponent
 	(
 		entity,
-		CShape{
-			rect
-		}
+		CSprite{}
 	);
+
 	entityMakerNC.addComponent
 	(
 		entity,
@@ -271,6 +286,7 @@ Entity& makeIndicator
 
 Entity& makeSlider
 (
+	TextureEnum texture,
 	sf::Vector2f pos,
 	sf::Vector2f size,
 	sf::Vector2f slider
@@ -297,16 +313,18 @@ Entity& makeSlider
 		}
 	);
 
-	sf::RectangleShape rect(sf::Vector2f(size.x, size.y));
-	rect.setFillColor(sf::Color::Green);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CTexture{ texture }
+	);
 
 	entityMakerNC.addComponent
 	(
 		entity,
-		CShape{
-			rect
-		}
+		CSprite{}
 	);
+
 	entityMakerNC.addComponent
 	(
 		entity,
@@ -346,6 +364,7 @@ Entity& makeSlider
 
 Entity& makeHitbox
 (
+	TextureEnum texture,
 	Entity slider,
 	float startSize,
 	float minSize,
@@ -373,16 +392,18 @@ Entity& makeHitbox
 		}
 	);
 
-	sf::RectangleShape rect(sf::Vector2f(0.f, 0.f));
-	rect.setFillColor(sf::Color::White);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CTexture{ texture }
+	);
 
 	entityMakerNC.addComponent
 	(
 		entity,
-		CShape{
-			rect
-		}
+		CSprite{}
 	);
+	
 	entityMakerNC.addComponent
 	(
 		entity,

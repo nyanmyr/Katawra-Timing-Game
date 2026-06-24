@@ -23,7 +23,6 @@ void main() {
 
 	// components registration
 	nc.registerComponent<CPosition>();
-	nc.registerComponent<CShape>();
 	nc.registerComponent<CTransform>();
 	nc.registerComponent<COrigin>();
 	nc.registerComponent<CButton>();

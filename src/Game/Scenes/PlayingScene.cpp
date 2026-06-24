@@ -8,13 +8,17 @@ using sf::Clock;
 using sf::Event;
 using sf::Keyboard::Scancode;
 
-// TODO: add sprites
 // TODO: add sounds
 // TODO: time it right intro
+// FIX: add background sprite
 // TODO: dark mode
+// TODO: display number of hits
+// TODO: clear feed when fail
 // TODO: rename window
 // TODO: make window and application logo
 // TODO: bug fixing
+// FIX: rename makers to correspond to sprite names
+// FIX: make a seperate load texture for menu scene
 // TODO: publish
 
 void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficulty) {
@@ -57,6 +61,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 	// entity instantiation
 	Entity indicator = makeIndicator
 	(
+		TextureEnum::INDICATOR,
 		{
 			window.getSize().x / 2.f,
 			window.getSize().y / 2.f
@@ -71,6 +76,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 
 	Entity slider = makeSlider
 	(
+		TextureEnum::BAR,
 		{
 			window.getSize().x / 2.f,
 			window.getSize().y / 2.f
@@ -87,6 +93,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 
 	Entity hitbox = makeHitbox
 	(
+		TextureEnum::FILL,
 		slider,
 		startSize, // start size
 		minSize, // min size
@@ -115,7 +122,6 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		// in this case the extra baggage is afforable :p
 		setTextSystem(font); // font system is limited to one font
 		setTextOriginSystem();
-		setShapeOriginSystem();
 
 		setSpriteOrigins_StartSystem();
 

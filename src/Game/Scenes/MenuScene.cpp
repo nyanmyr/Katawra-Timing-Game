@@ -14,7 +14,6 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 	// game state variables
 	Clock clock;
 	std::queue<Entity> renderQueue;
-	bool buttonClicked = false;
 
 	// entity instantiation
 	Entity normalMode = makeButton
@@ -33,9 +32,10 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 				100.f
 			}
 		),
-		Scene::PLAYING,
+		TextureEnum::TEXTURE_PLACEHOLDER_PLACEHOLDER,
 		"Normal",
-		font
+		font,
+		Scene::PLAYING
 	);
 
 	nc.addComponent
@@ -60,9 +60,10 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 				100.f
 			}
 		),
-		Scene::PLAYING,
+		TextureEnum::TEXTURE_PLACEHOLDER_PLACEHOLDER,
 		"Hard",
-		font
+		font,
+		Scene::PLAYING
 	);
 
 	nc.addComponent
@@ -71,10 +72,16 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		CMode{ GameMode::MODE_HARD }
 	);
 
+	Entity loadedTextures = makeLoadedTexturesContainer();
+
 	// onstart systems
 	setTextSystem(font); // font system is limited to one font
 	setTextOriginSystem();
-	setShapeOriginSystem();
+
+	loadTextures_StartSystem(loadedTextures);
+	loadSprites_StartSystem(loadedTextures);
+
+	setSpriteOrigins_StartSystem();
 
 	while (window.isOpen())
 	{
@@ -92,12 +99,27 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 
 			if (const auto& mousePress = event->getIf<sf::Event::MouseButtonPressed>())
 			{
-				buttonClicked = true;
+				buttonClicks_UpdateSystem
+				(
+					sf::Vector2i
+					(
+						worldPos.x,
+						worldPos.y
+					)
+				);
 			}
 		}
 
 		// update systems
-		buttonClickedSystem(sf::Vector2i(worldPos.x, worldPos.y), buttonClicked, dt);
+		button_Update
+		(
+			sf::Vector2i
+			(
+				worldPos.x,
+				worldPos.y
+			),
+			dt
+		);
 		nextSceneSystem(window, font);
 
 		window.clear();

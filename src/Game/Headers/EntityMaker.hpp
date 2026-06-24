@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "Scenes.hpp"
+#include "Components.hpp"
 
 Entity makeUIText
 (
@@ -21,10 +22,19 @@ Entity makeLog
 	float fadeSet
 );
 
-Entity& makeButton(sf::Vector2f pos, sf::Vector2f size, Scene scene, std::string str, sf::Font& font);
+Entity& makeButton
+(
+	sf::Vector2f pos,
+	sf::Vector2f size,
+	TextureEnum texture,
+	std::string str,
+	sf::Font& font,
+	Scene scene
+);
 
 Entity& makeIndicator
 (
+	TextureEnum texture,
 	sf::Vector2f pos,
 	sf::Vector2f size,
 	float speed,
@@ -33,6 +43,7 @@ Entity& makeIndicator
 
 Entity& makeSlider
 (
+	TextureEnum texture,
 	sf::Vector2f pos,
 	sf::Vector2f size,
 	sf::Vector2f slider
@@ -40,6 +51,7 @@ Entity& makeSlider
 
 Entity& makeHitbox
 (
+	TextureEnum texture,
 	Entity slider,
 	float startSize,
 	float minSize,

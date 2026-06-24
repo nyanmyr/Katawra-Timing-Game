@@ -13,7 +13,6 @@
 // -------------------------------------------------------
 void setTextSystem(sf::Font& font);
 void setTextOriginSystem();
-void setShapeOriginSystem();
 
 void loadTextures_StartSystem(Entity loadedTextures);
 
@@ -23,7 +22,12 @@ void setSpriteOrigins_StartSystem();
 // -------------------------------------------------------
 // update systems
 // -------------------------------------------------------
-void buttonClickedSystem(sf::Vector2i& mouseVector, bool& buttonClicked, const DeltaTime dt);
+void buttonClicks_UpdateSystem(sf::Vector2i mouseVector);
+void button_Update
+(
+	sf::Vector2i mouseVector,
+	DeltaTime dt
+);
 void nextSceneSystem(sf::RenderWindow& window, sf::Font& font);
 
 void Hit_Control
