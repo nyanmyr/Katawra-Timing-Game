@@ -15,9 +15,12 @@ void setTextSystem(sf::Font& font);
 void setTextOriginSystem();
 
 void loadTextures_StartSystem(Entity loadedTextures);
-
 void loadSprites_StartSystem(Entity loadedTextures);
+
+void loadSoundEffects_Start(Entity soundEffects);
+
 void setSpriteOrigins_StartSystem();
+
 
 // -------------------------------------------------------
 // update systems
@@ -79,6 +82,8 @@ void doFeed
 	DeltaTime dt,
 	Entity feed
 );
+void playSounds(Entity soundEffects);
+void delete_UpdateSystem(DeltaTime dt);
 
 // -------------------------------------------------------
 // rendering systems

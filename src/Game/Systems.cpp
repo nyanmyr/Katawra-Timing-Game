@@ -97,7 +97,6 @@ void loadTextures_StartSystem(Entity loadedTextures)
     container.map.emplace(TextureEnum::BACKGROUND, sf::Texture(SPRITES_PATH "background_texture.jpg"));
     container.map.emplace(TextureEnum::TEXTURE_PLACEHOLDER_PLACEHOLDER, sf::Texture(SPRITES_PATH "placeholder_placeholder.jpg"));
 }
-
 void loadSprites_StartSystem(Entity loadedTextures)
 {
     auto& spriteArray = systemsNC.getComponentArray<CSprite>();
@@ -136,6 +135,24 @@ void loadSprites_StartSystem(Entity loadedTextures)
         );
     }
 }
+
+void loadSoundEffects_Start(Entity soundEffects)
+{
+    if (!systemsNC.getComponentArray<CSoundEffectsContainer>()->hasData(soundEffects))
+    {
+        return;
+    }
+
+    CSoundEffectsContainer& container = systemsNC.getComponentArray<CSoundEffectsContainer>()->getData(soundEffects);
+
+    container.sounds.emplace(SoundEffect::BONUS, sf::SoundBuffer(SOUND_EFFECTS_PATH "Bonus.wav"));
+    container.sounds.emplace(SoundEffect::BUTTON, sf::SoundBuffer(SOUND_EFFECTS_PATH "Button.wav"));
+    container.sounds.emplace(SoundEffect::CENTER, sf::SoundBuffer(SOUND_EFFECTS_PATH "Center.wav"));
+    container.sounds.emplace(SoundEffect::FAIL, sf::SoundBuffer(SOUND_EFFECTS_PATH "Fail.wav"));
+    container.sounds.emplace(SoundEffect::HIT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Hit.wav"));
+    container.sounds.emplace(SoundEffect::HOVER, sf::SoundBuffer(SOUND_EFFECTS_PATH "Hover.wav"));
+}
+
 void setSpriteOrigins_StartSystem()
 {
     auto& originArray = systemsNC.getComponentArray<COrigin>();
@@ -430,6 +447,8 @@ void Hit_Control
         indicPos.x > hitPos.x + (hitTrans.width / 2.f)
     )
     {
+        makeSound(SoundEffect::FAIL);
+
         if (shakeCam.intensity <= FAIL_INTENSITY)
         {
             shakeCam.intensity = FAIL_INTENSITY;
@@ -488,7 +507,11 @@ void Hit_Control
 
     ++score.hits;
 
+
     score.unaccounted += HIT_SCORE + (HIT_SCORE * dist);
+    makeSound(SoundEffect::HIT);
+    makeSound(SoundEffect::CENTER, 1.f + dist);
+
     // hit score
     feed.feed.push
     (
@@ -524,6 +547,7 @@ void Hit_Control
 
     if (score.bounces < 2)
     {
+        makeSound(SoundEffect::BONUS);
         score.unaccounted += BOUNCE_BONUS;
         // bonus bounce
         feed.feed.push
@@ -921,6 +945,74 @@ void doFeed
     feedScore.positionsSet = false;
     systemsNC.deleteEntity(feedScore.feed.front());
     feedScore.feed.pop();
+}
+void playSounds(Entity soundEffects)
+{
+    auto& soundsArray = systemsNC.getComponentArray<CSound>();
+    if (soundsArray->getAll().empty())
+    {
+        //std::cout << "test";
+        return;
+    }
+
+    CSoundEffectsContainer& container = systemsNC.getComponentArray<CSoundEffectsContainer>()->getData(soundEffects);
+
+    for (auto& [entity, sound] : soundsArray->getAll())
+    {
+        //sprite.body.emplace(container.map[texture.data]);
+        if (!sound.sound.has_value())
+        {
+            sound.sound.emplace(container.sounds[sound.type]);
+        }
+
+        if 
+        (
+            sound.sound->getStatus() == sf::SoundSource::Status::Stopped &&
+            sound.played
+        )
+        {
+            systemsNC.addComponent
+            (
+                entity,
+                CDelete{}
+            );
+            continue;
+        }
+        else if (!sound.played)
+        {
+            sound.sound->setPitch(sound.pitch);
+            sound.sound->play();
+            sound.played = true;
+        }
+
+    }
+}
+void delete_UpdateSystem(DeltaTime dt)
+{
+    auto& deleteArray = systemsNC.getComponentArray<CDelete>();
+
+    if (deleteArray->getAll().empty())
+    {
+        return;
+    }
+
+    std::vector<Entity> toBeDeleted;
+
+    for (auto& [entity, deleteComponent] : deleteArray->getAll())
+    {
+        if (deleteComponent.timer <= 0.f)
+        {
+            toBeDeleted.emplace_back(entity);
+            continue;
+        }
+
+        deleteComponent.timer -= dt;
+    }
+
+    for (Entity entity : toBeDeleted)
+    {
+        systemsNC.deleteEntity(entity);
+    }
 }
 
 // -------------------------------------------------------

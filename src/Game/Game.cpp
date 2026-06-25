@@ -44,6 +44,10 @@ void main() {
 	nc.registerComponent<CSprite>();
 	nc.registerComponent<CTexture>();
 	nc.registerComponent<CTexturesContainer>();
+	nc.registerComponent<SoundEffect>();
+	nc.registerComponent<CSoundEffectsContainer>();
+	nc.registerComponent<CSound>();
+	nc.registerComponent<CDelete>();
 
 	sf::Font font;
 	if (!font.openFromFile(FONT_FILEPATH))

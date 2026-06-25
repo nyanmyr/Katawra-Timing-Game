@@ -8,14 +8,16 @@ using sf::Clock;
 using sf::Event;
 using sf::Keyboard::Scancode;
 
-// TODO: add sounds
-// TODO: time it right intro
+// TODO: time it right intro (with sounds)
 // FIX: add background sprite
+// FIX: button and hover sound is unused
+// TODO: add bounce on corners effect
 // TODO: dark mode
 // TODO: display number of hits
 // TODO: clear feed when fail
 // TODO: rename window
 // TODO: make window and application logo
+// TODO: add background music
 // TODO: bug fixing
 // FIX: rename makers to correspond to sprite names
 // FIX: make a seperate load texture for menu scene
@@ -113,9 +115,11 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 	Entity cameraShake = makeCameraShake();
 	Entity feed = makeFeed();
 	Entity loadedTextures = makeLoadedTexturesContainer();
+	Entity soundEffects = makeSoundEffectsContainer();
 
 	loadTextures_StartSystem(loadedTextures);
 	loadSprites_StartSystem(loadedTextures);
+	loadSoundEffects_Start(soundEffects);
 
 	while (window.isOpen())
 	{
@@ -194,6 +198,8 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			dt,
 			feed
 		);
+		playSounds(soundEffects);
+		delete_UpdateSystem(dt);
 
 		window.clear();
 		// render systems

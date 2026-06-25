@@ -36,7 +36,7 @@ public:
 	template<typename T>
 	void removeComponent(Entity entity)
 	{
-		cm.removeComponent(entity);
+		cm.removeComponent<T>(entity);
 	}
 
 	template<typename T>

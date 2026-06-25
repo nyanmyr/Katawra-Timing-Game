@@ -497,3 +497,42 @@ Entity makeLoadedTexturesContainer()
 
 	return entity;
 }
+
+Entity makeSoundEffectsContainer()
+{
+	Entity entity = entityMakerNC.createEntity();
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSoundEffectsContainer{}
+	);
+
+	return entity;
+}
+
+Entity makeSound(SoundEffect type)
+{
+	Entity entity = entityMakerNC.createEntity();
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSound{ type }
+	);
+
+	return entity;
+}
+
+Entity makeSound(SoundEffect type, float pitch)
+{
+	Entity entity = entityMakerNC.createEntity();
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSound{ type, pitch }
+	);
+
+	return entity;
+}

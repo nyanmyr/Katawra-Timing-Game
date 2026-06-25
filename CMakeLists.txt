@@ -48,6 +48,7 @@ if(PRODUCTION_BUILD)
     # Setup the RESOURCES_PATH macro to be in the root folder of your exe
     target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE RESOURCES_PATH="./resources/" PRODUCTION_BUILD=1) 
     target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE SPRITES_PATH="./resources/sprites/" PRODUCTION_BUILD=1) 
+    target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE SOUND_EFFECTS_PATH="./resources/sounds/" PRODUCTION_BUILD=1) 
     
     if(MSVC)
         # Remove the console only in production builds
@@ -57,6 +58,7 @@ else()
     # This is useful to get a RESOURCES_PATH in your IDE during development
     target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE RESOURCES_PATH="${CMAKE_CURRENT_SOURCE_DIR}/resources/" PRODUCTION_BUILD=0) 
     target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE SPRITES_PATH="${CMAKE_CURRENT_SOURCE_DIR}/resources/sprites/" PRODUCTION_BUILD=0) 
+    target_compile_definitions(${CMAKE_PROJECT_NAME} PRIVATE SOUND_EFFECTS_PATH="${CMAKE_CURRENT_SOURCE_DIR}/resources/sounds/" PRODUCTION_BUILD=0) 
 endif()
 
 # --- MSVC Specifics ---

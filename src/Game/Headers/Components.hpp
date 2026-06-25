@@ -2,6 +2,7 @@
 #define COMPONENTS_HPP
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "Scenes.hpp"
 #include <optional>
 #include <string>
@@ -190,6 +191,43 @@ struct CTexture
 struct CTexturesContainer
 {
 	std::unordered_map<TextureEnum, sf::Texture> map;
+};
+
+enum SoundEffect
+{
+	BONUS,
+	BUTTON,
+	CENTER,
+	FAIL,
+	HIT,
+	HOVER
+};
+
+struct CSoundEffectsContainer
+{
+	std::unordered_map<SoundEffect, sf::SoundBuffer> sounds;
+};
+
+struct CSound
+{
+	SoundEffect type{};
+	std::optional<sf::Sound> sound;
+	bool played = false;
+	float pitch = 1.f;
+
+	CSound() = default;
+	CSound(SoundEffect type) :
+		type(type) {
+	};
+
+	CSound(SoundEffect type, float pitch) :
+		type(type), pitch(pitch) {
+	};
+};
+
+struct CDelete
+{
+	float timer = 0.f;
 };
 
 #endif
