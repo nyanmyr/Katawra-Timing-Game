@@ -13,11 +13,8 @@ using sf::Keyboard::Scancode;
 // FIX: button and hover sound is unused
 // TODO: add bounce on corners effect
 // TODO: dark mode
-// TODO: display number of hits
-// TODO: clear feed when fail
-// TODO: rename window
-// TODO: make window and application logo
 // TODO: add background music
+// TODO: make window and application logo
 // TODO: bug fixing
 // FIX: rename makers to correspond to sprite names
 // FIX: make a seperate load texture for menu scene
@@ -109,7 +106,17 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			25.f
 		},
 		font,
-		"Test"
+		"Score: "
+	);
+
+	Entity hits = makeUIText
+	(
+		{
+			25.f,
+			75.f
+		},
+		font,
+		"Hits: "
 	);
 
 	Entity cameraShake = makeCameraShake();
@@ -182,6 +189,11 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			score,
 			hitbox,
 			dt
+		);
+		displayHits
+		(
+			hits,
+			hitbox
 		);
 		shakeCamera_UpdateSystem
 		(

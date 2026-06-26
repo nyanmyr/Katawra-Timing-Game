@@ -441,6 +441,10 @@ void Hit_Control
     //std::cout << "x:" << indicPos.x << "\n";
     //std::cout << "min:" << hitPos.x - (hitTrans.width / 2.f) << " max:" << hitPos.x + (hitTrans.width / 2.f) << "\n\n";
 
+    feed.positionsSet = false;
+    score.bounces = 0;
+    hit.spawned = false;
+
     if 
     (
         indicPos.x < hitPos.x - (hitTrans.width / 2.f) ||
@@ -465,8 +469,6 @@ void Hit_Control
         score.unaccounted = 0;
         score.fillTimer = 0;
 
-        hit.spawned = false;
-
         feed.feed.push
         (
             makeLog
@@ -482,6 +484,8 @@ void Hit_Control
                 FADE_TIMER
             )
         );
+
+        feed.clear = true;
 
         return;
     }
@@ -567,16 +571,11 @@ void Hit_Control
         );
     }
 
-    feed.positionsSet = false;
-
     // resets the fill timer when not already ticking
     if (score.fillTimer <= 0.f)
     {
         score.fillTimer = FILL_TIMER;
     }
-
-    score.bounces = 0;
-    hit.spawned = false;
 
     //std::cout << "distance: " << dist << "\n";
 }
@@ -812,6 +811,18 @@ void displayScore
     hitScore.fillTimer -= dt;
 }
 
+void displayHits
+(
+    Entity hits,
+    Entity hitbox
+)
+{
+    CText& scoreText = systemsNC.getComponentArray<CText>()->getData(hits);
+    CScore& hitScore = systemsNC.getComponentArray<CScore>()->getData(hitbox);
+
+    scoreText.box->setString("Hits: " + std::to_string(hitScore.hits));
+}
+
 void shakeCamera_UpdateSystem
 (
     Entity cameraShake,
@@ -882,6 +893,17 @@ void doFeed
     if (feedScore.feed.empty())
     {
         return;
+    }
+
+    if (feedScore.clear)
+    {
+        while (feedScore.feed.size() > 1)
+        {
+            systemsNC.deleteEntity(feedScore.feed.front());
+            feedScore.feed.pop();
+        }
+
+        feedScore.clear = false;
     }
 
     if (!feedScore.positionsSet)

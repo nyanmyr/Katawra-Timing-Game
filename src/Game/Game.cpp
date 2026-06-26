@@ -16,7 +16,7 @@ constexpr int MAX_FPS = 60;
 const std::string FONT_FILEPATH = RESOURCES_PATH "arial.ttf";
 
 void main() {
-	RenderWindow window(VideoMode({ SCREEN_WIDTH, SCREEN_HEIGHT }), "Nacre Engine", sf::Style::Close); // change of the window here
+	RenderWindow window(VideoMode({ SCREEN_WIDTH, SCREEN_HEIGHT }), "Katawra Timing Game", sf::Style::Close); // change of the window here
 	window.setFramerateLimit(MAX_FPS);
 
 	NacreCoordinator& nc = NacreCoordinator::getInstance();

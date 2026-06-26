@@ -154,6 +154,7 @@ struct CFeed
 {
 	std::queue<Entity> feed;
 	bool positionsSet = false;
+	bool clear = false;
 };
 
 struct CLog

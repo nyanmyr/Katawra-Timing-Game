@@ -69,6 +69,11 @@ void displayScore
 	Entity hitbox,
 	DeltaTime dt
 );
+void displayHits
+(
+	Entity hits,
+	Entity hitbox
+);
 
 void shakeCamera_UpdateSystem
 (
