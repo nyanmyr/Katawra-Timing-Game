@@ -75,13 +75,13 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 	Entity loadedTextures = makeLoadedTexturesContainer();
 
 	// onstart systems
-	setTextSystem(font); // font system is limited to one font
-	setTextOriginSystem();
+	setText_Start(font); // font system is limited to one font
+	setTextOrigin_Start();
 
-	loadTextures_StartSystem(loadedTextures);
-	loadSprites_StartSystem(loadedTextures);
+	loadTextures_Start(loadedTextures);
+	loadSprites_Start(loadedTextures);
 
-	setSpriteOrigins_StartSystem();
+	setSpriteOrigins_Start();
 
 	while (window.isOpen())
 	{
@@ -99,7 +99,7 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 
 			if (const auto& mousePress = event->getIf<sf::Event::MouseButtonPressed>())
 			{
-				buttonClicks_UpdateSystem
+				buttonClicks_Update
 				(
 					sf::Vector2i
 					(
@@ -120,12 +120,12 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 			),
 			dt
 		);
-		nextSceneSystem(window, font);
+		nextScene_Update(window, font);
 
 		window.clear();
 		// render systems
-		zIndexSystem(renderQueue);
-		renderSystem(window, renderQueue);
+		zIndex_Render(renderQueue);
+		render(window, renderQueue);
 		window.display();
 	}
 }

@@ -11,29 +11,29 @@
 // -------------------------------------------------------
 // start systems
 // -------------------------------------------------------
-void setTextSystem(sf::Font& font);
-void setTextOriginSystem();
+void setText_Start(sf::Font& font);
+void setTextOrigin_Start();
 
-void loadTextures_StartSystem(Entity loadedTextures);
-void loadSprites_StartSystem(Entity loadedTextures);
+void loadTextures_Start(Entity loadedTextures);
+void loadSprites_Start(Entity loadedTextures);
 
 void loadSoundEffects_Start(Entity soundEffects);
 
-void setSpriteOrigins_StartSystem();
+void setSpriteOrigins_Start();
 
 
 // -------------------------------------------------------
 // update systems
 // -------------------------------------------------------
-void buttonClicks_UpdateSystem(sf::Vector2i mouseVector);
+void buttonClicks_Update(sf::Vector2i mouseVector);
 void button_Update
 (
 	sf::Vector2i mouseVector,
 	DeltaTime dt
 );
-void nextSceneSystem(sf::RenderWindow& window, sf::Font& font);
+void nextScene_Update(sf::RenderWindow& window, sf::Font& font);
 
-void Hit_Control
+void hit_Control
 (
 	sf::Font& font,
 	Entity indicator,
@@ -47,53 +47,53 @@ void moveIndicator_Update
 	Entity slider,
 	Entity hitbox
 );
-void spawnHitbox
+void spawnHitbox_Update
 (
 	Entity hitbox,
 	Entity slider,
 	DeltaTime dt
 );
 
-void indicatorSpeed
+void adjustIndicatorSpeed_Update
 (
 	Entity slider,
 	Entity indicator,
 	Entity hitbox
 );
-void moveSystem(const DeltaTime dt);
-void dragSystem(const DeltaTime dt);
+void move_Update(const DeltaTime dt);
+void drag_Update(const DeltaTime dt);
 
-void displayScore
+void displayScore_Update
 (
 	Entity score,
 	Entity hitbox,
 	DeltaTime dt
 );
-void displayHits
+void displayHits_Update
 (
 	Entity hits,
 	Entity hitbox
 );
 
-void shakeCamera_UpdateSystem
+void shakeCamera_Update
 (
 	Entity cameraShake,
 	sf::RenderWindow& window,
 	DeltaTime dt
 );
-void doFeed
+void doFeed_Update
 (
 	sf::Vector2f startPos,
 	DeltaTime dt,
 	Entity feed
 );
-void playSounds(Entity soundEffects);
-void delete_UpdateSystem(DeltaTime dt);
+void playSounds_Update(Entity soundEffects);
+void delete_Update(DeltaTime dt);
 
 // -------------------------------------------------------
 // rendering systems
 // -------------------------------------------------------
-void zIndexSystem(std::queue<Entity>& renderQueue);
-void renderSystem(sf::RenderWindow& window, std::queue<Entity>& renderQueue);
+void zIndex_Render(std::queue<Entity>& renderQueue);
+void render(sf::RenderWindow& window, std::queue<Entity>& renderQueue);
 
 #endif

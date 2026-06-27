@@ -58,6 +58,12 @@ Entity& makeHitbox
 	float sizeDecrease
 );
 
+Entity& makeBackground
+(
+	TextureEnum texture,
+	sf::Vector2f size
+);
+
 Entity makeCameraShake();
 Entity makeFeed();
 Entity makeLoadedTexturesContainer();

@@ -9,9 +9,10 @@ using sf::Event;
 using sf::Keyboard::Scancode;
 
 // TODO: time it right intro (with sounds)
-// FIX: add background sprite
 // FIX: button and hover sound is unused
+// TODO: seperate fill bar and content?
 // TODO: add bounce on corners effect
+// TODO: move indicator to point at the midpoint
 // TODO: dark mode
 // TODO: add background music
 // TODO: make window and application logo
@@ -123,18 +124,26 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 	Entity feed = makeFeed();
 	Entity loadedTextures = makeLoadedTexturesContainer();
 	Entity soundEffects = makeSoundEffectsContainer();
+	Entity background = makeBackground
+	(
+		TextureEnum::BACKGROUND,
+		{
+			window.getDefaultView().getSize().x,
+			window.getDefaultView().getSize().y
+		}
+	);
 
-	loadTextures_StartSystem(loadedTextures);
-	loadSprites_StartSystem(loadedTextures);
+	loadTextures_Start(loadedTextures);
+	loadSprites_Start(loadedTextures);
 	loadSoundEffects_Start(soundEffects);
 
 	while (window.isOpen())
 	{
 		// in this case the extra baggage is afforable :p
-		setTextSystem(font); // font system is limited to one font
-		setTextOriginSystem();
+		setText_Start(font); // font system is limited to one font
+		setTextOrigin_Start();
 
-		setSpriteOrigins_StartSystem();
+		setSpriteOrigins_Start();
 
 		DeltaTime dt = clock.restart().asSeconds();
 
@@ -152,7 +161,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			{
 				if (buttonPress->scancode == sf::Keyboard::Scancode::Space)
 				{
-					Hit_Control
+					hit_Control
 					(
 						font,
 						indicator,
@@ -165,7 +174,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		}
 
 		// update systems
-		spawnHitbox
+		spawnHitbox_Update
 		(
 			hitbox,
 			slider,
@@ -177,31 +186,31 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			slider,
 			hitbox
 		);
-		indicatorSpeed
+		adjustIndicatorSpeed_Update
 		(
 			slider,
 			indicator,
 			hitbox
 		);
-		moveSystem(dt);
-		displayScore
+		move_Update(dt);
+		displayScore_Update
 		(
 			score,
 			hitbox,
 			dt
 		);
-		displayHits
+		displayHits_Update
 		(
 			hits,
 			hitbox
 		);
-		shakeCamera_UpdateSystem
+		shakeCamera_Update
 		(
 			cameraShake,
 			window,
 			dt
 		);
-		doFeed
+		doFeed_Update
 		(
 			{
 				window.getSize().x / 2.f,
@@ -210,13 +219,13 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			dt,
 			feed
 		);
-		playSounds(soundEffects);
-		delete_UpdateSystem(dt);
+		playSounds_Update(soundEffects);
+		delete_Update(dt);
 
 		window.clear();
 		// render systems
-		zIndexSystem(renderQueue);
-		renderSystem(window, renderQueue);
+		zIndex_Render(renderQueue);
+		render(window, renderQueue);
 		window.display();
 	}
 }

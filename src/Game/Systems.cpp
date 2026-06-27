@@ -25,7 +25,7 @@ float inverseLerp_Auxiliary
 // -------------------------------------------------------
 // start systems
 // -------------------------------------------------------
-void setTextSystem(sf::Font& font)
+void setText_Start(sf::Font& font)
 {
     auto& texts = systemsNC.getComponentArray<CText>();
 
@@ -36,7 +36,7 @@ void setTextSystem(sf::Font& font)
         text.box.value().setFillColor(text.color);
     }
 }
-void setTextOriginSystem()
+void setTextOrigin_Start()
 {
     auto& texts = systemsNC.getComponentArray<CText>();
     auto& transforms = systemsNC.getComponentArray<CTransform>();
@@ -80,7 +80,7 @@ void setTextOriginSystem()
     }
 }
 
-void loadTextures_StartSystem(Entity loadedTextures)
+void loadTextures_Start(Entity loadedTextures)
 {
     auto& texturesContainerArray = systemsNC.getComponentArray<CTexturesContainer>();
 
@@ -97,7 +97,7 @@ void loadTextures_StartSystem(Entity loadedTextures)
     container.map.emplace(TextureEnum::BACKGROUND, sf::Texture(SPRITES_PATH "background_texture.jpg"));
     container.map.emplace(TextureEnum::TEXTURE_PLACEHOLDER_PLACEHOLDER, sf::Texture(SPRITES_PATH "placeholder_placeholder.jpg"));
 }
-void loadSprites_StartSystem(Entity loadedTextures)
+void loadSprites_Start(Entity loadedTextures)
 {
     auto& spriteArray = systemsNC.getComponentArray<CSprite>();
     auto& transformArray = systemsNC.getComponentArray<CTransform>();
@@ -153,7 +153,7 @@ void loadSoundEffects_Start(Entity soundEffects)
     container.sounds.emplace(SoundEffect::HOVER, sf::SoundBuffer(SOUND_EFFECTS_PATH "Hover.wav"));
 }
 
-void setSpriteOrigins_StartSystem()
+void setSpriteOrigins_Start()
 {
     auto& originArray = systemsNC.getComponentArray<COrigin>();
     auto& spriteArray = systemsNC.getComponentArray<CSprite>();
@@ -189,7 +189,7 @@ const float HOVER_SCALE_Y = 1.1f;
 const float CLICKED_SCALE_X = 0.9f;
 const float CLICKED_SCALE_Y = 0.9f;
 
-void buttonClicks_UpdateSystem(sf::Vector2i mouseVector)
+void buttonClicks_Update(sf::Vector2i mouseVector)
 {
     auto& spriteArray = systemsNC.getComponentArray<CSprite>();
     auto& buttonArray = systemsNC.getComponentArray<CButton>();
@@ -357,7 +357,7 @@ void button_Update
         }
     }
 }
-void nextSceneSystem(sf::RenderWindow& window, sf::Font& font)
+void nextScene_Update(sf::RenderWindow& window, sf::Font& font)
 {
     auto& nextScenes = systemsNC.getComponentArray<CNextScene>();
 
@@ -418,8 +418,7 @@ const float FILL_TIMER = 1.f;
 const sf::Color SCORE_COLOR = sf::Color::White;
 const sf::Color FAIL_COLOR = sf::Color::Red;
 
-// TODO: rename systems to start with lowercase
-void Hit_Control
+void hit_Control
 (
     sf::Font& font,
     Entity indicator,
@@ -616,7 +615,7 @@ void moveIndicator_Update
 
 const float HITBOX_HEIGHT = 11.5f;
 
-void spawnHitbox
+void spawnHitbox_Update
 (
     Entity hitbox,
     Entity slider,
@@ -682,7 +681,7 @@ void spawnHitbox
 const float MINIMUM_SCALED_FACTOR = 0.25f;
 const float CENTER_OFFSET = 175.f;
 
-void indicatorSpeed
+void adjustIndicatorSpeed_Update
 (
     Entity slider,
     Entity indicator,
@@ -736,7 +735,7 @@ void indicatorSpeed
     speed.amount *= (1.f - scaledSpeed);
 }
 
-void moveSystem(const DeltaTime dt)
+void move_Update(const DeltaTime dt)
 {
     auto& velocities = systemsNC.getComponentArray<CVelocity>();
     auto& positions = systemsNC.getComponentArray<CPosition>();
@@ -753,7 +752,7 @@ void moveSystem(const DeltaTime dt)
         pos.y += (velocity.y * dt);
     }
 }
-void dragSystem(const DeltaTime dt)
+void drag_Update(const DeltaTime dt)
 {
     auto& velocities = systemsNC.getComponentArray<CVelocity>();
     auto& drags = systemsNC.getComponentArray<CDrag>();
@@ -775,7 +774,7 @@ void dragSystem(const DeltaTime dt)
     }
 }
 
-void displayScore
+void displayScore_Update
 (
     Entity score,
     Entity hitbox,
@@ -811,7 +810,7 @@ void displayScore
     hitScore.fillTimer -= dt;
 }
 
-void displayHits
+void displayHits_Update
 (
     Entity hits,
     Entity hitbox
@@ -823,7 +822,7 @@ void displayHits
     scoreText.box->setString("Hits: " + std::to_string(hitScore.hits));
 }
 
-void shakeCamera_UpdateSystem
+void shakeCamera_Update
 (
     Entity cameraShake,
     sf::RenderWindow& window,
@@ -881,7 +880,7 @@ void shakeCamera_UpdateSystem
 
 const float LOG_SPACING_Y = 40.f;
 
-void doFeed
+void doFeed_Update
 (
     sf::Vector2f startPos,
     DeltaTime dt,
@@ -968,7 +967,7 @@ void doFeed
     systemsNC.deleteEntity(feedScore.feed.front());
     feedScore.feed.pop();
 }
-void playSounds(Entity soundEffects)
+void playSounds_Update(Entity soundEffects)
 {
     auto& soundsArray = systemsNC.getComponentArray<CSound>();
     if (soundsArray->getAll().empty())
@@ -1009,7 +1008,7 @@ void playSounds(Entity soundEffects)
 
     }
 }
-void delete_UpdateSystem(DeltaTime dt)
+void delete_Update(DeltaTime dt)
 {
     auto& deleteArray = systemsNC.getComponentArray<CDelete>();
 
@@ -1040,7 +1039,7 @@ void delete_UpdateSystem(DeltaTime dt)
 // -------------------------------------------------------
 // rendering systems
 // -------------------------------------------------------
-void zIndexSystem(std::queue<Entity>& renderQueue)
+void zIndex_Render(std::queue<Entity>& renderQueue)
 {
     auto& zIndexes = systemsNC.getComponentArray<CZIndex>();
 
@@ -1056,7 +1055,7 @@ void zIndexSystem(std::queue<Entity>& renderQueue)
         renderQueue.push(entity);
     }
 }
-void renderSystem
+void render
 (
     sf::RenderWindow& window,
     std::queue<Entity>& renderQueue
