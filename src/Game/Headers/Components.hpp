@@ -172,10 +172,11 @@ struct CSprite
 // might reorganize this later
 enum TextureEnum
 {
-	INDICATOR,
-	BAR,
-	FILL,
-	BACKGROUND,
+	INDICATOR_TEXTURE,
+	BAR_TEXTURE,
+	FILL_TEXTURE,
+	BACKGROUND_TEXTURE,
+	BUTTON_TEXTURE,
 	TEXTURE_PLACEHOLDER_PLACEHOLDER
 };
 
@@ -196,12 +197,13 @@ struct CTexturesContainer
 
 enum SoundEffect
 {
-	BONUS,
-	BUTTON,
-	CENTER,
-	FAIL,
-	HIT,
-	HOVER
+	BONUS_SOUND_EFFECT,
+	BUTTON_SOUND_EFFECT,
+	CENTER_SOUND_EFFECT,
+	FAIL_SOUND_EFFECT,
+	HIT_SOUND_EFFECT,
+	HOVER_SOUND_EFFECT,
+	UNHOVER_SOUND_EFFECT
 };
 
 struct CSoundEffectsContainer
@@ -224,6 +226,11 @@ struct CSound
 	CSound(SoundEffect type, float pitch) :
 		type(type), pitch(pitch) {
 	};
+};
+
+struct CButtonSounds
+{
+	bool hovering = false, hovered = false, unhovered = false, clicked = false;
 };
 
 struct CDelete

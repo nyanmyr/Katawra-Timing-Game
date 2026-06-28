@@ -9,14 +9,16 @@ using sf::Event;
 using sf::Keyboard::Scancode;
 
 // TODO: time it right intro (with sounds)
-// FIX: button and hover sound is unused
 // TODO: seperate fill bar and content?
 // TODO: add bounce on corners effect
 // TODO: move indicator to point at the midpoint
+// TODO: return to main menu button
 // TODO: dark mode
 // TODO: add background music
 // TODO: make window and application logo
 // TODO: bug fixing
+// FIX: no delay upon clicking button (directly enters next scene)
+// FIX: remove use of Vector2f in entity creation
 // FIX: rename makers to correspond to sprite names
 // FIX: make a seperate load texture for menu scene
 // TODO: publish
@@ -61,7 +63,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 	// entity instantiation
 	Entity indicator = makeIndicator
 	(
-		TextureEnum::INDICATOR,
+		TextureEnum::INDICATOR_TEXTURE,
 		{
 			window.getSize().x / 2.f,
 			window.getSize().y / 2.f
@@ -76,7 +78,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 
 	Entity slider = makeSlider
 	(
-		TextureEnum::BAR,
+		TextureEnum::BAR_TEXTURE,
 		{
 			window.getSize().x / 2.f,
 			window.getSize().y / 2.f
@@ -93,7 +95,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 
 	Entity hitbox = makeHitbox
 	(
-		TextureEnum::FILL,
+		TextureEnum::FILL_TEXTURE,
 		slider,
 		startSize, // start size
 		minSize, // min size
@@ -103,7 +105,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 	Entity score = makeUIText
 	(
 		{
-			25.f,
+			100.f,
 			25.f
 		},
 		font,
@@ -113,7 +115,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 	Entity hits = makeUIText
 	(
 		{
-			25.f,
+			100.f,
 			75.f
 		},
 		font,
@@ -126,16 +128,16 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 	Entity soundEffects = makeSoundEffectsContainer();
 	Entity background = makeBackground
 	(
-		TextureEnum::BACKGROUND,
+		TextureEnum::BACKGROUND_TEXTURE,
 		{
 			window.getDefaultView().getSize().x,
 			window.getDefaultView().getSize().y
 		}
 	);
 
-	loadTextures_Start(loadedTextures);
+	loadPlayingTextures_Start(loadedTextures);
 	loadSprites_Start(loadedTextures);
-	loadSoundEffects_Start(soundEffects);
+	loadPlaySoundEffects_Start(soundEffects);
 
 	while (window.isOpen())
 	{

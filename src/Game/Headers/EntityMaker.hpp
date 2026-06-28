@@ -12,6 +12,15 @@ Entity makeUIText
 	std::string str
 );
 
+Entity makeUIText
+(
+	sf::Vector2f pos,
+	sf::Font& font,
+	std::string str,
+	int size,
+	sf::Color col
+);
+
 Entity makeLog
 (
 	sf::Vector2f pos,

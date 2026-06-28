@@ -14,13 +14,14 @@
 void setText_Start(sf::Font& font);
 void setTextOrigin_Start();
 
-void loadTextures_Start(Entity loadedTextures);
+void loadPlayingTextures_Start(Entity loadedTextures);
+void loadMenuTextures_Start(Entity loadedTextures);
 void loadSprites_Start(Entity loadedTextures);
 
-void loadSoundEffects_Start(Entity soundEffects);
+void loadMenuSoundEffects_Start(Entity soundEffects);
+void loadPlaySoundEffects_Start(Entity soundEffects);
 
 void setSpriteOrigins_Start();
-
 
 // -------------------------------------------------------
 // update systems

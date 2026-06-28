@@ -47,6 +47,7 @@ void main() {
 	nc.registerComponent<SoundEffect>();
 	nc.registerComponent<CSoundEffectsContainer>();
 	nc.registerComponent<CSound>();
+	nc.registerComponent<CButtonSounds>();
 	nc.registerComponent<CDelete>();
 
 	sf::Font font;

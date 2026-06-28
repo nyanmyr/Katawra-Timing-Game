@@ -22,17 +22,17 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		(
 			{
 				window.getSize().x / 2.f,
-				window.getSize().y / 2.f - 100.f
+				window.getSize().y / 2.f
 			}
 		),
 		sf::Vector2f
 		(
 			{
-				200.f,
+				300.f,
 				100.f
 			}
 		),
-		TextureEnum::TEXTURE_PLACEHOLDER_PLACEHOLDER,
+		TextureEnum::BUTTON_TEXTURE,
 		"Normal",
 		font,
 		Scene::PLAYING
@@ -50,20 +50,56 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		(
 			{
 				window.getSize().x / 2.f,
-				window.getSize().y / 2.f + 100.f
+				window.getSize().y / 2.f + 150.f
 			}
 		),
 		sf::Vector2f
 		(
 			{
-				200.f,
+				300.f,
 				100.f
 			}
 		),
-		TextureEnum::TEXTURE_PLACEHOLDER_PLACEHOLDER,
+		TextureEnum::BUTTON_TEXTURE,
 		"Hard",
 		font,
 		Scene::PLAYING
+	);
+
+	Entity name = makeUIText
+	(
+		{
+			window.getSize().x / 2.f,
+			45.f
+		},
+		font,
+		"Katawra's",
+		64,
+		sf::Color::Black
+	);
+
+	Entity title = makeUIText
+	(
+		{
+			window.getSize().x / 2.f,
+			150.f
+		},
+		font,
+		"Timing Game",
+		128,
+		sf::Color::Black
+	);
+
+	Entity creator = makeUIText
+	(
+		{
+			window.getSize().x / 2.f,
+			550.f
+		},
+		font,
+		"a game by Katawra",
+		32,
+		sf::Color::Black
 	);
 
 	nc.addComponent
@@ -73,13 +109,23 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 	);
 
 	Entity loadedTextures = makeLoadedTexturesContainer();
+	Entity background = makeBackground
+	(
+		TextureEnum::BACKGROUND_TEXTURE,
+		{
+			window.getDefaultView().getSize().x,
+			window.getDefaultView().getSize().y
+		}
+	);
+	Entity soundEffects = makeSoundEffectsContainer();
 
 	// onstart systems
 	setText_Start(font); // font system is limited to one font
 	setTextOrigin_Start();
 
-	loadTextures_Start(loadedTextures);
+	loadMenuTextures_Start(loadedTextures);
 	loadSprites_Start(loadedTextures);
+	loadMenuSoundEffects_Start(soundEffects);
 
 	setSpriteOrigins_Start();
 
@@ -120,6 +166,7 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 			),
 			dt
 		);
+		playSounds_Update(soundEffects);
 		nextScene_Update(window, font);
 
 		window.clear();

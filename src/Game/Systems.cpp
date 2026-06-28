@@ -80,7 +80,7 @@ void setTextOrigin_Start()
     }
 }
 
-void loadTextures_Start(Entity loadedTextures)
+void loadPlayingTextures_Start(Entity loadedTextures)
 {
     auto& texturesContainerArray = systemsNC.getComponentArray<CTexturesContainer>();
 
@@ -91,10 +91,25 @@ void loadTextures_Start(Entity loadedTextures)
 
     CTexturesContainer& container = texturesContainerArray->getData(loadedTextures);
 
-    container.map.emplace(TextureEnum::INDICATOR, sf::Texture(SPRITES_PATH "indicator_texture.png"));
-    container.map.emplace(TextureEnum::BAR, sf::Texture(SPRITES_PATH "bar_texture.png"));
-    container.map.emplace(TextureEnum::FILL, sf::Texture(SPRITES_PATH "fill_texture.jpg"));
-    container.map.emplace(TextureEnum::BACKGROUND, sf::Texture(SPRITES_PATH "background_texture.jpg"));
+    container.map.emplace(TextureEnum::INDICATOR_TEXTURE, sf::Texture(SPRITES_PATH "indicator_texture.png"));
+    container.map.emplace(TextureEnum::BAR_TEXTURE, sf::Texture(SPRITES_PATH "bar_texture.png"));
+    container.map.emplace(TextureEnum::FILL_TEXTURE, sf::Texture(SPRITES_PATH "fill_texture.jpg"));
+    container.map.emplace(TextureEnum::BACKGROUND_TEXTURE, sf::Texture(SPRITES_PATH "background_texture.jpg"));
+    container.map.emplace(TextureEnum::TEXTURE_PLACEHOLDER_PLACEHOLDER, sf::Texture(SPRITES_PATH "placeholder_placeholder.jpg"));
+}
+void loadMenuTextures_Start(Entity loadedTextures)
+{
+    auto& texturesContainerArray = systemsNC.getComponentArray<CTexturesContainer>();
+
+    if (!texturesContainerArray->hasData(loadedTextures))
+    {
+        return;
+    }
+
+    CTexturesContainer& container = texturesContainerArray->getData(loadedTextures);
+
+    container.map.emplace(TextureEnum::BUTTON_TEXTURE, sf::Texture(SPRITES_PATH "button_texture.png"));
+    container.map.emplace(TextureEnum::BACKGROUND_TEXTURE, sf::Texture(SPRITES_PATH "background_texture.jpg"));
     container.map.emplace(TextureEnum::TEXTURE_PLACEHOLDER_PLACEHOLDER, sf::Texture(SPRITES_PATH "placeholder_placeholder.jpg"));
 }
 void loadSprites_Start(Entity loadedTextures)
@@ -136,7 +151,7 @@ void loadSprites_Start(Entity loadedTextures)
     }
 }
 
-void loadSoundEffects_Start(Entity soundEffects)
+void loadPlaySoundEffects_Start(Entity soundEffects)
 {
     if (!systemsNC.getComponentArray<CSoundEffectsContainer>()->hasData(soundEffects))
     {
@@ -145,12 +160,23 @@ void loadSoundEffects_Start(Entity soundEffects)
 
     CSoundEffectsContainer& container = systemsNC.getComponentArray<CSoundEffectsContainer>()->getData(soundEffects);
 
-    container.sounds.emplace(SoundEffect::BONUS, sf::SoundBuffer(SOUND_EFFECTS_PATH "Bonus.wav"));
-    container.sounds.emplace(SoundEffect::BUTTON, sf::SoundBuffer(SOUND_EFFECTS_PATH "Button.wav"));
-    container.sounds.emplace(SoundEffect::CENTER, sf::SoundBuffer(SOUND_EFFECTS_PATH "Center.wav"));
-    container.sounds.emplace(SoundEffect::FAIL, sf::SoundBuffer(SOUND_EFFECTS_PATH "Fail.wav"));
-    container.sounds.emplace(SoundEffect::HIT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Hit.wav"));
-    container.sounds.emplace(SoundEffect::HOVER, sf::SoundBuffer(SOUND_EFFECTS_PATH "Hover.wav"));
+    container.sounds.emplace(SoundEffect::BONUS_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Bonus.wav"));
+    container.sounds.emplace(SoundEffect::CENTER_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Center.wav"));
+    container.sounds.emplace(SoundEffect::FAIL_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Fail.wav"));
+    container.sounds.emplace(SoundEffect::HIT_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Hit.wav"));
+}
+void loadMenuSoundEffects_Start(Entity soundEffects)
+{
+    if (!systemsNC.getComponentArray<CSoundEffectsContainer>()->hasData(soundEffects))
+    {
+        return;
+    }
+
+    CSoundEffectsContainer& container = systemsNC.getComponentArray<CSoundEffectsContainer>()->getData(soundEffects);
+
+    container.sounds.emplace(SoundEffect::BUTTON_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Button.wav"));
+    container.sounds.emplace(SoundEffect::HOVER_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Hover.wav"));
+    container.sounds.emplace(SoundEffect::UNHOVER_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Unhover.wav"));
 }
 
 void setSpriteOrigins_Start()
@@ -245,6 +271,7 @@ void button_Update
     auto& nextSceneArray = systemsNC.getComponentArray<CNextScene>();
     auto& transformArray = systemsNC.getComponentArray<CTransform>();
     auto& positionArray = systemsNC.getComponentArray<CPosition>();
+    auto& buttonSoundsArray = systemsNC.getComponentArray<CButtonSounds>();
 
     for (auto& [entity, button] : buttonArray->getAll())
     {
@@ -256,104 +283,144 @@ void button_Update
         // buttonArray must have a shape, origin, and text
         if
         (
-            originArray->hasData(entity) &&
-            textArray->hasData(entity) &&
-            positionArray->hasData(entity) &&
-            spriteArray->hasData(entity)
+            !originArray->hasData(entity) &&
+            !textArray->hasData(entity) &&
+            !positionArray->hasData(entity) &&
+            !spriteArray->hasData(entity) &&
+            !buttonSoundsArray->hasData(entity)
         )
         {
-            ////std::cout << "button.top: " << button.top << "\n";
-            ////std::cout << "button.left: " << button.left << "\n";
-            COrigin& origin = originArray->getData(entity);
-            CText& text = textArray->getData(entity);
-            CTransform& transform = transformArray->getData(entity);
-            CPosition& position = positionArray->getData(entity);
-            CSprite& sprite = spriteArray->getData(entity);
+            continue;
+        }
 
+        ////std::cout << "button.top: " << button.top << "\n";
+        ////std::cout << "button.left: " << button.left << "\n";
+        COrigin& origin = originArray->getData(entity);
+        CText& text = textArray->getData(entity);
+        CTransform& transform = transformArray->getData(entity);
+        CPosition& position = positionArray->getData(entity);
+        CSprite& sprite = spriteArray->getData(entity);
+        CButtonSounds& buttonSounds = buttonSoundsArray->getData(entity);
 
+        if (button.clickedTimer <= 0)
+        {
+            sprite.body->setScale
+            (
+                sf::Vector2f
+                (
+                    DEFAULT_SCALE_X * (transform.width / sprite.body->getTexture().getSize().x),
+                    DEFAULT_SCALE_Y * (transform.height / sprite.body->getTexture().getSize().y)
+                )
+            );
+            text.box.value().setScale
+            (
+                sf::Vector2f
+                (
+                    DEFAULT_SCALE_X,
+                    DEFAULT_SCALE_Y
+                )
+            );
+            button.clicked = false; // reset
+        }
+        else
+        {
+            button.clickedTimer -= dt;
             if (button.clickedTimer <= 0)
             {
-                sprite.body->setScale
-                (
-                    sf::Vector2f
-                    (
-                        DEFAULT_SCALE_X * (transform.width / sprite.body->getTexture().getSize().x),
-                        DEFAULT_SCALE_Y * (transform.height / sprite.body->getTexture().getSize().y)
-                    )
-                );
-                text.box.value().setScale
-                (
-                    sf::Vector2f
-                    (
-                        DEFAULT_SCALE_X,
-                        DEFAULT_SCALE_Y
-                    )
-                );
-                button.clicked = false; // reset
-            }
-            else
-            {
-                button.clickedTimer -= dt;
-                if (button.clickedTimer <= 0)
+                button.clicked = true;
+                if (nextSceneArray->hasData(entity))
                 {
-                    button.clicked = true;
-                    if (nextSceneArray->hasData(entity))
-                    {
-                        ////std::cout << "starting next scene." << "\n";
-                        CNextScene& nextScene = nextSceneArray->getData(entity);
-                        nextScene.active = true;
-                    }
+                    ////std::cout << "starting next scene." << "\n";
+                    CNextScene& nextScene = nextSceneArray->getData(entity);
+                    nextScene.active = true;
                 }
             }
+        }
 
-            // button hovering
+        // button hovering
+        if
+        (
+            mouseVector.x > position.x - origin.offsetX &&
+            mouseVector.x < position.x + transform.width - origin.offsetX &&
+            mouseVector.y > position.y - origin.offsetY &&
+            mouseVector.y < position.y + transform.height - origin.offsetY &&
+            button.clickedTimer <= 0
+        )
+        {
+            buttonSounds.hovering = true;
+
             if
             (
-                mouseVector.x > position.x - origin.offsetX &&
-                mouseVector.x < position.x + transform.width - origin.offsetX &&
-                mouseVector.y > position.y - origin.offsetY &&
-                mouseVector.y < position.y + transform.height - origin.offsetY &&
-                button.clickedTimer <= 0
+                buttonSounds.hovering &&
+                !buttonSounds.hovered
             )
             {
-                sprite.body->setScale
-                (
-                    sf::Vector2f
-                    (
-                        HOVER_SCALE_X * (transform.width / sprite.body->getTexture().getSize().x),
-                        HOVER_SCALE_Y * (transform.height / sprite.body->getTexture().getSize().y)
-                    )
-                );
-                text.box.value().setScale
-                (
-                    sf::Vector2f
-                    (
-                        HOVER_SCALE_X,
-                        HOVER_SCALE_Y
-                    )
-                );
+                makeSound(SoundEffect::HOVER_SOUND_EFFECT);
+                buttonSounds.hovered = true;
             }
 
-            // button clicking
-            if (button.clickedTimer > 0)
+            sprite.body->setScale
+            (
+                sf::Vector2f
+                (
+                    HOVER_SCALE_X * (transform.width / sprite.body->getTexture().getSize().x),
+                    HOVER_SCALE_Y * (transform.height / sprite.body->getTexture().getSize().y)
+                )
+            );
+            text.box.value().setScale
+            (
+                sf::Vector2f
+                (
+                    HOVER_SCALE_X,
+                    HOVER_SCALE_Y
+                )
+            );
+        }
+        else
+        {
+            if (buttonSounds.hovered)
             {
-                sprite.body->setScale
-                (
-                    sf::Vector2f
-                    (
-                        CLICKED_SCALE_X * (transform.width / sprite.body->getTexture().getSize().x),
-                        CLICKED_SCALE_Y * (transform.height / sprite.body->getTexture().getSize().y)
-                    )
-                );
-                text.box.value().setScale
-                (
-                    sf::Vector2f
-                    (
-                        CLICKED_SCALE_X,
-                        CLICKED_SCALE_Y
-                    )
-                );
+                buttonSounds.unhovered = true;
             }
+
+            buttonSounds.hovering = false;
+            buttonSounds.hovered = false;
+
+            if (buttonSounds.unhovered)
+            {
+                makeSound(SoundEffect::UNHOVER_SOUND_EFFECT);
+                buttonSounds.unhovered = false;
+            }
+        }
+
+        // button clicking
+        if (button.clickedTimer > 0)
+        {
+            if
+            (
+                !buttonSounds.clicked
+            )
+            {
+                makeSound(SoundEffect::BUTTON_SOUND_EFFECT);
+                buttonSounds.clicked = true;
+            }
+
+            sprite.body->setScale
+            (
+                sf::Vector2f
+                (
+                    CLICKED_SCALE_X * (transform.width / sprite.body->getTexture().getSize().x),
+                    CLICKED_SCALE_Y * (transform.height / sprite.body->getTexture().getSize().y)
+                )
+            );
+            text.box.value().setScale
+            (
+                sf::Vector2f
+                (
+                    CLICKED_SCALE_X,
+                    CLICKED_SCALE_Y
+                )
+            );
         }
     }
 }
@@ -450,7 +517,7 @@ void hit_Control
         indicPos.x > hitPos.x + (hitTrans.width / 2.f)
     )
     {
-        makeSound(SoundEffect::FAIL);
+        makeSound(SoundEffect::FAIL_SOUND_EFFECT);
 
         if (shakeCam.intensity <= FAIL_INTENSITY)
         {
@@ -512,8 +579,8 @@ void hit_Control
 
 
     score.unaccounted += HIT_SCORE + (HIT_SCORE * dist);
-    makeSound(SoundEffect::HIT);
-    makeSound(SoundEffect::CENTER, 1.f + dist);
+    makeSound(SoundEffect::HIT_SOUND_EFFECT);
+    makeSound(SoundEffect::CENTER_SOUND_EFFECT, 1.f + dist);
 
     // hit score
     feed.feed.push
@@ -550,7 +617,7 @@ void hit_Control
 
     if (score.bounces < 2)
     {
-        makeSound(SoundEffect::BONUS);
+        makeSound(SoundEffect::BONUS_SOUND_EFFECT);
         score.unaccounted += BOUNCE_BONUS;
         // bonus bounce
         feed.feed.push

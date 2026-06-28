@@ -47,6 +47,73 @@ Entity makeUIText
 		}
 	);
 
+	entityMakerNC.addComponent
+	(
+		entity,
+		CTransform
+		{
+			0.f,
+			0.f
+		}
+	);
+
+	return entity;
+}
+
+Entity makeUIText
+(
+	sf::Vector2f pos,
+	sf::Font& font,
+	std::string str,
+	int size,
+	sf::Color col
+)
+{
+	Entity entity = entityMakerNC.createEntity();
+
+	entityMakerNC.addComponent(
+		entity,
+		CPosition
+		{
+			pos.x,
+			pos.y
+		}
+	);
+
+	sf::Text text(font);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CText
+		{
+			text,
+			str,
+			size,
+			col,
+			TextFormat::MIDDLE
+		}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CZIndex
+		{
+			4,
+			true
+		}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CTransform
+		{
+			0.f,
+			0.f
+		}
+	);
+
 	return entity;
 }
 
@@ -103,6 +170,16 @@ Entity makeLog
 			timer,
 			fadeSet,
 			fadeSet
+		}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CTransform
+		{
+			0.f,
+			0.f
 		}
 	);
 
@@ -200,6 +277,11 @@ Entity& makeButton
 			1,
 			true
 		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CButtonSounds{}
 	);
 
 	return entity;
