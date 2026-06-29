@@ -8,19 +8,16 @@ using sf::Clock;
 using sf::Event;
 using sf::Keyboard::Scancode;
 
-// TODO: time it right intro (with sounds)
-// TODO: seperate fill bar and content?
-// TODO: add bounce on corners effect
-// TODO: move indicator to point at the midpoint
 // TODO: return to main menu button
-// TODO: dark mode
+// TODO: dark mode (make also a maker for buttons without text)
+// TODO: make mute music and sound effects button
 // TODO: add background music
 // TODO: make window and application logo
+// TODO: move toward center sound effect
 // TODO: bug fixing
 // FIX: no delay upon clicking button (directly enters next scene)
 // FIX: remove use of Vector2f in entity creation
 // FIX: rename makers to correspond to sprite names
-// FIX: make a seperate load texture for menu scene
 // TODO: publish
 
 void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficulty) {
@@ -66,28 +63,45 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		TextureEnum::INDICATOR_TEXTURE,
 		{
 			window.getSize().x / 2.f,
-			window.getSize().y / 2.f
+			(window.getSize().y / 2.f) - 9.f
 		},
 		{
-			10.f,
-			20.f
+			25.f,
+			25.f
 		},
 		startingSpeed,
 		speedIncrease
 	);
 
-	Entity slider = makeSlider
+	Entity inner = makeSlider
 	(
-		TextureEnum::BAR_TEXTURE,
+		TextureEnum::INNER_TEXTURE,
 		{
 			window.getSize().x / 2.f,
 			window.getSize().y / 2.f
 		},
 		{ // xbounds is tied to size
-			window.getSize().x / 2.f,
-			20.f
+			501.f,
+			14.f
 		},
-		{ // slider min/ max
+		{ // inner min/ max
+			0.f,
+			100.f
+		}
+	);
+
+	Entity outer = makeSlider
+	(
+		TextureEnum::OUTER_TEXTURE,
+		{
+			window.getSize().x / 2.f,
+			window.getSize().y / 2.f
+		},
+		{ // xbounds is tied to size
+			509.f,
+			23.f
+		},
+		{ // inner min/ max
 			0.f,
 			100.f
 		}
@@ -96,7 +110,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 	Entity hitbox = makeHitbox
 	(
 		TextureEnum::FILL_TEXTURE,
-		slider,
+		inner,
 		startSize, // start size
 		minSize, // min size
 		sizeDecrease // size decrease
@@ -242,18 +256,18 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		spawnHitbox_Update
 		(
 			hitbox,
-			slider,
+			inner,
 			dt
 		);
 		moveIndicator_Update
 		(
 			indicator,
-			slider,
+			inner,
 			hitbox
 		);
 		adjustIndicatorSpeed_Update
 		(
-			slider,
+			inner,
 			indicator,
 			hitbox
 		);

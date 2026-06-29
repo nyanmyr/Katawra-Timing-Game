@@ -92,9 +92,10 @@ void loadPlayingTextures_Start(Entity loadedTextures)
     CTexturesContainer& container = texturesContainerArray->getData(loadedTextures);
 
     container.map.emplace(TextureEnum::INDICATOR_TEXTURE, sf::Texture(SPRITES_PATH "indicator_texture.png"));
-    container.map.emplace(TextureEnum::BAR_TEXTURE, sf::Texture(SPRITES_PATH "bar_texture.png"));
     container.map.emplace(TextureEnum::FILL_TEXTURE, sf::Texture(SPRITES_PATH "fill_texture.jpg"));
     container.map.emplace(TextureEnum::BACKGROUND_TEXTURE, sf::Texture(SPRITES_PATH "background_texture.jpg"));
+    container.map.emplace(TextureEnum::INNER_TEXTURE, sf::Texture(SPRITES_PATH "inner_texture.png"));
+    container.map.emplace(TextureEnum::OUTER_TEXTURE, sf::Texture(SPRITES_PATH "outer_texture.png"));
     container.map.emplace(TextureEnum::TEXTURE_PLACEHOLDER_PLACEHOLDER, sf::Texture(SPRITES_PATH "placeholder_placeholder.jpg"));
 }
 void loadMenuTextures_Start(Entity loadedTextures)
@@ -166,6 +167,7 @@ void loadPlaySoundEffects_Start(Entity soundEffects)
     container.sounds.emplace(SoundEffect::HIT_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Hit.wav"));
     container.sounds.emplace(SoundEffect::BLIP1_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Blip1.wav"));
     container.sounds.emplace(SoundEffect::BLIP2_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Blip2.wav"));
+    container.sounds.emplace(SoundEffect::BOUNCE_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Bounce.wav"));
 }
 void loadMenuSoundEffects_Start(Entity soundEffects)
 {
@@ -746,6 +748,7 @@ void moveIndicator_Update
     {
         vel.x = -vel.x;
         ++score.bounces;
+        makeSound(SoundEffect::BOUNCE_SOUND_EFFECT);
     }
 
     if (pos.x > xBounds.max)
@@ -758,7 +761,7 @@ void moveIndicator_Update
     }
 }
 
-const float HITBOX_HEIGHT = 11.5f;
+const float HITBOX_HEIGHT = 14.f;
 
 void spawnHitbox_Update
 (
