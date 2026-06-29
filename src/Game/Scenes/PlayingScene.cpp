@@ -122,6 +122,45 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		"Hits: "
 	);
 
+	Entity intro1 = makeUIText
+	(
+		{
+			window.getSize().x / 2.f,
+			window.getSize().y / 2.f
+		},
+		font,
+		"TIME",
+		16,
+		sf::Color::Black,
+		false
+	);
+
+	Entity intro2 = makeUIText
+	(
+		{
+			window.getSize().x / 2.f,
+			window.getSize().y / 2.f
+		},
+		font,
+		"IT",
+		16,
+		sf::Color::Black,
+		false
+	);
+
+	Entity intro3 = makeUIText
+	(
+		{
+			window.getSize().x / 2.f,
+			window.getSize().y / 2.f
+		},
+		font,
+		"RIGHT!",
+		16,
+		sf::Color::Black,
+		false
+	);
+
 	Entity cameraShake = makeCameraShake();
 	Entity feed = makeFeed();
 	Entity loadedTextures = makeLoadedTexturesContainer();
@@ -134,6 +173,24 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			window.getDefaultView().getSize().y
 		}
 	);
+	Entity intro = makeIntro
+	(
+		{
+			intro1,
+			intro2,
+			intro3
+		},
+		{
+			.5f,
+			.5f,
+			.75f
+		},
+		{
+			SoundEffect::BLIP1_SOUND_EFFECT,
+			SoundEffect::BLIP1_SOUND_EFFECT,
+			SoundEffect::BLIP2_SOUND_EFFECT
+		}
+	);
 
 	loadPlayingTextures_Start(loadedTextures);
 	loadSprites_Start(loadedTextures);
@@ -143,14 +200,20 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 	{
 		// in this case the extra baggage is afforable :p
 		setText_Start(font); // font system is limited to one font
-		setTextOrigin_Start();
-
 		setSpriteOrigins_Start();
 
 		DeltaTime dt = clock.restart().asSeconds();
 
 		auto& pixelPos = sf::Mouse::getPosition(window);
 		auto& worldPos = window.mapPixelToCoords(pixelPos);
+
+		playIntro_Update
+		(
+			intro,
+			dt
+		);
+
+		setTextOrigin_Start();
 
 		while (const std::optional event = window.pollEvent())
 		{

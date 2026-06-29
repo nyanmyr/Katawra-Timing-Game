@@ -34,6 +34,12 @@ void button_Update
 );
 void nextScene_Update(sf::RenderWindow& window, sf::Font& font);
 
+void playIntro_Update
+(
+	Entity intro,
+	DeltaTime dt
+);
+
 void hit_Control
 (
 	sf::Font& font,

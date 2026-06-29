@@ -203,7 +203,9 @@ enum SoundEffect
 	FAIL_SOUND_EFFECT,
 	HIT_SOUND_EFFECT,
 	HOVER_SOUND_EFFECT,
-	UNHOVER_SOUND_EFFECT
+	UNHOVER_SOUND_EFFECT,
+	BLIP1_SOUND_EFFECT,
+	BLIP2_SOUND_EFFECT
 };
 
 struct CSoundEffectsContainer
@@ -236,6 +238,13 @@ struct CButtonSounds
 struct CDelete
 {
 	float timer = 0.f;
+};
+
+struct CIntro
+{
+	std::queue<Entity> texts;
+	std::queue<std::pair<float, float>> timers;
+	std::queue<SoundEffect> soundEffects;
 };
 
 #endif

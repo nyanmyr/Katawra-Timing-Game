@@ -75,7 +75,7 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		font,
 		"Katawra's",
 		64,
-		sf::Color::Black
+		sf::Color::White
 	);
 
 	Entity title = makeUIText
@@ -87,7 +87,7 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		font,
 		"Timing Game",
 		128,
-		sf::Color::Black
+		sf::Color::White
 	);
 
 	Entity creator = makeUIText
@@ -99,7 +99,7 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		font,
 		"a game by Katawra",
 		32,
-		sf::Color::Black
+		sf::Color::White
 	);
 
 	nc.addComponent

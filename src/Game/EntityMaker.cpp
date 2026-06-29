@@ -5,6 +5,7 @@
 
 NacreCoordinator& entityMakerNC = NacreCoordinator::getInstance();
 
+// TODO: is it better to merge these into one?
 Entity makeUIText
 (
 	sf::Vector2f pos,
@@ -101,6 +102,64 @@ Entity makeUIText
 		{
 			4,
 			true
+		}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CTransform
+		{
+			0.f,
+			0.f
+		}
+	);
+
+	return entity;
+}
+
+Entity makeUIText
+(
+	sf::Vector2f pos,
+	sf::Font& font,
+	std::string str,
+	int size,
+	sf::Color col,
+	bool visible
+)
+{
+	Entity entity = entityMakerNC.createEntity();
+
+	entityMakerNC.addComponent(
+		entity,
+		CPosition
+		{
+			pos.x,
+			pos.y
+		}
+	);
+
+	sf::Text text(font);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CText
+		{
+			text,
+			str,
+			size,
+			col,
+			TextFormat::MIDDLE
+		}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CZIndex
+		{
+			4,
+			visible
 		}
 	);
 
@@ -675,6 +734,48 @@ Entity makeSound(SoundEffect type, float pitch)
 	(
 		entity,
 		CSound{ type, pitch }
+	);
+
+	return entity;
+}
+
+Entity makeIntro
+(
+	const std::vector<Entity>& texts,
+	const std::vector<float>& timers,
+	const std::vector<SoundEffect>& soundEffects
+)
+{
+	Entity entity = entityMakerNC.createEntity();
+
+	std::queue<Entity> tempTexts;
+	std::queue<std::pair<float, float>> tempTimers;
+	std::queue<SoundEffect> tempSoundEffects;
+
+	for (Entity entity : texts)
+	{
+		tempTexts.push(entity);
+	}
+
+	for (float timer : timers)
+	{
+		tempTimers.push({ timer , timer });
+	}
+
+	for (SoundEffect soundEffect : soundEffects)
+	{
+		tempSoundEffects.push(soundEffect);
+	}
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CIntro
+		{
+			tempTexts,
+			tempTimers,
+			tempSoundEffects
+		}
 	);
 
 	return entity;

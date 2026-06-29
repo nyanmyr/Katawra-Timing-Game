@@ -164,6 +164,8 @@ void loadPlaySoundEffects_Start(Entity soundEffects)
     container.sounds.emplace(SoundEffect::CENTER_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Center.wav"));
     container.sounds.emplace(SoundEffect::FAIL_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Fail.wav"));
     container.sounds.emplace(SoundEffect::HIT_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Hit.wav"));
+    container.sounds.emplace(SoundEffect::BLIP1_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Blip1.wav"));
+    container.sounds.emplace(SoundEffect::BLIP2_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Blip2.wav"));
 }
 void loadMenuSoundEffects_Start(Entity soundEffects)
 {
@@ -465,6 +467,82 @@ void nextScene_Update(sf::RenderWindow& window, sf::Font& font)
         systemsNC.destroyAll();
         playScene(window, playNextScene, font, diff);
         window.close();
+    }
+}
+
+const float INTRO_TEXT_MAX_SIZE = 512;
+
+void playIntro_Update
+(
+    Entity intro,
+    DeltaTime dt
+)
+{
+    auto& zIndexArray = systemsNC.getComponentArray<CZIndex>();
+    auto& textArray = systemsNC.getComponentArray<CText>();
+
+    CIntro& introC = systemsNC.getComponentArray<CIntro>()->getData(intro);
+
+    if
+        (
+            introC.texts.empty() ||
+            introC.timers.empty()
+            )
+    {
+        //std::cout << "test" << "\n";
+        return;
+    }
+
+    if (introC.timers.front().first > 0.f)
+    {
+        CZIndex& zIndex = zIndexArray->getData(introC.texts.front());
+        CText& text = textArray->getData(introC.texts.front());
+
+        if (!zIndex.visible)
+        {
+            makeSound(introC.soundEffects.front());
+            zIndex.visible = true;
+        }
+
+        //std::cout << "time: " << introC.timers.front().first << "\n";
+
+        float visibility = inverseLerp_Auxiliary
+        (
+            0.f,
+            introC.timers.front().second,
+            introC.timers.front().first
+        );
+        //std::cout << "visibility: " << visibility << "\n";
+
+        text.box->setFillColor
+        (
+            sf::Color
+            (
+                text.box->getFillColor().r,
+                text.box->getFillColor().g,
+                text.box->getFillColor().b,
+                255 * visibility
+            )
+        );
+
+        text.box->setCharacterSize
+        (
+            INTRO_TEXT_MAX_SIZE * (1.f - visibility)
+        );
+
+        introC.timers.front().first -= dt;
+    }
+    else
+    {
+        systemsNC.addComponent
+        (
+            introC.texts.front(),
+            CDelete{}
+        );
+
+        introC.texts.pop();
+        introC.timers.pop();
+        introC.soundEffects.pop();
     }
 }
 

@@ -49,6 +49,7 @@ void main() {
 	nc.registerComponent<CSound>();
 	nc.registerComponent<CButtonSounds>();
 	nc.registerComponent<CDelete>();
+	nc.registerComponent<CIntro>();
 
 	sf::Font font;
 	if (!font.openFromFile(FONT_FILEPATH))

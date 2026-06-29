@@ -21,6 +21,16 @@ Entity makeUIText
 	sf::Color col
 );
 
+Entity makeUIText
+(
+	sf::Vector2f pos,
+	sf::Font& font,
+	std::string str,
+	int size,
+	sf::Color col,
+	bool visible
+);
+
 Entity makeLog
 (
 	sf::Vector2f pos,
@@ -79,5 +89,11 @@ Entity makeLoadedTexturesContainer();
 Entity makeSoundEffectsContainer();
 Entity makeSound(SoundEffect type);
 Entity makeSound(SoundEffect type, float pitch);
+Entity makeIntro
+(
+	const std::vector<Entity>& texts,
+	const std::vector<float>& timers,
+	const std::vector<SoundEffect>& soundEffects
+);
 
 #endif
