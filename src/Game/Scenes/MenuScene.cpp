@@ -18,20 +18,14 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 	// entity instantiation
 	Entity normalMode = makeButton
 	(
-		sf::Vector2f
-		(
-			{
-				window.getSize().x / 2.f,
-				window.getSize().y / 2.f
-			}
-		),
-		sf::Vector2f
-		(
-			{
-				300.f,
-				100.f
-			}
-		),
+		{
+			window.getSize().x / 2.f,
+			window.getSize().y / 2.f
+		},
+		{
+			300.f,
+			100.f
+		},
 		TextureEnum::BUTTON_TEXTURE,
 		"Normal",
 		font,
@@ -46,20 +40,14 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 
 	Entity hardMode = makeButton
 	(
-		sf::Vector2f
-		(
-			{
-				window.getSize().x / 2.f,
-				window.getSize().y / 2.f + 150.f
-			}
-		),
-		sf::Vector2f
-		(
-			{
-				300.f,
-				100.f
-			}
-		),
+		{
+			window.getSize().x / 2.f,
+			window.getSize().y / 2.f + 150.f
+		},
+		{
+			300.f,
+			100.f
+		},
 		TextureEnum::BUTTON_TEXTURE,
 		"Hard",
 		font,

@@ -393,7 +393,7 @@ Entity& makeIndicator
 		entity,
 		CZIndex
 		{
-			3,
+			4,
 			true
 		}
 	);
@@ -425,7 +425,7 @@ Entity& makeIndicator
 	return entity;
 }
 
-Entity& makeSlider
+Entity& makeInnerBar
 (
 	TextureEnum texture,
 	sf::Vector2f pos,
@@ -484,11 +484,6 @@ Entity& makeSlider
 			size.y / 2.f
 		}
 	);
-	entityMakerNC.addComponent
-	(
-		entity,
-		CVelocity{}
-	);
 
 	entityMakerNC.addComponent
 	(
@@ -497,6 +492,69 @@ Entity& makeSlider
 		{
 			pos.x - (size.x / 2.f),
 			pos.x + (size.x / 2.f)
+		}
+	);
+
+	return entity;
+}
+
+Entity& makeObject
+(
+	TextureEnum texture,
+	sf::Vector2f pos,
+	sf::Vector2f size,
+	int index
+)
+{
+	Entity entity = entityMakerNC.createEntity();
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CPosition
+		{
+			pos.x,
+			pos.y
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CTransform
+		{
+			size.x,
+			size.y
+		}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CTexture{ texture }
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSprite{}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CZIndex
+		{
+			index,
+			true
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		COrigin
+		{
+			size.x / 2.f,
+			size.y / 2.f
 		}
 	);
 

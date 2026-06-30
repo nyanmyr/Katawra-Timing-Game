@@ -9,15 +9,11 @@ using sf::Event;
 using sf::Keyboard::Scancode;
 
 // TODO: return to main menu button
-// TODO: dark mode (make also a maker for buttons without text)
 // TODO: make mute music and sound effects button
 // TODO: add background music
-// TODO: make window and application logo
 // TODO: move toward center sound effect
 // TODO: bug fixing
 // FIX: no delay upon clicking button (directly enters next scene)
-// FIX: remove use of Vector2f in entity creation
-// FIX: rename makers to correspond to sprite names
 // TODO: publish
 
 void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficulty) {
@@ -63,7 +59,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		TextureEnum::INDICATOR_TEXTURE,
 		{
 			window.getSize().x / 2.f,
-			(window.getSize().y / 2.f) - 9.f
+			(window.getSize().y / 2.f) - 11.f
 		},
 		{
 			25.f,
@@ -73,7 +69,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		speedIncrease
 	);
 
-	Entity inner = makeSlider
+	Entity inner = makeInnerBar
 	(
 		TextureEnum::INNER_TEXTURE,
 		{
@@ -90,7 +86,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		}
 	);
 
-	Entity outer = makeSlider
+	Entity outer = makeObject
 	(
 		TextureEnum::OUTER_TEXTURE,
 		{
@@ -101,10 +97,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			509.f,
 			23.f
 		},
-		{ // inner min/ max
-			0.f,
-			100.f
-		}
+		3
 	);
 
 	Entity hitbox = makeHitbox

@@ -18,6 +18,8 @@ const std::string FONT_FILEPATH = RESOURCES_PATH "arial.ttf";
 void main() {
 	RenderWindow window(VideoMode({ SCREEN_WIDTH, SCREEN_HEIGHT }), "Katawra Timing Game", sf::Style::Close); // change of the window here
 	window.setFramerateLimit(MAX_FPS);
+	sf::Image icon(SPRITES_PATH "favicon_icon.png");
+	window.setIcon(icon);
 
 	NacreCoordinator& nc = NacreCoordinator::getInstance();
 

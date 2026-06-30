@@ -60,12 +60,20 @@ Entity& makeIndicator
 	float speedIncrease
 );
 
-Entity& makeSlider
+Entity& makeInnerBar
 (
 	TextureEnum texture,
 	sf::Vector2f pos,
 	sf::Vector2f size,
 	sf::Vector2f slider
+);
+
+Entity& makeObject
+(
+	TextureEnum texture,
+	sf::Vector2f pos,
+	sf::Vector2f size,
+	int index
 );
 
 Entity& makeHitbox

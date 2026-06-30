@@ -92,7 +92,7 @@ void loadPlayingTextures_Start(Entity loadedTextures)
     CTexturesContainer& container = texturesContainerArray->getData(loadedTextures);
 
     container.map.emplace(TextureEnum::INDICATOR_TEXTURE, sf::Texture(SPRITES_PATH "indicator_texture.png"));
-    container.map.emplace(TextureEnum::FILL_TEXTURE, sf::Texture(SPRITES_PATH "fill_texture.jpg"));
+    container.map.emplace(TextureEnum::FILL_TEXTURE, sf::Texture(SPRITES_PATH "hitbox_texture.jpg"));
     container.map.emplace(TextureEnum::BACKGROUND_TEXTURE, sf::Texture(SPRITES_PATH "background_texture.jpg"));
     container.map.emplace(TextureEnum::INNER_TEXTURE, sf::Texture(SPRITES_PATH "inner_texture.png"));
     container.map.emplace(TextureEnum::OUTER_TEXTURE, sf::Texture(SPRITES_PATH "outer_texture.png"));
