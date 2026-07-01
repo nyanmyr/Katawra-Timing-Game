@@ -52,7 +52,8 @@ void moveIndicator_Update
 (
 	Entity indicator,
 	Entity slider,
-	Entity hitbox
+	Entity hitbox,
+	Entity hum
 );
 void spawnHitbox_Update
 (

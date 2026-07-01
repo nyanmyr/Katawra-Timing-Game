@@ -207,7 +207,8 @@ enum SoundEffect
 	UNHOVER_SOUND_EFFECT,
 	BLIP1_SOUND_EFFECT,
 	BLIP2_SOUND_EFFECT,
-	BOUNCE_SOUND_EFFECT
+	BOUNCE_SOUND_EFFECT,
+	HUM_SOUND_EFFECT
 };
 
 struct CSoundEffectsContainer
@@ -220,7 +221,9 @@ struct CSound
 	SoundEffect type{};
 	std::optional<sf::Sound> sound;
 	bool played = false;
+	bool loop = false;
 	float pitch = 1.f;
+	float volume = 100.f;
 
 	CSound() = default;
 	CSound(SoundEffect type) :
@@ -229,6 +232,10 @@ struct CSound
 
 	CSound(SoundEffect type, float pitch) :
 		type(type), pitch(pitch) {
+	};
+
+	CSound(SoundEffect type, bool loop, float volume) :
+		type(type), loop(loop), volume(volume) {
 	};
 };
 

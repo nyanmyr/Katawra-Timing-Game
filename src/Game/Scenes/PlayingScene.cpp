@@ -11,7 +11,6 @@ using sf::Keyboard::Scancode;
 // TODO: return to main menu button
 // TODO: make mute music and sound effects button
 // TODO: add background music
-// TODO: move toward center sound effect
 // TODO: bug fixing
 // FIX: no delay upon clicking button (directly enters next scene)
 // TODO: publish
@@ -203,6 +202,8 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 	loadSprites_Start(loadedTextures);
 	loadPlaySoundEffects_Start(soundEffects);
 
+	Entity hum = makeLoopSound(SoundEffect::HUM_SOUND_EFFECT, 6.25f);
+
 	while (window.isOpen())
 	{
 		// in this case the extra baggage is afforable :p
@@ -256,7 +257,8 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		(
 			indicator,
 			inner,
-			hitbox
+			hitbox,
+			hum
 		);
 		adjustIndicatorSpeed_Update
 		(

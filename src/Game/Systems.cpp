@@ -22,6 +22,15 @@ float inverseLerp_Auxiliary
     return (current - min) / (max - min);
 }
 
+float getDistance_Auxiliary
+(
+    float x,
+    float y
+)
+{
+    return std::sqrt(std::pow(x - y,2));
+}
+
 // -------------------------------------------------------
 // start systems
 // -------------------------------------------------------
@@ -168,6 +177,7 @@ void loadPlaySoundEffects_Start(Entity soundEffects)
     container.sounds.emplace(SoundEffect::BLIP1_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Blip1.wav"));
     container.sounds.emplace(SoundEffect::BLIP2_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Blip2.wav"));
     container.sounds.emplace(SoundEffect::BOUNCE_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Bounce.wav"));
+    container.sounds.emplace(SoundEffect::HUM_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Hum.wav"));
 }
 void loadMenuSoundEffects_Start(Entity soundEffects)
 {
@@ -730,19 +740,50 @@ void moveIndicator_Update
 (
     Entity indicator,
     Entity slider,
-    Entity hitbox
+    Entity hitbox,
+    Entity hum
 )
 {
     const CXBounds& xBounds = systemsNC.getComponentArray<CXBounds>()->getData(slider);
     const CSpeed& speed = systemsNC.getComponentArray<CSpeed>()->getData(indicator);
+    const CPosition& hitboxPos = systemsNC.getComponentArray<CPosition>()->getData(hitbox);
+    const CTransform& hitTrans = systemsNC.getComponentArray<CTransform>()->getData(hitbox);
     CPosition& pos = systemsNC.getComponentArray<CPosition>()->getData(indicator);
     CVelocity& vel = systemsNC.getComponentArray<CVelocity>()->getData(indicator);
     CScore& score = systemsNC.getComponentArray<CScore>()->getData(hitbox);
+    CSound& humSound = systemsNC.getComponentArray<CSound>()->getData(hum);
 
     vel.x = vel.x < 0 ? -speed.amount : speed.amount;
 
+    float dist = getDistance_Auxiliary
+    (
+        hitboxPos.x,
+        pos.x
+    );
+
+    float maximalDist = getDistance_Auxiliary
+    (
+        xBounds.min + (hitTrans.width / 2.f),
+        xBounds.max
+    );
+
+    float normalizedDist = inverseLerp_Auxiliary
+    (
+        maximalDist,
+        0.f,
+        dist
+    );
+
+    //std::cout << "dist: " << std::abs(dist) << "\n";
+    //std::cout << "maximalDist: " << std::abs(maximalDist) << "\n";
+    //std::cout << "normalizedDist: " << std::abs(normalizedDist) << "\n";
     //std::cout << "speed.amount: " << speed.amount << "\n";
     //std::cout << "vel.x: " << vel.x << "\n";
+
+    if (humSound.sound.has_value())
+    {
+        humSound.pitch = normalizedDist;
+    }
 
     if (pos.x > xBounds.max || pos.x < xBounds.min)
     {
@@ -1134,10 +1175,19 @@ void playSounds_Update(Entity soundEffects)
             sound.sound.emplace(container.sounds[sound.type]);
         }
 
+        sound.sound->setPitch(sound.pitch);
+        sound.sound->setVolume(sound.volume);
+
+        if (sound.loop)
+        {
+            sound.sound->setLooping(true);
+        }
+
         if 
         (
             sound.sound->getStatus() == sf::SoundSource::Status::Stopped &&
-            sound.played
+            sound.played &&
+            !sound.loop
         )
         {
             systemsNC.addComponent
@@ -1149,7 +1199,6 @@ void playSounds_Update(Entity soundEffects)
         }
         else if (!sound.played)
         {
-            sound.sound->setPitch(sound.pitch);
             sound.sound->play();
             sound.played = true;
         }

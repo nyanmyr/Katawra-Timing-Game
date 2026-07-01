@@ -97,6 +97,7 @@ Entity makeLoadedTexturesContainer();
 Entity makeSoundEffectsContainer();
 Entity makeSound(SoundEffect type);
 Entity makeSound(SoundEffect type, float pitch);
+Entity makeLoopSound(SoundEffect type, float volume);
 Entity makeIntro
 (
 	const std::vector<Entity>& texts,
