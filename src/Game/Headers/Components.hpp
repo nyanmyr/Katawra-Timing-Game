@@ -64,6 +64,7 @@ struct CNextScene
 {
 	Scene next;
 	bool active;
+	Entity sound;
 };
 
 struct CZIndex

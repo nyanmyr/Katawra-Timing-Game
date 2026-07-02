@@ -315,6 +315,7 @@ void button_Update
         CPosition& position = positionArray->getData(entity);
         CSprite& sprite = spriteArray->getData(entity);
         CButtonSounds& buttonSounds = buttonSoundsArray->getData(entity);
+        CNextScene& nextScene = nextSceneArray->getData(entity);
 
         if (button.clickedTimer <= 0)
         {
@@ -345,7 +346,6 @@ void button_Update
                 if (nextSceneArray->hasData(entity))
                 {
                     ////std::cout << "starting next scene." << "\n";
-                    CNextScene& nextScene = nextSceneArray->getData(entity);
                     nextScene.active = true;
                 }
             }
@@ -415,7 +415,7 @@ void button_Update
                 !buttonSounds.clicked
             )
             {
-                makeSound(SoundEffect::BUTTON_SOUND_EFFECT);
+                nextScene.sound = makeSound(SoundEffect::BUTTON_SOUND_EFFECT);
                 buttonSounds.clicked = true;
             }
 
@@ -448,7 +448,11 @@ void nextScene_Update(sf::RenderWindow& window, sf::Font& font)
 
     for (auto& [entity, nextScene] : nextScenes->getAll())
     {
-        if (!systemsNC.getComponentArray<CMode>()->hasData(entity))
+        if 
+        (
+            !systemsNC.getComponentArray<CMode>()->hasData(entity) ||
+            !systemsNC.getComponentArray<CSound>()->hasData(nextScene.sound)
+        )
         {
             continue;
         }
@@ -465,7 +469,13 @@ void nextScene_Update(sf::RenderWindow& window, sf::Font& font)
         }
 
         // buttons must have a shape, origin, and text
-        if (nextScene.active)
+        if
+            (
+                nextScene.active &&
+                systemsNC.getComponentArray<CSound>()->getData(nextScene.sound).sound.has_value() &&
+                systemsNC.getComponentArray<CSound>()->getData(nextScene.sound).sound->getStatus()
+                    == sf::SoundSource::Status::Stopped
+        )
         {
             //std::cout << "active: " << nextScene.next << "\n";
             playNext = true;
@@ -482,7 +492,7 @@ void nextScene_Update(sf::RenderWindow& window, sf::Font& font)
     }
 }
 
-const float INTRO_TEXT_MAX_SIZE = 512;
+const float INTRO_TEXT_MAX_SIZE = 256;
 
 void playIntro_Update
 (

@@ -9,8 +9,15 @@ using sf::Event;
 using sf::Keyboard::Scancode;
 
 // TODO: return to main menu button
-// TODO: make mute music and sound effects button
 // TODO: add background music
+// TODO: make mute music and sound effects button
+// TODO: fade in fade out when switching scenes (shorter fade in for playing the game)
+// TOOO: add what difficulty is selected as text (somewhere on the screen)
+// TODO: change the text color for hard mode and normal mode intro to be different
+// TODO: fix text colors (should be blue instead of white or blacks)
+// TODO: are you sure button prompt main menu button
+// TODO: save score (make it save when returning to menu)
+// TODO: ask to continue if window is abruptly closed
 // TODO: bug fixing
 // FIX: no delay upon clicking button (directly enters next scene)
 // TODO: publish
@@ -28,6 +35,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 	float startSize;
 	float minSize;
 	float sizeDecrease;
+	std::string difficultyStr;
 
 	switch (difficulty)
 	{
@@ -38,7 +46,10 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			startSize = 80.f;
 			minSize = 15.f;
 			sizeDecrease = 10.f;
-			std::cout << "difficulty: HARD\n";
+
+			//std::cout << "difficulty: HARD\n";
+			difficultyStr = "HARD";
+
 			break;
 		case DIFFICULTY_NORMAL:
 		default:
@@ -48,7 +59,10 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			startSize = 100.f;
 			minSize = 20.f;
 			sizeDecrease = 5.f;
-			std::cout << "difficulty: NORMAL\n";
+
+			//std::cout << "difficulty: NORMAL\n";
+			difficultyStr = "NORMAL";
+
 			break;
 	}
 
@@ -167,6 +181,19 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		false
 	);
 
+	Entity difficultyIntro = makeUIText
+	(
+		{
+			window.getSize().x / 2.f,
+			window.getSize().y / 2.f
+		},
+		font,
+		difficultyStr + " MODE",
+		16,
+		sf::Color::Red,
+		false
+	);
+
 	Entity cameraShake = makeCameraShake();
 	Entity feed = makeFeed();
 	Entity loadedTextures = makeLoadedTexturesContainer();
@@ -184,17 +211,20 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		{
 			intro1,
 			intro2,
-			intro3
+			intro3,
+			difficultyIntro
 		},
 		{
 			.5f,
 			.5f,
-			.75f
+			.75f,
+			1.f
 		},
 		{
 			SoundEffect::BLIP1_SOUND_EFFECT,
 			SoundEffect::BLIP1_SOUND_EFFECT,
-			SoundEffect::BLIP2_SOUND_EFFECT
+			SoundEffect::BLIP2_SOUND_EFFECT,
+			SoundEffect::BLIP1_SOUND_EFFECT
 		}
 	);
 
