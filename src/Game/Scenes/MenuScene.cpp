@@ -107,6 +107,9 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 	);
 	Entity soundEffects = makeSoundEffectsContainer();
 
+	const float CORNER_DISTANCE = 50.f;
+	const float SMALL_BUTTON_SIZE = 75.f;
+
 	// onstart systems
 	setText_Start(font); // font system is limited to one font
 	setTextOrigin_Start();
@@ -133,14 +136,17 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 
 			if (const auto& mousePress = event->getIf<sf::Event::MouseButtonPressed>())
 			{
-				buttonClicks_Update
-				(
-					sf::Vector2i
+				if (mousePress->button == sf::Mouse::Button::Left)
+				{
+					buttonClicks_Update
 					(
-						worldPos.x,
-						worldPos.y
-					)
-				);
+						sf::Vector2i
+						(
+							worldPos.x,
+							worldPos.y
+						)
+					);
+				}
 			}
 		}
 

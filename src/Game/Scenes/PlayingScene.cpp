@@ -8,16 +8,16 @@ using sf::Clock;
 using sf::Event;
 using sf::Keyboard::Scancode;
 
-// TODO: return to main menu button
 // TODO: add background music
-// TODO: make mute music and sound effects button
-// TODO: fade in fade out when switching scenes (shorter fade in for playing the game)
+// TODO: make mute music and sound effects button (functionality)
+// TODO: fade in fade out when switching scenes (shorter fade in for playing the game, music should also fade)
 // TOOO: add what difficulty is selected as text (somewhere on the screen)
 // TODO: change the text color for hard mode and normal mode intro to be different
 // TODO: fix text colors (should be blue instead of white or blacks)
 // TODO: are you sure button prompt main menu button
 // TODO: save score (make it save when returning to menu)
 // TODO: ask to continue if window is abruptly closed
+// TODO: change .exe favicon to actual favicon
 // TODO: bug fixing
 // FIX: no delay upon clicking button (directly enters next scene)
 // TODO: publish
@@ -228,9 +228,26 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		}
 	);
 
+	const float CORNER_DISTANCE = 50.f;
+	const float SMALL_BUTTON_SIZE = 75.f;
+
+	Entity menuReturn = makeButton
+	(
+		{
+			CORNER_DISTANCE + (SMALL_BUTTON_SIZE / 2.f),
+			window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)
+		},
+		{
+			SMALL_BUTTON_SIZE,
+			SMALL_BUTTON_SIZE
+		},
+		TextureEnum::BUTTON_RETURN_TEXTURE,
+		Scene::MENU
+	);
+
 	loadPlayingTextures_Start(loadedTextures);
 	loadSprites_Start(loadedTextures);
-	loadPlaySoundEffects_Start(soundEffects);
+	loadPlayingSoundEffects_Start(soundEffects);
 
 	Entity hum = makeLoopSound(SoundEffect::HUM_SOUND_EFFECT, 6.25f);
 
@@ -238,7 +255,6 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 	{
 		// in this case the extra baggage is afforable :p
 		setText_Start(font); // font system is limited to one font
-		setSpriteOrigins_Start();
 
 		DeltaTime dt = clock.restart().asSeconds();
 
@@ -260,6 +276,21 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 				window.close();
 			}
 
+			if (const auto& mousePress = event->getIf<sf::Event::MouseButtonPressed>())
+			{
+				if (mousePress->button == sf::Mouse::Button::Left)
+				{
+					buttonClicks_Update
+					(
+						sf::Vector2i
+						(
+							worldPos.x,
+							worldPos.y
+						)
+					);
+				}
+			}
+
 			if (const auto& buttonPress = event->getIf<sf::Event::KeyReleased>())
 			{
 				if (buttonPress->scancode == sf::Keyboard::Scancode::Space)
@@ -277,6 +308,18 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		}
 
 		// update systems
+		button_Update
+		(
+			sf::Vector2i
+			(
+				worldPos.x,
+				worldPos.y
+			),
+			dt
+		);
+
+		setSpriteOrigins_Start();
+
 		spawnHitbox_Update
 		(
 			hitbox,
@@ -324,6 +367,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			feed
 		);
 		playSounds_Update(soundEffects);
+		nextScene_Update(window, font);
 		delete_Update(dt);
 
 		window.clear();

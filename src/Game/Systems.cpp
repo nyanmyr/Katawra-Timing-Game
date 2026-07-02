@@ -89,6 +89,21 @@ void setTextOrigin_Start()
     }
 }
 
+void loadMusicButtons_Helper(CTexturesContainer& container)
+{
+    container.map.emplace(TextureEnum::BUTTON_MUSIC_1_TEXTURE, sf::Texture(SPRITES_PATH "button_music_1_texture.png"));
+    container.map.emplace(TextureEnum::BUTTON_MUSIC_2_TEXTURE, sf::Texture(SPRITES_PATH "button_music_2_texture.png"));
+    container.map.emplace(TextureEnum::BUTTON_MUSIC_3_TEXTURE, sf::Texture(SPRITES_PATH "button_music_3_texture.png"));
+    container.map.emplace(TextureEnum::BUTTON_MUSIC_OFF_TEXTURE, sf::Texture(SPRITES_PATH "button_music_off_texture.png"));
+}
+void loadSoundButtons_Helper(CTexturesContainer& container)
+{
+    container.map.emplace(TextureEnum::BUTTON_SOUND_1_TEXTURE, sf::Texture(SPRITES_PATH "button_sound_1_texture.png"));
+    container.map.emplace(TextureEnum::BUTTON_SOUND_2_TEXTURE, sf::Texture(SPRITES_PATH "button_sound_2_texture.png"));
+    container.map.emplace(TextureEnum::BUTTON_SOUND_3_TEXTURE, sf::Texture(SPRITES_PATH "button_sound_3_texture.png"));
+    container.map.emplace(TextureEnum::BUTTON_SOUND_OFF_TEXTURE, sf::Texture(SPRITES_PATH "button_sound_off_texture.png"));
+}
+
 void loadPlayingTextures_Start(Entity loadedTextures)
 {
     auto& texturesContainerArray = systemsNC.getComponentArray<CTexturesContainer>();
@@ -106,6 +121,9 @@ void loadPlayingTextures_Start(Entity loadedTextures)
     container.map.emplace(TextureEnum::INNER_TEXTURE, sf::Texture(SPRITES_PATH "inner_texture.png"));
     container.map.emplace(TextureEnum::OUTER_TEXTURE, sf::Texture(SPRITES_PATH "outer_texture.png"));
     container.map.emplace(TextureEnum::TEXTURE_PLACEHOLDER_PLACEHOLDER, sf::Texture(SPRITES_PATH "placeholder_placeholder.jpg"));
+    container.map.emplace(TextureEnum::BUTTON_RETURN_TEXTURE, sf::Texture(SPRITES_PATH "button_return_texture.png"));
+    loadMusicButtons_Helper(container);
+    loadSoundButtons_Helper(container);
 }
 void loadMenuTextures_Start(Entity loadedTextures)
 {
@@ -121,6 +139,9 @@ void loadMenuTextures_Start(Entity loadedTextures)
     container.map.emplace(TextureEnum::BUTTON_TEXTURE, sf::Texture(SPRITES_PATH "button_texture.png"));
     container.map.emplace(TextureEnum::BACKGROUND_TEXTURE, sf::Texture(SPRITES_PATH "background_texture.jpg"));
     container.map.emplace(TextureEnum::TEXTURE_PLACEHOLDER_PLACEHOLDER, sf::Texture(SPRITES_PATH "placeholder_placeholder.jpg"));
+    // unused
+    //loadMusicButtons_Helper(container);
+    //loadSoundButtons_Helper(container);
 }
 void loadSprites_Start(Entity loadedTextures)
 {
@@ -139,10 +160,10 @@ void loadSprites_Start(Entity loadedTextures)
     for (auto& [entity, sprite] : spriteArray->getAll())
     {
         if
-            (
-                !transformArray->hasData(entity) ||
-                !textureArray->hasData(entity)
-                )
+        (
+            !transformArray->hasData(entity) ||
+            !textureArray->hasData(entity)
+        )
         {
             continue;
         }
@@ -161,7 +182,14 @@ void loadSprites_Start(Entity loadedTextures)
     }
 }
 
-void loadPlaySoundEffects_Start(Entity soundEffects)
+void loadButtonSoundEffects_Helper(CSoundEffectsContainer& container)
+{
+    container.sounds.emplace(SoundEffect::BUTTON_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Button.wav"));
+    container.sounds.emplace(SoundEffect::HOVER_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Hover.wav"));
+    container.sounds.emplace(SoundEffect::UNHOVER_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Unhover.wav"));
+}
+
+void loadPlayingSoundEffects_Start(Entity soundEffects)
 {
     if (!systemsNC.getComponentArray<CSoundEffectsContainer>()->hasData(soundEffects))
     {
@@ -178,6 +206,7 @@ void loadPlaySoundEffects_Start(Entity soundEffects)
     container.sounds.emplace(SoundEffect::BLIP2_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Blip2.wav"));
     container.sounds.emplace(SoundEffect::BOUNCE_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Bounce.wav"));
     container.sounds.emplace(SoundEffect::HUM_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Hum.wav"));
+    loadButtonSoundEffects_Helper(container);
 }
 void loadMenuSoundEffects_Start(Entity soundEffects)
 {
@@ -188,9 +217,7 @@ void loadMenuSoundEffects_Start(Entity soundEffects)
 
     CSoundEffectsContainer& container = systemsNC.getComponentArray<CSoundEffectsContainer>()->getData(soundEffects);
 
-    container.sounds.emplace(SoundEffect::BUTTON_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Button.wav"));
-    container.sounds.emplace(SoundEffect::HOVER_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Hover.wav"));
-    container.sounds.emplace(SoundEffect::UNHOVER_SOUND_EFFECT, sf::SoundBuffer(SOUND_EFFECTS_PATH "Unhover.wav"));
+    loadButtonSoundEffects_Helper(container);
 }
 
 void setSpriteOrigins_Start()
@@ -298,7 +325,6 @@ void button_Update
         if
         (
             !originArray->hasData(entity) &&
-            !textArray->hasData(entity) &&
             !positionArray->hasData(entity) &&
             !spriteArray->hasData(entity) &&
             !buttonSoundsArray->hasData(entity)
@@ -310,7 +336,6 @@ void button_Update
         ////std::cout << "button.top: " << button.top << "\n";
         ////std::cout << "button.left: " << button.left << "\n";
         COrigin& origin = originArray->getData(entity);
-        CText& text = textArray->getData(entity);
         CTransform& transform = transformArray->getData(entity);
         CPosition& position = positionArray->getData(entity);
         CSprite& sprite = spriteArray->getData(entity);
@@ -327,14 +352,20 @@ void button_Update
                     DEFAULT_SCALE_Y * (transform.height / sprite.body->getTexture().getSize().y)
                 )
             );
-            text.box.value().setScale
-            (
-                sf::Vector2f
+            
+            if (textArray->hasData(entity))
+            {
+                CText& text = textArray->getData(entity);
+                text.box.value().setScale
                 (
-                    DEFAULT_SCALE_X,
-                    DEFAULT_SCALE_Y
-                )
-            );
+                    sf::Vector2f
+                    (
+                        DEFAULT_SCALE_X,
+                        DEFAULT_SCALE_Y
+                    )
+                );
+            }
+
             button.clicked = false; // reset
         }
         else
@@ -381,14 +412,19 @@ void button_Update
                     HOVER_SCALE_Y * (transform.height / sprite.body->getTexture().getSize().y)
                 )
             );
-            text.box.value().setScale
-            (
-                sf::Vector2f
+
+            if (textArray->hasData(entity))
+            {
+                CText& text = textArray->getData(entity);
+                text.box.value().setScale
                 (
-                    HOVER_SCALE_X,
-                    HOVER_SCALE_Y
-                )
-            );
+                    sf::Vector2f
+                    (
+                        HOVER_SCALE_X,
+                        HOVER_SCALE_Y
+                    )
+                );
+            }
         }
         else
         {
@@ -427,14 +463,19 @@ void button_Update
                     CLICKED_SCALE_Y * (transform.height / sprite.body->getTexture().getSize().y)
                 )
             );
-            text.box.value().setScale
-            (
-                sf::Vector2f
+
+            if (textArray->hasData(entity))
+            {
+                CText& text = textArray->getData(entity);
+                text.box.value().setScale
                 (
-                    CLICKED_SCALE_X,
-                    CLICKED_SCALE_Y
-                )
-            );
+                    sf::Vector2f
+                    (
+                        CLICKED_SCALE_X,
+                        CLICKED_SCALE_Y
+                    )
+                );
+            }
         }
     }
 }
@@ -450,15 +491,16 @@ void nextScene_Update(sf::RenderWindow& window, sf::Font& font)
     {
         if 
         (
-            !systemsNC.getComponentArray<CMode>()->hasData(entity) ||
             !systemsNC.getComponentArray<CSound>()->hasData(nextScene.sound)
         )
         {
             continue;
         }
 
-        switch (systemsNC.getComponentArray<CMode>()->getData(entity).selected)
+        if (systemsNC.getComponentArray<CMode>()->hasData(entity))
         {
+            switch (systemsNC.getComponentArray<CMode>()->getData(entity).selected)
+            {
             case DIFFICULTY_HARD:
                 diff = Difficulty::DIFFICULTY_HARD;
                 break;
@@ -466,6 +508,11 @@ void nextScene_Update(sf::RenderWindow& window, sf::Font& font)
             default:
                 diff = Difficulty::DIFFICULTY_NORMAL;
                 break;
+            }
+        }
+        else
+        {
+            diff = Difficulty::DIFFICULTY_NORMAL;
         }
 
         // buttons must have a shape, origin, and text

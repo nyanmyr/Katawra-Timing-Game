@@ -19,7 +19,7 @@ void loadMenuTextures_Start(Entity loadedTextures);
 void loadSprites_Start(Entity loadedTextures);
 
 void loadMenuSoundEffects_Start(Entity soundEffects);
-void loadPlaySoundEffects_Start(Entity soundEffects);
+void loadPlayingSoundEffects_Start(Entity soundEffects);
 
 void setSpriteOrigins_Start();
 
