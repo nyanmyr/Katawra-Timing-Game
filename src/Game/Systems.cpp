@@ -224,9 +224,21 @@ void setSpriteOrigins_Start()
 {
     auto& originArray = systemsNC.getComponentArray<COrigin>();
     auto& spriteArray = systemsNC.getComponentArray<CSprite>();
+    auto& doSpriteCenterArray = systemsNC.getComponentArray<CDoSpriteCenter>();
+
+    std::vector<Entity> doSpriteCenterVector;
 
     for (auto& [entity, sprite] : spriteArray->getAll())
     {
+        if (!doSpriteCenterArray->hasData(entity))
+        {
+            continue;
+        }
+        else
+        {
+            doSpriteCenterVector.emplace_back(entity);
+        }
+
         if (!originArray->hasData(entity))
         {
             continue;
@@ -241,6 +253,16 @@ void setSpriteOrigins_Start()
                 origin.offsetY / sprite.body->getScale().y
             }
         );
+    }
+
+    if (doSpriteCenterVector.empty())
+    {
+        return;
+    }
+
+    for (Entity entity : doSpriteCenterVector)
+    {
+        systemsNC.removeComponent<CDoSpriteCenter>(entity);
     }
 }
 
@@ -919,6 +941,12 @@ void spawnHitbox_Update
             spawnSize / hitSprite.body->getTexture().getSize().x,
             HITBOX_HEIGHT / hitSprite.body->getTexture().getSize().y
         }
+    );
+
+    systemsNC.addComponent
+    (
+        hitbox,
+        CDoSpriteCenter{}
     );
 
     hit.spawned = true;

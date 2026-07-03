@@ -266,4 +266,7 @@ struct CIntro
 	std::queue<SoundEffect> soundEffects;
 };
 
+struct CDoSpriteCenter
+{ };
+
 #endif

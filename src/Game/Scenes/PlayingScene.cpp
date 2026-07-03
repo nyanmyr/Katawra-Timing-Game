@@ -17,7 +17,6 @@ using sf::Keyboard::Scancode;
 // TODO: are you sure button prompt main menu button
 // TODO: save score (make it save when returning to menu)
 // TODO: ask to continue if window is abruptly closed
-// TODO: change .exe favicon to actual favicon
 // TODO: bug fixing
 // FIX: no delay upon clicking button (directly enters next scene)
 // TODO: publish
@@ -268,6 +267,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		);
 
 		setTextOrigin_Start();
+		setSpriteOrigins_Start();
 
 		while (const std::optional event = window.pollEvent())
 		{
@@ -317,8 +317,6 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			),
 			dt
 		);
-
-		setSpriteOrigins_Start();
 
 		spawnHitbox_Update
 		(

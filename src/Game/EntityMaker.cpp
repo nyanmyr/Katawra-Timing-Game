@@ -343,6 +343,12 @@ Entity& makeButton
 		CButtonSounds{}
 	);
 
+	entityMakerNC.addComponent
+	(
+		entity,
+		CDoSpriteCenter{}
+	);
+
 	return entity;
 }
 Entity& makeButton
@@ -428,6 +434,12 @@ Entity& makeButton
 		CButtonSounds{}
 	);
 
+	entityMakerNC.addComponent
+	(
+		entity,
+		CDoSpriteCenter{}
+	);
+
 	return entity;
 }
 
@@ -507,6 +519,12 @@ Entity& makeIndicator
 		CSpeedIncrease{ speedIncrease }
 	);
 
+	entityMakerNC.addComponent
+	(
+		entity,
+		CDoSpriteCenter{}
+	);
+
 	return entity;
 }
 
@@ -580,6 +598,12 @@ Entity& makeInnerBar
 		}
 	);
 
+	entityMakerNC.addComponent
+	(
+		entity,
+		CDoSpriteCenter{}
+	);
+
 	return entity;
 }
 
@@ -641,6 +665,12 @@ Entity& makeObject
 			size.x / 2.f,
 			size.y / 2.f
 		}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CDoSpriteCenter{}
 	);
 
 	return entity;
@@ -740,6 +770,12 @@ Entity& makeHitbox
 		CScore{}
 	);
 
+	entityMakerNC.addComponent
+	(
+		entity,
+		CDoSpriteCenter{}
+	);
+
 	return entity;
 }
 
@@ -799,6 +835,12 @@ Entity& makeBackground
 			size.x / 2.f,
 			size.y / 2.f
 		}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CDoSpriteCenter{}
 	);
 
 	return entity;
