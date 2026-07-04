@@ -11,10 +11,8 @@ using sf::Keyboard::Scancode;
 // TODO: add background music
 // TODO: make mute music and sound effects button (functionality)
 // TODO: fade in fade out when switching scenes (shorter fade in for playing the game, music should also fade)
-// TOOO: add what difficulty is selected as text (somewhere on the screen)
-// TODO: change the text color for hard mode and normal mode intro to be different
 // TODO: fix text colors (should be blue instead of white or blacks)
-// TODO: are you sure button prompt main menu button
+// TODO: are you sure button prompt main menu button (you should be able to save your progress)
 // TODO: save score (make it save when returning to menu)
 // TODO: ask to continue if window is abruptly closed
 // TODO: bug fixing
@@ -35,6 +33,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 	float minSize;
 	float sizeDecrease;
 	std::string difficultyStr;
+	sf::Color difficultyColor;
 
 	switch (difficulty)
 	{
@@ -48,6 +47,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 
 			//std::cout << "difficulty: HARD\n";
 			difficultyStr = "HARD";
+			difficultyColor = sf::Color(204, 102, 0);
 
 			break;
 		case DIFFICULTY_NORMAL:
@@ -61,6 +61,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 
 			//std::cout << "difficulty: NORMAL\n";
 			difficultyStr = "NORMAL";
+			difficultyColor = sf::Color(0, 102, 204);
 
 			break;
 	}
@@ -189,7 +190,20 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		font,
 		difficultyStr + " MODE",
 		16,
-		sf::Color::Red,
+		difficultyColor,
+		false
+	);
+
+	Entity difficultyText = makeUIText
+	(
+		{
+			window.getSize().x / 2.f,
+			window.getSize().y - 25.f
+		},
+		font,
+		difficultyStr + " MODE",
+		16,
+		difficultyColor,
 		false
 	);
 
