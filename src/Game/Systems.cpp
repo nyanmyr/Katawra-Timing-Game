@@ -677,7 +677,6 @@ void hit_Control
     //std::cout << "min:" << hitPos.x - (hitTrans.width / 2.f) << " max:" << hitPos.x + (hitTrans.width / 2.f) << "\n\n";
 
     feed.positionsSet = false;
-    score.bounces = 0;
     hit.spawned = false;
 
     if 
@@ -784,6 +783,7 @@ void hit_Control
         )
     );
 
+    std::cout << "score.bounces: " << score.bounces << "\n";
     if (score.bounces < 2)
     {
         makeSound(SoundEffect::BONUS_SOUND_EFFECT);
@@ -811,6 +811,8 @@ void hit_Control
     {
         score.fillTimer = FILL_TIMER;
     }
+
+    score.bounces = 0;
 
     //std::cout << "distance: " << dist << "\n";
 }
@@ -868,6 +870,7 @@ void moveIndicator_Update
     {
         vel.x = -vel.x;
         ++score.bounces;
+        //std::cout << "bounces: " << score.bounces << "\n";
         makeSound(SoundEffect::BOUNCE_SOUND_EFFECT);
     }
 

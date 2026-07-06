@@ -11,7 +11,7 @@ using sf::Keyboard::Scancode;
 // TODO: add background music
 // TODO: make mute music and sound effects button (functionality)
 // TODO: fade in fade out when switching scenes (shorter fade in for playing the game, music should also fade)
-// TODO: fix text colors (should be blue instead of white or blacks)
+// TODO: make adjustable color theme
 // TODO: are you sure button prompt main menu button (you should be able to save your progress)
 // TODO: save score (make it save when returning to menu)
 // TODO: ask to continue if window is abruptly closed

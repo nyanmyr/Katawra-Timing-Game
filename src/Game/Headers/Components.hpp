@@ -228,7 +228,7 @@ struct CSoundEffectsContainer
 
 struct CSound
 {
-	SoundEffect type{};
+	SoundEffect type;
 	std::optional<sf::Sound> sound;
 	bool played = false;
 	bool loop = false;
@@ -268,5 +268,26 @@ struct CIntro
 
 struct CDoSpriteCenter
 { };
+
+enum Music
+{
+	_8_BIT_ARCADE,
+	_8_BIT_BEGINNING
+};
+
+enum FadeStatus
+{
+	FADING_IN,
+	FADING_OUT,
+	FADING_COMPLETED
+};
+
+struct CMusic
+{
+	Music type;
+	std::optional<sf::Music> music;
+	float pitch = 1.f;
+	float volume = 100.f;
+};
 
 #endif

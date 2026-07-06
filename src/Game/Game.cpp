@@ -53,6 +53,7 @@ void main() {
 	nc.registerComponent<CDelete>();
 	nc.registerComponent<CIntro>();
 	nc.registerComponent<CDoSpriteCenter>();
+	nc.registerComponent<CMusic>();
 
 	sf::Font font;
 	if (!font.openFromFile(FONT_FILEPATH))
