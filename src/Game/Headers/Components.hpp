@@ -290,4 +290,20 @@ struct CMusic
 	float volume = 100.f;
 };
 
+struct CSceneTransition
+{
+	bool active = true;
+	float timer = 0.f;
+	float fadeinTimer = 0.f;
+	float fadeoutTimer = 0.f;
+	FadeStatus status = FADING_IN;
+	sf::RectangleShape box;
+
+	// timer is set to fade in because it is expected that the entity is created at the start
+	// i.e. the fade in cue of the scene transition
+	CSceneTransition() = default;
+	CSceneTransition(float fadeinTimer, float fadeoutTimer) :
+		timer(fadeinTimer), fadeinTimer(fadeinTimer), fadeoutTimer(fadeoutTimer) {};
+};
+
 #endif

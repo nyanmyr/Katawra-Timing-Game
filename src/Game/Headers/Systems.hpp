@@ -32,6 +32,12 @@ void button_Update
 	sf::Vector2i mouseVector,
 	DeltaTime dt
 );
+void doSceneTransition
+(
+	Entity sceneTransition,
+	DeltaTime dt,
+	const sf::RenderWindow& window
+);
 void nextScene_Update(sf::RenderWindow& window, sf::Font& font);
 
 void playIntro_Update
@@ -103,6 +109,11 @@ void delete_Update(DeltaTime dt);
 // rendering systems
 // -------------------------------------------------------
 void zIndex_Render(std::queue<Entity>& renderQueue);
+void renderSceneTransition
+(
+	sf::RenderWindow& window,
+	Entity sceneTransition
+);
 void render(sf::RenderWindow& window, std::queue<Entity>& renderQueue);
 
 #endif

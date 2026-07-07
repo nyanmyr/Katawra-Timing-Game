@@ -112,5 +112,10 @@ Entity makeIntro
 	const std::vector<float>& timers,
 	const std::vector<SoundEffect>& soundEffects
 );
+Entity makeSceneTransition
+(
+	float fadeinTimer,
+	float fadeoutTimer
+);
 
 #endif

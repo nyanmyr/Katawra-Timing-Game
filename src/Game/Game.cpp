@@ -54,6 +54,7 @@ void main() {
 	nc.registerComponent<CIntro>();
 	nc.registerComponent<CDoSpriteCenter>();
 	nc.registerComponent<CMusic>();
+	nc.registerComponent<CSceneTransition>();
 
 	sf::Font font;
 	if (!font.openFromFile(FONT_FILEPATH))

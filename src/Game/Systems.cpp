@@ -501,6 +501,64 @@ void button_Update
         }
     }
 }
+void doSceneTransition
+(
+    Entity sceneTransition,
+    DeltaTime dt,
+    const sf::RenderWindow& window
+)
+{
+    // this shouldn't be possible (but just in case)
+    if (!systemsNC.getComponentArray<CSceneTransition>()->hasData(sceneTransition))
+    {
+        return;
+    }
+
+    CSceneTransition& sceneTrans = systemsNC.getComponentArray<CSceneTransition>()->getData(sceneTransition);
+
+    sceneTrans.box.setSize
+    (
+        {
+            (float)window.getSize().x,
+            (float)window.getSize().y
+        }
+    );
+
+ 
+
+    if (sceneTrans.timer <= 0.f)
+    {
+        sceneTrans.active = false;
+        return;
+    }
+
+    //std::cout << "timer: " << sceneTrans.timer << "\n";
+
+    sceneTrans.active = true;
+    sceneTrans.timer -= dt;
+
+    float progress = inverseLerp_Auxiliary
+    (
+        0.f,
+        sceneTrans.status == FadeStatus::FADING_IN ? sceneTrans.fadeinTimer : sceneTrans.fadeoutTimer,
+        sceneTrans.timer
+    );
+
+
+    uint8_t alpha = (255.f * progress) < 1 ? 1 : (255.f * progress);
+    //std::cout << "alpha: " << (int)alpha << "\n";
+
+    sf::Color col =
+    {
+        0,
+        0,
+        0,
+        alpha
+    };
+
+    sceneTrans.box.setFillColor(col);
+
+}
 void nextScene_Update(sf::RenderWindow& window, sf::Font& font)
 {
     auto& nextScenes = systemsNC.getComponentArray<CNextScene>();
@@ -1339,6 +1397,27 @@ void zIndex_Render(std::queue<Entity>& renderQueue)
     {
         renderQueue.push(entity);
     }
+}
+void renderSceneTransition
+(
+    sf::RenderWindow& window,
+    Entity sceneTransition
+)
+{
+    if (!systemsNC.getComponentArray<CSceneTransition>()->hasData(sceneTransition))
+    {
+        return;
+    }
+
+    CSceneTransition& sceneTrans = systemsNC.getComponentArray<CSceneTransition>()->getData(sceneTransition);
+
+    if (!sceneTrans.active)
+    {
+        return;
+    }
+
+    //std::cout << "test: " << "\n";
+    window.draw(sceneTrans.box);
 }
 void render
 (

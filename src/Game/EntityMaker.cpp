@@ -978,3 +978,24 @@ Entity makeIntro
 
 	return entity;
 }
+
+Entity makeSceneTransition
+(
+	float fadeinTimer,
+	float fadeoutTimer
+)
+{
+	Entity entity = entityMakerNC.createEntity();
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSceneTransition
+		{
+			fadeinTimer,
+			fadeoutTimer
+		}
+	);
+
+	return entity;
+}

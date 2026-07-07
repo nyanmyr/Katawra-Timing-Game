@@ -107,6 +107,12 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 	);
 	Entity soundEffects = makeSoundEffectsContainer();
 
+	Entity sceneTransition = makeSceneTransition
+	(
+		1.f, // fade in
+		1.f // fade out
+	);
+
 	const float CORNER_DISTANCE = 50.f;
 	const float SMALL_BUTTON_SIZE = 75.f;
 
@@ -161,12 +167,23 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 			dt
 		);
 		playSounds_Update(soundEffects);
+		doSceneTransition
+		(
+			sceneTransition,
+			dt,
+			window
+		);
 		nextScene_Update(window, font);
 
 		window.clear();
 		// render systems
 		zIndex_Render(renderQueue);
 		render(window, renderQueue);
+		renderSceneTransition
+		(
+			window,
+			sceneTransition
+		);
 		window.display();
 	}
 }
