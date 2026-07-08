@@ -38,7 +38,12 @@ void doSceneTransition
 	DeltaTime dt,
 	const sf::RenderWindow& window
 );
-void nextScene_Update(sf::RenderWindow& window, sf::Font& font);
+void nextScene_Update
+(
+	Entity sceneTransition,
+	sf::RenderWindow& window,
+	sf::Font& font
+);
 
 void playIntro_Update
 (

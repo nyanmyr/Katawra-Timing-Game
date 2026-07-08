@@ -173,7 +173,12 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 			dt,
 			window
 		);
-		nextScene_Update(window, font);
+		nextScene_Update
+		(
+			sceneTransition,
+			window,
+			font
+		);
 
 		window.clear();
 		// render systems

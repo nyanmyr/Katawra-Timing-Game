@@ -524,23 +524,35 @@ void doSceneTransition
         }
     );
 
- 
-
     if (sceneTrans.timer <= 0.f)
     {
+        //std::cout << "test: " << "\n";
         sceneTrans.active = false;
         return;
     }
 
-    //std::cout << "timer: " << sceneTrans.timer << "\n";
+    std::cout << "timer: " << sceneTrans.timer << "\n";
 
     sceneTrans.active = true;
     sceneTrans.timer -= dt;
 
+    float progressMin, progressMax;
+
+    if (sceneTrans.status == FadeStatus::FADING_IN)
+    {
+        progressMin = 0.f;
+        progressMax = sceneTrans.fadeinTimer;
+    }
+    else // ik it includes FADING_COMPLETED, but it won't happen
+    {
+        progressMin = sceneTrans.fadeoutTimer;
+        progressMax = 0.f;
+    }
+
     float progress = inverseLerp_Auxiliary
     (
-        0.f,
-        sceneTrans.status == FadeStatus::FADING_IN ? sceneTrans.fadeinTimer : sceneTrans.fadeoutTimer,
+        progressMin,
+        progressMax,
         sceneTrans.timer
     );
 
@@ -559,13 +571,25 @@ void doSceneTransition
     sceneTrans.box.setFillColor(col);
 
 }
-void nextScene_Update(sf::RenderWindow& window, sf::Font& font)
+void nextScene_Update
+(
+    Entity sceneTransition,
+    sf::RenderWindow& window,
+    sf::Font& font
+)
 {
     auto& nextScenes = systemsNC.getComponentArray<CNextScene>();
 
     bool playNext = false;
     Scene playNextScene;
     Difficulty diff;
+
+    if (!systemsNC.getComponentArray<CSceneTransition>()->hasData(sceneTransition))
+    {
+        return;
+    }
+
+    CSceneTransition& sceneTrans = systemsNC.getComponentArray<CSceneTransition>()->getData(sceneTransition);
 
     for (auto& [entity, nextScene] : nextScenes->getAll())
     {
@@ -595,23 +619,37 @@ void nextScene_Update(sf::RenderWindow& window, sf::Font& font)
             diff = Difficulty::DIFFICULTY_NORMAL;
         }
 
+        if (sceneTrans.status == FadeStatus::FADING_OUT)
+        {
+            playNext = true;
+            playNextScene = nextScene.next;
+            break;
+        }
+
         // buttons must have a shape, origin, and text
         if
-            (
-                nextScene.active &&
-                systemsNC.getComponentArray<CSound>()->getData(nextScene.sound).sound.has_value() &&
-                systemsNC.getComponentArray<CSound>()->getData(nextScene.sound).sound->getStatus()
-                    == sf::SoundSource::Status::Stopped
+        (
+            nextScene.active &&
+            systemsNC.getComponentArray<CSound>()->getData(nextScene.sound).sound.has_value() &&
+            systemsNC.getComponentArray<CSound>()->getData(nextScene.sound).sound->getStatus()
+                == sf::SoundSource::Status::Stopped
         )
         {
             //std::cout << "active: " << nextScene.next << "\n";
             playNext = true;
             playNextScene = nextScene.next;
+            sceneTrans.status = FadeStatus::FADING_OUT;
+            sceneTrans.timer = sceneTrans.fadeoutTimer;
             break;
         }
     }
 
-    if (playNext)
+    if 
+    (
+        playNext &&
+        sceneTrans.status == FadeStatus::FADING_OUT &&
+        sceneTrans.timer <= 0
+    )
     {
         systemsNC.destroyAll();
         playScene(window, playNextScene, font, diff);

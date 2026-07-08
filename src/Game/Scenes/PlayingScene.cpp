@@ -258,6 +258,12 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		Scene::MENU
 	);
 
+	Entity sceneTransition = makeSceneTransition
+	(
+		1.f, // fade in
+		1.f // fade out
+	);
+
 	loadPlayingTextures_Start(loadedTextures);
 	loadSprites_Start(loadedTextures);
 	loadPlayingSoundEffects_Start(soundEffects);
@@ -274,6 +280,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		auto& pixelPos = sf::Mouse::getPosition(window);
 		auto& worldPos = window.mapPixelToCoords(pixelPos);
 
+		// TODO: make it play after fade in fade out
 		playIntro_Update
 		(
 			intro,
@@ -320,6 +327,8 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 				}
 			}
 		}
+
+		//std::cout << "fuck! " << nc.getComponentArray<CSceneTransition>()->getAll().size() << "\n";
 
 		// update systems
 		button_Update
@@ -379,13 +388,28 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			feed
 		);
 		playSounds_Update(soundEffects);
-		nextScene_Update(window, font);
+		doSceneTransition
+		(
+			sceneTransition,
+			dt,
+			window
+		);
+		nextScene_Update
+		(
+			sceneTransition,
+			window,
+			font
+		);
 		delete_Update(dt);
 
 		window.clear();
 		// render systems
 		zIndex_Render(renderQueue);
-		render(window, renderQueue);
+		//renderSceneTransition
+		//(
+		//	window,
+		//	sceneTransition
+		//);
 		window.display();
 	}
 }
