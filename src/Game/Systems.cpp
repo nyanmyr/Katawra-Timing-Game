@@ -278,8 +278,20 @@ const float HOVER_SCALE_Y = 1.1f;
 const float CLICKED_SCALE_X = 0.9f;
 const float CLICKED_SCALE_Y = 0.9f;
 
-void buttonClicks_Update(sf::Vector2i mouseVector)
+void buttonClicks_Update
+(
+    Entity sceneTransition,
+    sf::Vector2i mouseVector
+)
 {
+    if 
+    (
+        systemsNC.getComponentArray<CSceneTransition>()->getData(sceneTransition).timer > 0
+    )
+    {
+        return;
+    }
+
     auto& spriteArray = systemsNC.getComponentArray<CSprite>();
     auto& buttonArray = systemsNC.getComponentArray<CButton>();
     auto& originArray = systemsNC.getComponentArray<COrigin>();
@@ -531,7 +543,7 @@ void doSceneTransition
         return;
     }
 
-    std::cout << "timer: " << sceneTrans.timer << "\n";
+    //std::cout << "timer: " << sceneTrans.timer << "\n";
 
     sceneTrans.active = true;
     sceneTrans.timer -= dt;
@@ -593,10 +605,7 @@ void nextScene_Update
 
     for (auto& [entity, nextScene] : nextScenes->getAll())
     {
-        if 
-        (
-            !systemsNC.getComponentArray<CSound>()->hasData(nextScene.sound)
-        )
+        if (!nextScene.active)
         {
             continue;
         }
@@ -644,6 +653,10 @@ void nextScene_Update
         }
     }
 
+    std::cout << "playNext: " << playNext << "\n";
+    std::cout << "sceneTrans.status: " << (sceneTrans.status == FadeStatus::FADING_OUT) << "\n";
+    std::cout << "sceneTrans.timer: " << sceneTrans.timer << "\n";
+
     if 
     (
         playNext &&
@@ -651,6 +664,8 @@ void nextScene_Update
         sceneTrans.timer <= 0
     )
     {
+        std::cout << "test: " << "\n";
+
         systemsNC.destroyAll();
         playScene(window, playNextScene, font, diff);
         window.close();
@@ -662,6 +677,7 @@ const float INTRO_TEXT_MAX_SIZE = 256;
 void playIntro_Update
 (
     Entity intro,
+    Entity sceneTransition,
     DeltaTime dt
 )
 {
@@ -671,10 +687,10 @@ void playIntro_Update
     CIntro& introC = systemsNC.getComponentArray<CIntro>()->getData(intro);
 
     if
-        (
-            introC.texts.empty() ||
-            introC.timers.empty()
-            )
+    (
+        introC.texts.empty() ||
+        introC.timers.empty()
+        )
     {
         //std::cout << "test" << "\n";
         return;
@@ -684,6 +700,15 @@ void playIntro_Update
     {
         CZIndex& zIndex = zIndexArray->getData(introC.texts.front());
         CText& text = textArray->getData(introC.texts.front());
+
+        if
+        (
+            systemsNC.getComponentArray<CSceneTransition>()->getData(sceneTransition).timer > 0
+        )
+        {
+            zIndex.visible = false;
+            return;
+        }
 
         if (!zIndex.visible)
         {
@@ -756,9 +781,18 @@ void hit_Control
     Entity indicator,
     Entity hitbox,
     Entity cameraShake,
-    Entity scoreFeed
+    Entity scoreFeed,
+    Entity sceneTransition
 )
 {
+    if
+    (
+        systemsNC.getComponentArray<CSceneTransition>()->getData(sceneTransition).timer > 0
+    )
+    {
+        return;
+    }
+
     const CPosition& indicPos = systemsNC.getComponentArray<CPosition>()->getData(indicator);
 
     const CPosition& hitPos = systemsNC.getComponentArray<CPosition>()->getData(hitbox);
@@ -879,7 +913,7 @@ void hit_Control
         )
     );
 
-    std::cout << "score.bounces: " << score.bounces << "\n";
+    //std::cout << "score.bounces: " << score.bounces << "\n";
     if (score.bounces < 2)
     {
         makeSound(SoundEffect::BONUS_SOUND_EFFECT);
@@ -918,9 +952,18 @@ void moveIndicator_Update
     Entity indicator,
     Entity slider,
     Entity hitbox,
-    Entity hum
+    Entity hum,
+    Entity sceneTransition
 )
 {
+    if
+    (
+        systemsNC.getComponentArray<CSceneTransition>()->getData(sceneTransition).timer > 0
+    )
+    {
+        return;
+    }
+
     const CXBounds& xBounds = systemsNC.getComponentArray<CXBounds>()->getData(slider);
     const CSpeed& speed = systemsNC.getComponentArray<CSpeed>()->getData(indicator);
     const CPosition& hitboxPos = systemsNC.getComponentArray<CPosition>()->getData(hitbox);
@@ -1058,9 +1101,18 @@ void adjustIndicatorSpeed_Update
 (
     Entity slider,
     Entity indicator,
-    Entity hitbox
+    Entity hitbox,
+    Entity sceneTransition
 )
 {
+    if
+    (
+        systemsNC.getComponentArray<CSceneTransition>()->getData(sceneTransition).timer > 0
+    )
+    {
+        return;
+    }
+
     const CXBounds& xBounds = systemsNC.getComponentArray<CXBounds>()->getData(slider);
     const CSpeedIncrease& speedIncrease = systemsNC.getComponentArray<CSpeedIncrease>()->getData(indicator);
     const CPosition& pos = systemsNC.getComponentArray<CPosition>()->getData(indicator);

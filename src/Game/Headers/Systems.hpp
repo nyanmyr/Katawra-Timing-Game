@@ -26,7 +26,11 @@ void setSpriteOrigins_Start();
 // -------------------------------------------------------
 // update systems
 // -------------------------------------------------------
-void buttonClicks_Update(sf::Vector2i mouseVector);
+void buttonClicks_Update
+(
+	Entity sceneTransition,
+	sf::Vector2i mouseVector
+);
 void button_Update
 (
 	sf::Vector2i mouseVector,
@@ -48,6 +52,7 @@ void nextScene_Update
 void playIntro_Update
 (
 	Entity intro,
+	Entity sceneTransition,
 	DeltaTime dt
 );
 
@@ -57,14 +62,16 @@ void hit_Control
 	Entity indicator,
 	Entity hitbox,
 	Entity cameraShake,
-	Entity scoreFeed
+	Entity scoreFeed,
+	Entity sceneTransition
 );
 void moveIndicator_Update
 (
 	Entity indicator,
 	Entity slider,
 	Entity hitbox,
-	Entity hum
+	Entity hum,
+	Entity sceneTransition
 );
 void spawnHitbox_Update
 (
@@ -77,7 +84,8 @@ void adjustIndicatorSpeed_Update
 (
 	Entity slider,
 	Entity indicator,
-	Entity hitbox
+	Entity hitbox,
+	Entity sceneTransition
 );
 void move_Update(const DeltaTime dt);
 void drag_Update(const DeltaTime dt);

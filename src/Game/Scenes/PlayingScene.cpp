@@ -8,9 +8,9 @@ using sf::Clock;
 using sf::Event;
 using sf::Keyboard::Scancode;
 
+// TODO: adjust volume when fading
 // TODO: add background music
 // TODO: make mute music and sound effects button (functionality)
-// TODO: fade in fade out when switching scenes (shorter fade in for playing the game, music should also fade)
 // TODO: make adjustable color theme
 // TODO: are you sure button prompt main menu button (you should be able to save your progress)
 // TODO: save score (make it save when returning to menu)
@@ -260,8 +260,8 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 
 	Entity sceneTransition = makeSceneTransition
 	(
-		1.f, // fade in
-		1.f // fade out
+		.5f, // fade in
+		.5f // fade out
 	);
 
 	loadPlayingTextures_Start(loadedTextures);
@@ -280,10 +280,10 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		auto& pixelPos = sf::Mouse::getPosition(window);
 		auto& worldPos = window.mapPixelToCoords(pixelPos);
 
-		// TODO: make it play after fade in fade out
 		playIntro_Update
 		(
 			intro,
+			sceneTransition,
 			dt
 		);
 
@@ -303,6 +303,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 				{
 					buttonClicks_Update
 					(
+						sceneTransition,
 						sf::Vector2i
 						(
 							worldPos.x,
@@ -322,13 +323,12 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 						indicator,
 						hitbox,
 						cameraShake,
-						feed
+						feed,
+						sceneTransition
 					);
 				}
 			}
 		}
-
-		//std::cout << "fuck! " << nc.getComponentArray<CSceneTransition>()->getAll().size() << "\n";
 
 		// update systems
 		button_Update
@@ -352,13 +352,15 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			indicator,
 			inner,
 			hitbox,
-			hum
+			hum,
+			sceneTransition
 		);
 		adjustIndicatorSpeed_Update
 		(
 			inner,
 			indicator,
-			hitbox
+			hitbox,
+			sceneTransition
 		);
 		move_Update(dt);
 		displayScore_Update
@@ -405,11 +407,12 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		window.clear();
 		// render systems
 		zIndex_Render(renderQueue);
-		//renderSceneTransition
-		//(
-		//	window,
-		//	sceneTransition
-		//);
+		render(window, renderQueue);
+		renderSceneTransition
+		(
+			window,
+			sceneTransition
+		);
 		window.display();
 	}
 }

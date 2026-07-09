@@ -109,8 +109,8 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 
 	Entity sceneTransition = makeSceneTransition
 	(
-		1.f, // fade in
-		1.f // fade out
+		.5f, // fade in
+		.5f // fade out
 	);
 
 	const float CORNER_DISTANCE = 50.f;
@@ -146,6 +146,7 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 				{
 					buttonClicks_Update
 					(
+						sceneTransition,
 						sf::Vector2i
 						(
 							worldPos.x,
