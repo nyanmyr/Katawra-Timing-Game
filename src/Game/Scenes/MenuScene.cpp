@@ -167,7 +167,11 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 			),
 			dt
 		);
-		playSounds_Update(soundEffects);
+		playSounds_Update
+		(
+			soundEffects,
+			sceneTransition
+		);
 		doSceneTransition
 		(
 			sceneTransition,

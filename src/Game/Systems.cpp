@@ -540,6 +540,7 @@ void doSceneTransition
     {
         //std::cout << "test: " << "\n";
         sceneTrans.active = false;
+        sceneTrans.timer = 0;
         return;
     }
 
@@ -567,7 +568,6 @@ void doSceneTransition
         progressMax,
         sceneTrans.timer
     );
-
 
     uint8_t alpha = (255.f * progress) < 1 ? 1 : (255.f * progress);
     //std::cout << "alpha: " << (int)alpha << "\n";
@@ -653,9 +653,9 @@ void nextScene_Update
         }
     }
 
-    std::cout << "playNext: " << playNext << "\n";
-    std::cout << "sceneTrans.status: " << (sceneTrans.status == FadeStatus::FADING_OUT) << "\n";
-    std::cout << "sceneTrans.timer: " << sceneTrans.timer << "\n";
+    //std::cout << "playNext: " << playNext << "\n";
+    //std::cout << "sceneTrans.status: " << (sceneTrans.status == FadeStatus::FADING_OUT) << "\n";
+    //std::cout << "sceneTrans.timer: " << sceneTrans.timer << "\n";
 
     if 
     (
@@ -1392,16 +1392,48 @@ void doFeed_Update
     systemsNC.deleteEntity(feedScore.feed.front());
     feedScore.feed.pop();
 }
-void playSounds_Update(Entity soundEffects)
+void playSounds_Update
+(
+    Entity soundEffects,
+    Entity sceneTransition
+)
 {
     auto& soundsArray = systemsNC.getComponentArray<CSound>();
-    if (soundsArray->getAll().empty())
+
+    if 
+    (
+        soundsArray->getAll().empty() ||
+        !systemsNC.getComponentArray<CSceneTransition>()->hasData(sceneTransition)
+    )
     {
         //std::cout << "test";
         return;
     }
 
+    CSceneTransition& sceneTrans = systemsNC.getComponentArray<CSceneTransition>()->getData(sceneTransition);
     CSoundEffectsContainer& container = systemsNC.getComponentArray<CSoundEffectsContainer>()->getData(soundEffects);
+
+    float progressMin, progressMax;
+
+    if (sceneTrans.status == FadeStatus::FADING_IN)
+    {
+        progressMin = 0.f;
+        progressMax = sceneTrans.fadeinTimer;
+    }
+    else // ik it includes FADING_COMPLETED, but it won't happen
+    {
+        progressMin = sceneTrans.fadeoutTimer;
+        progressMax = 0.f;
+    }
+
+    float progress = inverseLerp_Auxiliary
+    (
+        progressMax,
+        progressMin,
+        sceneTrans.timer
+    );
+
+    //std::cout << "test: " << progress << "\n";
 
     for (auto& [entity, sound] : soundsArray->getAll())
     {
@@ -1412,7 +1444,7 @@ void playSounds_Update(Entity soundEffects)
         }
 
         sound.sound->setPitch(sound.pitch);
-        sound.sound->setVolume(sound.volume);
+        sound.sound->setVolume(sound.volume * progress);
 
         if (sound.loop)
         {

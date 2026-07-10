@@ -8,8 +8,6 @@ using sf::Clock;
 using sf::Event;
 using sf::Keyboard::Scancode;
 
-// TODO: adjust volume when fading
-// TODO: add background music
 // TODO: make mute music and sound effects button (functionality)
 // TODO: make adjustable color theme
 // TODO: are you sure button prompt main menu button (you should be able to save your progress)
@@ -389,7 +387,11 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			dt,
 			feed
 		);
-		playSounds_Update(soundEffects);
+		playSounds_Update
+		(
+			soundEffects,
+			sceneTransition
+		);
 		doSceneTransition
 		(
 			sceneTransition,

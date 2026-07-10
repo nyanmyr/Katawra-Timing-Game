@@ -114,7 +114,11 @@ void doFeed_Update
 	DeltaTime dt,
 	Entity feed
 );
-void playSounds_Update(Entity soundEffects);
+void playSounds_Update
+(
+	Entity soundEffects,
+	Entity sceneTransition
+);
 void delete_Update(DeltaTime dt);
 
 
