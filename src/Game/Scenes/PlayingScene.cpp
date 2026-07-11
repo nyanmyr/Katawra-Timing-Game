@@ -241,11 +241,12 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 
 	const float CORNER_DISTANCE = 50.f;
 	const float SMALL_BUTTON_SIZE = 75.f;
+	const float FIRST_SMALL_BUTTON_X = CORNER_DISTANCE + (SMALL_BUTTON_SIZE / 2.f);
 
 	Entity menuReturn = makeButton
 	(
 		{
-			CORNER_DISTANCE + (SMALL_BUTTON_SIZE / 2.f),
+			FIRST_SMALL_BUTTON_X,
 			window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)
 		},
 		{
@@ -254,6 +255,32 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		},
 		TextureEnum::BUTTON_RETURN_TEXTURE,
 		Scene::MENU
+	);
+
+	Entity musicButton = makeButton
+	(
+		{
+			FIRST_SMALL_BUTTON_X * 2,
+			window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)
+		},
+		{
+			SMALL_BUTTON_SIZE,
+			SMALL_BUTTON_SIZE
+		},
+		TextureEnum::BUTTON_MUSIC_3_TEXTURE
+	);
+
+	Entity soundButton = makeButton
+	(
+		{
+			FIRST_SMALL_BUTTON_X * 3,
+			window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)
+		},
+		{
+			SMALL_BUTTON_SIZE,
+			SMALL_BUTTON_SIZE
+		},
+		TextureEnum::BUTTON_SOUND_3_TEXTURE
 	);
 
 	Entity sceneTransition = makeSceneTransition

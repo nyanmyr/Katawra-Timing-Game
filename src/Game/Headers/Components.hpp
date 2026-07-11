@@ -41,6 +41,7 @@ struct CButton
 {
 	float clickedDuration, clickedTimer = 0.f;
 	bool clicked = false, enabled = true;
+	Entity sound;
 
 	CButton() = default;
 	CButton(const float clickedDuration, const bool enabled) :
@@ -64,7 +65,6 @@ struct CNextScene
 {
 	Scene next;
 	bool active;
-	Entity sound;
 };
 
 struct CZIndex

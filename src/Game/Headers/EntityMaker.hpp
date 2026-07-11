@@ -59,6 +59,13 @@ Entity& makeButton
 	Scene scene
 );
 
+Entity& makeButton
+(
+	sf::Vector2f pos,
+	sf::Vector2f size,
+	TextureEnum texture
+);
+
 Entity& makeIndicator
 (
 	TextureEnum texture,

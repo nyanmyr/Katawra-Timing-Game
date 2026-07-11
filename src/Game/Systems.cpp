@@ -358,9 +358,9 @@ void button_Update
         // buttonArray must have a shape, origin, and text
         if
         (
-            !originArray->hasData(entity) &&
-            !positionArray->hasData(entity) &&
-            !spriteArray->hasData(entity) &&
+            !originArray->hasData(entity) ||
+            !positionArray->hasData(entity) ||
+            !spriteArray->hasData(entity) ||
             !buttonSoundsArray->hasData(entity)
         )
         {
@@ -374,7 +374,6 @@ void button_Update
         CPosition& position = positionArray->getData(entity);
         CSprite& sprite = spriteArray->getData(entity);
         CButtonSounds& buttonSounds = buttonSoundsArray->getData(entity);
-        CNextScene& nextScene = nextSceneArray->getData(entity);
 
         if (button.clickedTimer <= 0)
         {
@@ -408,9 +407,12 @@ void button_Update
             if (button.clickedTimer <= 0)
             {
                 button.clicked = true;
+
+
                 if (nextSceneArray->hasData(entity))
                 {
                     ////std::cout << "starting next scene." << "\n";
+                    CNextScene& nextScene = nextSceneArray->getData(entity);
                     nextScene.active = true;
                 }
             }
@@ -485,9 +487,11 @@ void button_Update
                 !buttonSounds.clicked
             )
             {
-                nextScene.sound = makeSound(SoundEffect::BUTTON_SOUND_EFFECT);
+                button.sound = makeSound(SoundEffect::BUTTON_SOUND_EFFECT);
                 buttonSounds.clicked = true;
             }
+
+
 
             sprite.body->setScale
             (
@@ -590,6 +594,7 @@ void nextScene_Update
     sf::Font& font
 )
 {
+    auto& buttonArray = systemsNC.getComponentArray<CButton>();
     auto& nextScenes = systemsNC.getComponentArray<CNextScene>();
 
     bool playNext = false;
@@ -605,10 +610,16 @@ void nextScene_Update
 
     for (auto& [entity, nextScene] : nextScenes->getAll())
     {
-        if (!nextScene.active)
+        if 
+        (
+            !nextScene.active ||
+            !buttonArray->hasData(entity)
+        )
         {
             continue;
         }
+
+        CButton& button = systemsNC.getComponentArray<CButton>()->getData(entity);
 
         if (systemsNC.getComponentArray<CMode>()->hasData(entity))
         {
@@ -639,8 +650,8 @@ void nextScene_Update
         if
         (
             nextScene.active &&
-            systemsNC.getComponentArray<CSound>()->getData(nextScene.sound).sound.has_value() &&
-            systemsNC.getComponentArray<CSound>()->getData(nextScene.sound).sound->getStatus()
+            systemsNC.getComponentArray<CSound>()->getData(button.sound).sound.has_value() &&
+            systemsNC.getComponentArray<CSound>()->getData(button.sound).sound->getStatus()
                 == sf::SoundSource::Status::Stopped
         )
         {
