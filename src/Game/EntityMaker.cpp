@@ -1017,6 +1017,32 @@ Entity makeLoopSound(SoundEffect type, float volume)
 	return entity;
 }
 
+Entity makeMusic(Music type)
+{
+	Entity entity = entityMakerNC.createEntity();
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CMusic{ type }
+	);
+
+	return entity;
+}
+
+Entity makeMusicTrack()
+{
+	Entity entity = entityMakerNC.createEntity();
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CMusicTrack{}
+	);
+
+	return entity;
+}
+
 Entity makeIntro
 (
 	const std::vector<Entity>& texts,

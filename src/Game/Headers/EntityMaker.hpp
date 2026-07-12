@@ -109,10 +109,15 @@ Entity& makeBackground
 Entity makeCameraShake();
 Entity makeFeed();
 Entity makeLoadedTexturesContainer();
+
 Entity makeSoundEffectsContainer();
 Entity makeSound(SoundEffect type);
 Entity makeSound(SoundEffect type, float pitch);
 Entity makeLoopSound(SoundEffect type, float volume);
+
+Entity makeMusic(Music type);
+Entity makeMusicTrack();
+
 Entity makeIntro
 (
 	const std::vector<Entity>& texts,

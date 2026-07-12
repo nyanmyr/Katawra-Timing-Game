@@ -4,6 +4,7 @@
 #include <random>
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 const float E = 2.1781828f;
 
@@ -218,6 +219,18 @@ void loadMenuSoundEffects_Start(Entity soundEffects)
     CSoundEffectsContainer& container = systemsNC.getComponentArray<CSoundEffectsContainer>()->getData(soundEffects);
 
     loadButtonSoundEffects_Helper(container);
+}
+
+void loadPlayingMusicTrack(Entity musicTrack)
+{
+    if (!systemsNC.getComponentArray<CMusicTrack>()->hasData(musicTrack))
+    {
+        return;
+    }
+
+    CMusicTrack& musicTrackObj = systemsNC.getComponentArray<CMusicTrack>()->getData(musicTrack);
+
+    musicTrackObj.track.push(Music::_8_BIT_ARCADE);
 }
 
 void setSpriteOrigins_Start()
@@ -1483,6 +1496,73 @@ void playSounds_Update
         }
 
     }
+}
+void playMusic_Update
+(
+    Entity musicTrack,
+    Entity sceneTransition
+)
+{
+    if (!systemsNC.getComponentArray<CMusicTrack>()->hasData(musicTrack))
+    {
+        return;
+    }
+
+    CMusicTrack& musicTrackObj = systemsNC.getComponentArray<CMusicTrack>()->getData(musicTrack);
+
+    if (musicTrackObj.hasCurrent)
+    {
+        CMusic& musicObj = systemsNC.getComponentArray<CMusic>()->getData(musicTrackObj.current);
+
+        if (musicObj.music.getStatus() == sf::Music::Status::Stopped)
+        {
+            systemsNC.addComponent
+            (
+                musicTrackObj.current,
+                CDelete{}
+            );
+        }
+
+        Music tempType = musicObj.type;
+
+        musicTrackObj.track.pop();
+        musicTrackObj.track.push(tempType);
+
+        musicTrackObj.playing = false;
+        musicTrackObj.hasCurrent = false;
+        return;
+    }
+
+    if (musicTrackObj.playing)
+    {
+        return;
+    }
+
+    musicTrackObj.playing = true;
+    musicTrackObj.hasCurrent = true;
+    musicTrackObj.current = makeMusic(musicTrackObj.track.front());
+
+    CMusic& musicObj = systemsNC.getComponentArray<CMusic>()->getData(musicTrackObj.current);
+
+    std::string musicFilePath;
+
+    switch (musicObj.type)
+    {
+    case _8_BIT_ARCADE:
+        musicFilePath = "8_Bit_Arcade.ogg";
+        break;
+    case _8_BIT_BEGINNING:
+    default:
+        musicFilePath = "8_Bit_Beginning.ogg";
+        break;
+    }
+
+    if (!musicObj.music.openFromFile(MUSIC_PATH + musicFilePath))
+    {
+        throw std::runtime_error("Music file is missing.");
+    }
+
+    musicObj.music.play();
 }
 void delete_Update(DeltaTime dt)
 {

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "../src/Game/Headers/GameManager.hpp"
 #include "../src/Game/Headers/Scenes.hpp"
 
@@ -289,9 +290,12 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		.5f // fade out
 	);
 
+	Entity musicTrack = makeMusicTrack();
+
 	loadPlayingTextures_Start(loadedTextures);
 	loadSprites_Start(loadedTextures);
 	loadPlayingSoundEffects_Start(soundEffects);
+	loadPlayingMusicTrack(musicTrack);
 
 	Entity hum = makeLoopSound(SoundEffect::HUM_SOUND_EFFECT, 6.25f);
 
@@ -417,6 +421,11 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		playSounds_Update
 		(
 			soundEffects,
+			sceneTransition
+		);
+		playMusic_Update
+		(
+			musicTrack,
 			sceneTransition
 		);
 		doSceneTransition

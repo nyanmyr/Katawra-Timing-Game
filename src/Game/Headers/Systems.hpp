@@ -2,6 +2,8 @@
 #define SYSTEMS_HPP
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+
 #include "../../Engine/NacreCoordinator.hpp"
 #include "Components.hpp"
 #include "EntityMaker.hpp"
@@ -20,6 +22,8 @@ void loadSprites_Start(Entity loadedTextures);
 
 void loadMenuSoundEffects_Start(Entity soundEffects);
 void loadPlayingSoundEffects_Start(Entity soundEffects);
+
+void loadPlayingMusicTrack(Entity musicTrack);
 
 void setSpriteOrigins_Start();
 
@@ -117,6 +121,11 @@ void doFeed_Update
 void playSounds_Update
 (
 	Entity soundEffects,
+	Entity sceneTransition
+);
+void playMusic_Update
+(
+	Entity musicTrack,
 	Entity sceneTransition
 );
 void delete_Update(DeltaTime dt);
