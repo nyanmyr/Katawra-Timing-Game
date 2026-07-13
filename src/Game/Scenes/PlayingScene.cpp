@@ -296,6 +296,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 	loadSprites_Start(loadedTextures);
 	loadPlayingSoundEffects_Start(soundEffects);
 	loadPlayingMusicTrack(musicTrack);
+	std::optional<sf::Music> music;
 
 	Entity hum = makeLoopSound(SoundEffect::HUM_SOUND_EFFECT, 6.25f);
 
@@ -426,7 +427,8 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		playMusic_Update
 		(
 			musicTrack,
-			sceneTransition
+			sceneTransition,
+			music
 		);
 		doSceneTransition
 		(

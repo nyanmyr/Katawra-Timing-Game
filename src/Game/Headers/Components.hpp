@@ -285,14 +285,10 @@ enum FadeStatus
 struct CMusic
 {
 	Music type;
-	sf::Music music;
-	float pitch = 1.f;
-	float volume = 100.f;
 };
 
 struct CMusicTrack
 {
-	bool playing = false; // assumed at start
 	bool hasCurrent = false;
 	Entity current;
 	std::queue<Music> track;

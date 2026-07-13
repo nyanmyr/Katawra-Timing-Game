@@ -24,6 +24,7 @@ void loadMenuSoundEffects_Start(Entity soundEffects);
 void loadPlayingSoundEffects_Start(Entity soundEffects);
 
 void loadPlayingMusicTrack(Entity musicTrack);
+void loadMenuMusicTrack(Entity musicTrack);
 
 void setSpriteOrigins_Start();
 
@@ -126,7 +127,8 @@ void playSounds_Update
 void playMusic_Update
 (
 	Entity musicTrack,
-	Entity sceneTransition
+	Entity sceneTransition,
+	std::optional<sf::Music>& music
 );
 void delete_Update(DeltaTime dt);
 

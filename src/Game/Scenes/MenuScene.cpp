@@ -113,8 +113,14 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		.5f // fade out
 	);
 
+	// TODO: add use for these
 	const float CORNER_DISTANCE = 50.f;
 	const float SMALL_BUTTON_SIZE = 75.f;
+
+	Entity musicTrack = makeMusicTrack();
+
+	loadMenuMusicTrack(musicTrack);
+	std::optional<sf::Music> music;
 
 	// onstart systems
 	setText_Start(font); // font system is limited to one font
@@ -171,6 +177,12 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		(
 			soundEffects,
 			sceneTransition
+		);
+		playMusic_Update
+		(
+			musicTrack,
+			sceneTransition,
+			music
 		);
 		doSceneTransition
 		(

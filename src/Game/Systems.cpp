@@ -232,6 +232,17 @@ void loadPlayingMusicTrack(Entity musicTrack)
 
     musicTrackObj.track.push(Music::_8_BIT_ARCADE);
 }
+void loadMenuMusicTrack(Entity musicTrack)
+{
+    if (!systemsNC.getComponentArray<CMusicTrack>()->hasData(musicTrack))
+    {
+        return;
+    }
+
+    CMusicTrack& musicTrackObj = systemsNC.getComponentArray<CMusicTrack>()->getData(musicTrack);
+
+    musicTrackObj.track.push(Music::_8_BIT_BEGINNING);
+}
 
 void setSpriteOrigins_Start()
 {
@@ -688,7 +699,7 @@ void nextScene_Update
         sceneTrans.timer <= 0
     )
     {
-        std::cout << "test: " << "\n";
+        //std::cout << "test: " << "\n";
 
         systemsNC.destroyAll();
         playScene(window, playNextScene, font, diff);
@@ -1497,48 +1508,81 @@ void playSounds_Update
 
     }
 }
+
+const float DEFAULT_MUSIC_VOLUME = 50.f;
+
 void playMusic_Update
 (
     Entity musicTrack,
-    Entity sceneTransition
+    Entity sceneTransition,
+    std::optional<sf::Music>& music
 )
 {
-    if (!systemsNC.getComponentArray<CMusicTrack>()->hasData(musicTrack))
+    if 
+    (
+        !systemsNC.getComponentArray<CMusicTrack>()->hasData(musicTrack) ||
+        !systemsNC.getComponentArray<CSceneTransition>()->hasData(sceneTransition)
+    )
     {
         return;
     }
 
     CMusicTrack& musicTrackObj = systemsNC.getComponentArray<CMusicTrack>()->getData(musicTrack);
+    CSceneTransition& sceneTrans = systemsNC.getComponentArray<CSceneTransition>()->getData(sceneTransition);
+
+    // adjust music to blend w/ transition
+    if (music.has_value())
+    {
+        float progressMin, progressMax;
+
+        if (sceneTrans.status == FadeStatus::FADING_IN)
+        {
+            progressMin = 0.f;
+            progressMax = sceneTrans.fadeinTimer;
+        }
+        else // ik it includes FADING_COMPLETED, but it won't happen
+        {
+            progressMin = sceneTrans.fadeoutTimer;
+            progressMax = 0.f;
+        }
+
+        float progress = inverseLerp_Auxiliary
+        (
+            progressMax,
+            progressMin,
+            sceneTrans.timer
+        );
+
+        music->setVolume(DEFAULT_MUSIC_VOLUME * progress);
+    }
+
+    if 
+    (
+        music.has_value() &&
+        music->getStatus() == sf::Music::Status::Stopped &&
+        musicTrackObj.hasCurrent
+    )
+    {
+        musicTrackObj.hasCurrent = false;
+        systemsNC.addComponent
+        (
+            musicTrackObj.current,
+            CDelete{}
+        );
+
+        Music temp = musicTrackObj.track.front();
+
+        musicTrackObj.track.pop();
+        musicTrackObj.track.push(temp);
+
+        return;
+    }
 
     if (musicTrackObj.hasCurrent)
     {
-        CMusic& musicObj = systemsNC.getComponentArray<CMusic>()->getData(musicTrackObj.current);
-
-        if (musicObj.music.getStatus() == sf::Music::Status::Stopped)
-        {
-            systemsNC.addComponent
-            (
-                musicTrackObj.current,
-                CDelete{}
-            );
-        }
-
-        Music tempType = musicObj.type;
-
-        musicTrackObj.track.pop();
-        musicTrackObj.track.push(tempType);
-
-        musicTrackObj.playing = false;
-        musicTrackObj.hasCurrent = false;
         return;
     }
-
-    if (musicTrackObj.playing)
-    {
-        return;
-    }
-
-    musicTrackObj.playing = true;
+    
     musicTrackObj.hasCurrent = true;
     musicTrackObj.current = makeMusic(musicTrackObj.track.front());
 
@@ -1549,20 +1593,54 @@ void playMusic_Update
     switch (musicObj.type)
     {
     case _8_BIT_ARCADE:
-        musicFilePath = "8_Bit_Arcade.ogg";
+        musicFilePath = MUSIC_PATH "8_Bit_Arcade.ogg";
         break;
     case _8_BIT_BEGINNING:
     default:
-        musicFilePath = "8_Bit_Beginning.ogg";
+        musicFilePath = MUSIC_PATH "8_Bit_Beginning.ogg";
         break;
     }
 
-    if (!musicObj.music.openFromFile(MUSIC_PATH + musicFilePath))
-    {
-        throw std::runtime_error("Music file is missing.");
-    }
+    music.emplace(musicFilePath);
+    music->play();
 
-    musicObj.music.play();
+    //if (!musicObj.music.openFromFile(MUSIC_PATH + musicFilePath))
+    //{
+    //    throw std::runtime_error("Music file is missing.");
+    //}
+
+    //musicObj.music.play();
+
+
+    //if (musicTrackObj.hasCurrent)
+    //{
+    //    CMusic& musicObj = systemsNC.getComponentArray<CMusic>()->getData(musicTrackObj.current);
+
+    //    if (musicObj.music.getStatus() == sf::Music::Status::Stopped)
+    //    {
+    //        systemsNC.addComponent
+    //        (
+    //            musicTrackObj.current,
+    //            CDelete{}
+    //        );
+    //    }
+
+    //    Music tempType = musicObj.type;
+
+    //    musicTrackObj.track.pop();
+    //    musicTrackObj.track.push(tempType);
+
+    //    musicTrackObj.playing = false;
+    //    musicTrackObj.hasCurrent = false;
+    //    return;
+    //}
+
+    //if (musicTrackObj.playing)
+    //{
+    //    return;
+    //}
+
+
 }
 void delete_Update(DeltaTime dt)
 {
