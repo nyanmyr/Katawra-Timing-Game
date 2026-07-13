@@ -357,6 +357,51 @@ void buttonClicks_Update
         }
     }
 }
+void doSoundControl_Update(Entity soundButton)
+{
+    if
+    (
+        !systemsNC.getComponentArray<CButton>()->hasData(soundButton) ||
+        !systemsNC.getComponentArray<CSoundControl>()->hasData(soundButton)
+    )
+    {
+        return;
+    }
+
+    CSoundControl& soundControlObj = systemsNC.getComponentArray<CSoundControl>()->getData(soundButton);
+    const CButton& buttonObj = systemsNC.getComponentArray<CButton>()->getData(soundButton);
+
+    if 
+    (
+        !buttonObj.clicked ||
+        buttonObj.clickedTimer > 0.f
+    )
+    {
+        return;
+    }
+    //std::cout << "clicked" << "\n";
+
+    switch (soundControlObj.current)
+    {
+    case QUARTER_SOUND:
+        soundControlObj.current = ESoundStatus::HALF_SOUND;
+        std::cout << "half sound" << "\n";
+        break;
+    case HALF_SOUND:
+        soundControlObj.current = ESoundStatus::FULL_SOUND;
+        std::cout << "full sound" << "\n";
+        break;
+    case FULL_SOUND:
+        soundControlObj.current = ESoundStatus::MUTED_SOUND;
+        std::cout << "muted sound" << "\n";
+        break;
+    case MUTED_SOUND:
+    default:
+        soundControlObj.current = ESoundStatus::QUARTER_SOUND;
+        std::cout << "quarter sound" << "\n";
+        break;
+    }
+}
 void button_Update
 (
     sf::Vector2i mouseVector,
@@ -431,7 +476,6 @@ void button_Update
             if (button.clickedTimer <= 0)
             {
                 button.clicked = true;
-
 
                 if (nextSceneArray->hasData(entity))
                 {
@@ -1430,7 +1474,8 @@ void doFeed_Update
 void playSounds_Update
 (
     Entity soundEffects,
-    Entity sceneTransition
+    Entity sceneTransition,
+    Entity soundButton
 )
 {
     auto& soundsArray = systemsNC.getComponentArray<CSound>();
@@ -1438,7 +1483,8 @@ void playSounds_Update
     if 
     (
         soundsArray->getAll().empty() ||
-        !systemsNC.getComponentArray<CSceneTransition>()->hasData(sceneTransition)
+        !systemsNC.getComponentArray<CSceneTransition>()->hasData(sceneTransition) ||
+        !systemsNC.getComponentArray<CSoundControl>()->hasData(soundButton)
     )
     {
         //std::cout << "test";
@@ -1447,6 +1493,7 @@ void playSounds_Update
 
     CSceneTransition& sceneTrans = systemsNC.getComponentArray<CSceneTransition>()->getData(sceneTransition);
     CSoundEffectsContainer& container = systemsNC.getComponentArray<CSoundEffectsContainer>()->getData(soundEffects);
+    const CSoundControl& soundControlObj = systemsNC.getComponentArray<CSoundControl>()->getData(soundButton);
 
     float progressMin, progressMax;
 
@@ -1478,8 +1525,27 @@ void playSounds_Update
             sound.sound.emplace(container.sounds[sound.type]);
         }
 
+        float buttonFactor;
+
+        switch (soundControlObj.current)
+        {
+        case QUARTER_SOUND:
+            buttonFactor = .25f;
+            break;
+        case HALF_SOUND:
+            buttonFactor = .5f;
+            break;
+        case FULL_SOUND:
+            buttonFactor = 1.f;
+            break;
+        case MUTED_SOUND:
+        default:
+            buttonFactor = 0.f;
+            break;
+        }
+
         sound.sound->setPitch(sound.pitch);
-        sound.sound->setVolume(sound.volume * progress);
+        sound.sound->setVolume((sound.volume * progress) * buttonFactor);
 
         if (sound.loop)
         {
@@ -1515,13 +1581,15 @@ void playMusic_Update
 (
     Entity musicTrack,
     Entity sceneTransition,
+    Entity musicButton,
     std::optional<sf::Music>& music
 )
 {
     if 
     (
         !systemsNC.getComponentArray<CMusicTrack>()->hasData(musicTrack) ||
-        !systemsNC.getComponentArray<CSceneTransition>()->hasData(sceneTransition)
+        !systemsNC.getComponentArray<CSceneTransition>()->hasData(sceneTransition) ||
+        !systemsNC.getComponentArray<CSoundControl>()->hasData(musicButton)
     )
     {
         return;
@@ -1529,10 +1597,30 @@ void playMusic_Update
 
     CMusicTrack& musicTrackObj = systemsNC.getComponentArray<CMusicTrack>()->getData(musicTrack);
     CSceneTransition& sceneTrans = systemsNC.getComponentArray<CSceneTransition>()->getData(sceneTransition);
+    const CSoundControl& soundControlObj = systemsNC.getComponentArray<CSoundControl>()->getData(musicButton);
 
     // adjust music to blend w/ transition
     if (music.has_value())
     {
+        float buttonFactor;
+
+        switch (soundControlObj.current)
+        {
+        case QUARTER_SOUND:
+            buttonFactor = .25f;
+            break;
+        case HALF_SOUND:
+            buttonFactor = .5f;
+            break;
+        case FULL_SOUND:
+            buttonFactor = 1.f;
+            break;
+        case MUTED_SOUND:
+        default:
+            buttonFactor = 0.f;
+            break;
+        }
+
         float progressMin, progressMax;
 
         if (sceneTrans.status == FadeStatus::FADING_IN)
@@ -1553,7 +1641,7 @@ void playMusic_Update
             sceneTrans.timer
         );
 
-        music->setVolume(DEFAULT_MUSIC_VOLUME * progress);
+        music->setVolume((DEFAULT_MUSIC_VOLUME * progress) * buttonFactor);
     }
 
     if 

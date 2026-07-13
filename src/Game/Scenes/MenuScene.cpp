@@ -107,37 +107,64 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 	);
 	Entity soundEffects = makeSoundEffectsContainer();
 
+	const float CORNER_DISTANCE = 50.f;
+	const float SMALL_BUTTON_SIZE = 75.f;
+	const float FIRST_SMALL_BUTTON_X = CORNER_DISTANCE + (SMALL_BUTTON_SIZE / 2.f);
+
+	Entity musicButton = makeSoundButton
+	(
+		{
+			FIRST_SMALL_BUTTON_X,
+			window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)
+		},
+		{
+			SMALL_BUTTON_SIZE,
+			SMALL_BUTTON_SIZE
+		},
+		TextureEnum::BUTTON_MUSIC_3_TEXTURE
+	);
+
+	Entity soundButton = makeSoundButton
+	(
+		{
+			FIRST_SMALL_BUTTON_X * 2,
+			window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)
+		},
+		{
+			SMALL_BUTTON_SIZE,
+			SMALL_BUTTON_SIZE
+		},
+		TextureEnum::BUTTON_SOUND_3_TEXTURE
+	);
+
 	Entity sceneTransition = makeSceneTransition
 	(
 		.5f, // fade in
 		.5f // fade out
 	);
 
-	// TODO: add use for these
-	const float CORNER_DISTANCE = 50.f;
-	const float SMALL_BUTTON_SIZE = 75.f;
-
 	Entity musicTrack = makeMusicTrack();
 
-	loadMenuMusicTrack(musicTrack);
 	std::optional<sf::Music> music;
 
 	// onstart systems
-	setText_Start(font); // font system is limited to one font
-	setTextOrigin_Start();
-
 	loadMenuTextures_Start(loadedTextures);
 	loadSprites_Start(loadedTextures);
 	loadMenuSoundEffects_Start(soundEffects);
+	loadMenuMusicTrack(musicTrack);
 
-	setSpriteOrigins_Start();
 
 	while (window.isOpen())
 	{
+		setText_Start(font); // font system is limited to one font
+
 		DeltaTime dt = clock.restart().asSeconds();
 
 		auto& pixelPos = sf::Mouse::getPosition(window);
 		auto& worldPos = window.mapPixelToCoords(pixelPos);
+
+		setTextOrigin_Start();
+		setSpriteOrigins_Start();
 
 		while (const std::optional event = window.pollEvent())
 		{
@@ -164,6 +191,9 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		}
 
 		// update systems
+		doSoundControl_Update(soundButton);
+		doSoundControl_Update(musicButton);
+
 		button_Update
 		(
 			sf::Vector2i
@@ -176,12 +206,14 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		playSounds_Update
 		(
 			soundEffects,
-			sceneTransition
+			sceneTransition,
+			soundButton
 		);
 		playMusic_Update
 		(
 			musicTrack,
 			sceneTransition,
+			musicButton,
 			music
 		);
 		doSceneTransition

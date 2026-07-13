@@ -36,6 +36,7 @@ void buttonClicks_Update
 	Entity sceneTransition,
 	sf::Vector2i mouseVector
 );
+void doSoundControl_Update(Entity soundButton);
 void button_Update
 (
 	sf::Vector2i mouseVector,
@@ -122,12 +123,14 @@ void doFeed_Update
 void playSounds_Update
 (
 	Entity soundEffects,
-	Entity sceneTransition
+	Entity sceneTransition,
+	Entity soundButton
 );
 void playMusic_Update
 (
 	Entity musicTrack,
 	Entity sceneTransition,
+	Entity musicButton,
 	std::optional<sf::Music>& music
 );
 void delete_Update(DeltaTime dt);

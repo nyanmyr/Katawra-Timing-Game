@@ -1017,6 +1017,93 @@ Entity makeLoopSound(SoundEffect type, float volume)
 	return entity;
 }
 
+Entity& makeSoundButton
+(
+	sf::Vector2f pos,
+	sf::Vector2f size,
+	TextureEnum texture
+)
+{
+	Entity entity = entityMakerNC.createEntity();
+
+	entityMakerNC.addComponent(
+		entity,
+		CPosition
+		{
+			pos.x,
+			pos.y
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CTransform
+		{
+			size.x,
+			size.y
+		}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CTexture{ texture }
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSprite{}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		COrigin
+		{
+			size.x / 2.f,
+			size.y / 2.f
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CButton
+		{
+			0.125f,
+			true
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CZIndex
+		{
+			1,
+			true
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CButtonSounds{}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CDoSpriteCenter{}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSoundControl{}
+	);
+
+	return entity;
+}
+
 Entity makeMusic(Music type)
 {
 	Entity entity = entityMakerNC.createEntity();
