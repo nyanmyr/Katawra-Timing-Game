@@ -258,7 +258,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		Scene::MENU
 	);
 
-	Entity musicButton = makeButton
+	Entity musicButton = makeSoundButton
 	(
 		{
 			FIRST_SMALL_BUTTON_X * 2,
@@ -271,7 +271,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		TextureEnum::BUTTON_MUSIC_3_TEXTURE
 	);
 
-	Entity soundButton = makeButton
+	Entity soundButton = makeSoundButton
 	(
 		{
 			FIRST_SMALL_BUTTON_X * 3,

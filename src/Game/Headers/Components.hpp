@@ -310,4 +310,17 @@ struct CSceneTransition
 		timer(fadeinTimer), fadeinTimer(fadeinTimer), fadeoutTimer(fadeoutTimer) {};
 };
 
+enum ESoundStatus
+{
+	QUARTER_SOUND,
+	HALF_SOUND,
+	FULL_SOUND,
+	MUTED_SOUND
+};
+
+struct CSoundControl
+{
+	ESoundStatus current = ESoundStatus::FULL_SOUND;
+}
+
 #endif

@@ -357,6 +357,20 @@ void buttonClicks_Update
         }
     }
 }
+void doMusicButton_Update(Entity musicButton)
+{
+    if 
+    (
+        !systemsNC.getComponentArray<CButton>()->hasData(musicButton) ||
+        !systemsNC.getComponentArray<CSoundControl>()->hasData(musicButton)
+    )
+    {
+        return;
+    }
+
+    CButton buttonObj = systemsNC.getComponentArray<CButton>()->getData(musicButton);
+}
+
 void button_Update
 (
     sf::Vector2i mouseVector,
