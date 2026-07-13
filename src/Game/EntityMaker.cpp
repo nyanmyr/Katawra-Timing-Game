@@ -522,6 +522,99 @@ Entity& makeButton
 
 	return entity;
 }
+Entity& makeSoundButton
+(
+	sf::Vector2f pos,
+	sf::Vector2f size,
+	TextureEnum texture,
+	std::unordered_map<ESoundStatus, TextureEnum> map
+)
+{
+	Entity entity = entityMakerNC.createEntity();
+
+	entityMakerNC.addComponent(
+		entity,
+		CPosition
+		{
+			pos.x,
+			pos.y
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CTransform
+		{
+			size.x,
+			size.y
+		}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CTexture{ texture }
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSprite{}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		COrigin
+		{
+			size.x / 2.f,
+			size.y / 2.f
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CButton
+		{
+			0.125f,
+			true
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CZIndex
+		{
+			1,
+			true
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CButtonSounds{}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CDoSpriteCenter{}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSoundControl{}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSoundStatusTextures{ map }
+	);
+
+	return entity;
+}
 
 Entity& makeIndicator
 (
@@ -1012,93 +1105,6 @@ Entity makeLoopSound(SoundEffect type, float volume)
 	(
 		entity,
 		CSound{ type, true, volume }
-	);
-
-	return entity;
-}
-
-Entity& makeSoundButton
-(
-	sf::Vector2f pos,
-	sf::Vector2f size,
-	TextureEnum texture
-)
-{
-	Entity entity = entityMakerNC.createEntity();
-
-	entityMakerNC.addComponent(
-		entity,
-		CPosition
-		{
-			pos.x,
-			pos.y
-		}
-	);
-	entityMakerNC.addComponent
-	(
-		entity,
-		CTransform
-		{
-			size.x,
-			size.y
-		}
-	);
-
-	entityMakerNC.addComponent
-	(
-		entity,
-		CTexture{ texture }
-	);
-
-	entityMakerNC.addComponent
-	(
-		entity,
-		CSprite{}
-	);
-
-	entityMakerNC.addComponent
-	(
-		entity,
-		COrigin
-		{
-			size.x / 2.f,
-			size.y / 2.f
-		}
-	);
-	entityMakerNC.addComponent
-	(
-		entity,
-		CButton
-		{
-			0.125f,
-			true
-		}
-	);
-	entityMakerNC.addComponent
-	(
-		entity,
-		CZIndex
-		{
-			1,
-			true
-		}
-	);
-	entityMakerNC.addComponent
-	(
-		entity,
-		CButtonSounds{}
-	);
-
-	entityMakerNC.addComponent
-	(
-		entity,
-		CDoSpriteCenter{}
-	);
-
-	entityMakerNC.addComponent
-	(
-		entity,
-		CSoundControl{}
 	);
 
 	return entity;

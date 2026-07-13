@@ -37,6 +37,7 @@ void buttonClicks_Update
 	sf::Vector2i mouseVector
 );
 void doSoundControl_Update(Entity soundButton);
+void changeSoundButtonTexture(Entity loadedTextures);
 void button_Update
 (
 	sf::Vector2i mouseVector,

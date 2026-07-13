@@ -140,9 +140,8 @@ void loadMenuTextures_Start(Entity loadedTextures)
     container.map.emplace(TextureEnum::BUTTON_TEXTURE, sf::Texture(SPRITES_PATH "button_texture.png"));
     container.map.emplace(TextureEnum::BACKGROUND_TEXTURE, sf::Texture(SPRITES_PATH "background_texture.jpg"));
     container.map.emplace(TextureEnum::TEXTURE_PLACEHOLDER_PLACEHOLDER, sf::Texture(SPRITES_PATH "placeholder_placeholder.jpg"));
-    // unused
-    //loadMusicButtons_Helper(container);
-    //loadSoundButtons_Helper(container);
+    loadMusicButtons_Helper(container);
+    loadSoundButtons_Helper(container);
 }
 void loadSprites_Start(Entity loadedTextures)
 {
@@ -400,6 +399,62 @@ void doSoundControl_Update(Entity soundButton)
         soundControlObj.current = ESoundStatus::QUARTER_SOUND;
         std::cout << "quarter sound" << "\n";
         break;
+    }
+}
+void changeSoundButtonTexture(Entity loadedTextures)
+{
+    auto& texturesContainerArray = systemsNC.getComponentArray<CTexturesContainer>();
+
+    if (!texturesContainerArray->hasData(loadedTextures))
+    {
+        return;
+    }
+
+    CTexturesContainer& container = texturesContainerArray->getData(loadedTextures);
+
+    for (auto& [entity, soundControlObj] : systemsNC.getComponentArray<CSoundControl>()->getAll())
+    {
+        if 
+        (
+            !systemsNC.getComponentArray<CButton>()->hasData(entity) ||
+            !systemsNC.getComponentArray<CSoundStatusTextures>()->hasData(entity) ||
+            !systemsNC.getComponentArray<CSprite>()->hasData(entity) ||
+            !systemsNC.getComponentArray<CTransform>()->hasData(entity) ||
+            !systemsNC.getComponentArray<CTexture>()->hasData(entity)
+        )
+        {
+            continue;
+        }
+
+        CSprite& sprite = systemsNC.getComponentArray<CSprite>()->getData(entity);
+        CTexture& texture = systemsNC.getComponentArray<CTexture>()->getData(entity);
+        CTransform& transform = systemsNC.getComponentArray<CTransform>()->getData(entity);
+        CSoundStatusTextures& soundStatusTexturesObj = systemsNC.getComponentArray<CSoundStatusTextures>()->getData(entity);
+        const CButton& buttonObj = systemsNC.getComponentArray<CButton>()->getData(entity);
+
+        if
+        (
+            !buttonObj.clicked ||
+            buttonObj.clickedTimer > 0.f
+        )
+        {
+            continue;
+        }
+
+        sprite.body.emplace(container.map[soundStatusTexturesObj.map[soundControlObj.current]]);
+        sprite.body->setScale
+        (
+            {
+                transform.width / sprite.body->getGlobalBounds().size.x,
+                transform.height / sprite.body->getGlobalBounds().size.y
+            }
+        );
+
+        systemsNC.addComponent
+        (
+            entity,
+            CDoSpriteCenter{}
+        );
     }
 }
 void button_Update
@@ -1691,44 +1746,6 @@ void playMusic_Update
 
     music.emplace(musicFilePath);
     music->play();
-
-    //if (!musicObj.music.openFromFile(MUSIC_PATH + musicFilePath))
-    //{
-    //    throw std::runtime_error("Music file is missing.");
-    //}
-
-    //musicObj.music.play();
-
-
-    //if (musicTrackObj.hasCurrent)
-    //{
-    //    CMusic& musicObj = systemsNC.getComponentArray<CMusic>()->getData(musicTrackObj.current);
-
-    //    if (musicObj.music.getStatus() == sf::Music::Status::Stopped)
-    //    {
-    //        systemsNC.addComponent
-    //        (
-    //            musicTrackObj.current,
-    //            CDelete{}
-    //        );
-    //    }
-
-    //    Music tempType = musicObj.type;
-
-    //    musicTrackObj.track.pop();
-    //    musicTrackObj.track.push(tempType);
-
-    //    musicTrackObj.playing = false;
-    //    musicTrackObj.hasCurrent = false;
-    //    return;
-    //}
-
-    //if (musicTrackObj.playing)
-    //{
-    //    return;
-    //}
-
-
 }
 void delete_Update(DeltaTime dt)
 {

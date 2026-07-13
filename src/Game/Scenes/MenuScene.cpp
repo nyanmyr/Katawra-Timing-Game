@@ -121,7 +121,13 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 			SMALL_BUTTON_SIZE,
 			SMALL_BUTTON_SIZE
 		},
-		TextureEnum::BUTTON_MUSIC_3_TEXTURE
+		TextureEnum::BUTTON_MUSIC_3_TEXTURE,
+		{
+			{ESoundStatus::QUARTER_SOUND, TextureEnum::BUTTON_MUSIC_1_TEXTURE},
+			{ESoundStatus::HALF_SOUND, TextureEnum::BUTTON_MUSIC_2_TEXTURE},
+			{ESoundStatus::FULL_SOUND, TextureEnum::BUTTON_MUSIC_3_TEXTURE},
+			{ESoundStatus::MUTED_SOUND, TextureEnum::BUTTON_MUSIC_OFF_TEXTURE}
+		}
 	);
 
 	Entity soundButton = makeSoundButton
@@ -134,7 +140,13 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 			SMALL_BUTTON_SIZE,
 			SMALL_BUTTON_SIZE
 		},
-		TextureEnum::BUTTON_SOUND_3_TEXTURE
+		TextureEnum::BUTTON_SOUND_3_TEXTURE,
+		{
+			{ESoundStatus::QUARTER_SOUND, TextureEnum::BUTTON_SOUND_1_TEXTURE},
+			{ESoundStatus::HALF_SOUND, TextureEnum::BUTTON_SOUND_2_TEXTURE},
+			{ESoundStatus::FULL_SOUND, TextureEnum::BUTTON_SOUND_3_TEXTURE},
+			{ESoundStatus::MUTED_SOUND, TextureEnum::BUTTON_SOUND_OFF_TEXTURE}
+		}
 	);
 
 	Entity sceneTransition = makeSceneTransition
@@ -193,6 +205,7 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		// update systems
 		doSoundControl_Update(soundButton);
 		doSoundControl_Update(musicButton);
+		changeSoundButtonTexture(loadedTextures);
 
 		button_Update
 		(

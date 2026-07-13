@@ -323,4 +323,9 @@ struct CSoundControl
 	ESoundStatus current = ESoundStatus::FULL_SOUND;
 };
 
+struct CSoundStatusTextures
+{
+	std::unordered_map<ESoundStatus, TextureEnum> map;
+};
+
 #endif

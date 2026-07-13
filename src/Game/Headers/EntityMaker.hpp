@@ -68,7 +68,8 @@ Entity& makeSoundButton
 (
 	sf::Vector2f pos,
 	sf::Vector2f size,
-	TextureEnum texture
+	TextureEnum texture,
+	std::unordered_map<ESoundStatus, TextureEnum> map
 );
 
 Entity& makeIndicator
