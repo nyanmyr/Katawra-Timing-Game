@@ -13,6 +13,17 @@
 // -------------------------------------------------------
 // start systems
 // -------------------------------------------------------
+void loadSoundStatusData_Start(DSoundStatus& soundStatusData);
+void adjustSoundTextureEnum_Start
+(
+	const DSoundStatus& soundStatusData,
+	TextureEnum& soundTextureEnum
+);
+void adjustMusicTextureEnum_Start
+(
+	const DSoundStatus& soundStatusData,
+	TextureEnum& musicTextureEnum
+);
 void setText_Start(sf::Font& font);
 void setTextOrigin_Start();
 
@@ -31,13 +42,19 @@ void setSpriteOrigins_Start();
 // -------------------------------------------------------
 // update systems
 // -------------------------------------------------------
+void saveSoundStatusData_Update
+(
+	DSoundStatus& soundStatusData,
+	Entity soundButton,
+	Entity musicButton
+);
 void buttonClicks_Update
 (
 	Entity sceneTransition,
 	sf::Vector2i mouseVector
 );
 void doSoundControl_Update(Entity soundButton);
-void changeSoundButtonTexture(Entity loadedTextures);
+void changeSoundButtonTexture_Update(Entity loadedTextures);
 void button_Update
 (
 	sf::Vector2i mouseVector,
@@ -48,6 +65,12 @@ void doSceneTransition
 	Entity sceneTransition,
 	DeltaTime dt,
 	const sf::RenderWindow& window
+);
+void nextSceneSaveSoundStatusData_Update
+(
+	DSoundStatus& soundStatusData,
+	Entity soundButton,
+	Entity musicButton
 );
 void nextScene_Update
 (

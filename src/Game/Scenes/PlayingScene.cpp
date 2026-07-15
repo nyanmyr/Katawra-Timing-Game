@@ -9,13 +9,13 @@ using sf::Clock;
 using sf::Event;
 using sf::Keyboard::Scancode;
 
-// TODO: make music and sound button settings transferrable
-// TODO: make adjustable color theme
+// TODO: make adjustable color theme (must be saved)
 // TODO: are you sure button prompt main menu button (you should be able to save your progress)
 // TODO: save score (make it save when returning to menu)
 // TODO: ask to continue if window is abruptly closed
 // TODO: bug fixing
 // FIX: no delay upon clicking button (directly enters next scene)
+// FIX: look into checking the sound array to see if its all actually deleted
 // TODO: publish
 
 void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficulty) {
@@ -258,6 +258,23 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		Scene::MENU
 	);
 
+	DSoundStatus soundStatusData;
+	loadSoundStatusData_Start(soundStatusData);
+
+	TextureEnum soundTextureEnum = TextureEnum::BUTTON_SOUND_3_TEXTURE;
+	TextureEnum musicTextureEnum = TextureEnum::BUTTON_MUSIC_3_TEXTURE;
+
+	adjustSoundTextureEnum_Start
+	(
+		soundStatusData,
+		soundTextureEnum
+	);
+	adjustMusicTextureEnum_Start
+	(
+		soundStatusData,
+		musicTextureEnum
+	);
+
 	Entity musicButton = makeSoundButton
 	(
 		{
@@ -268,13 +285,14 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			SMALL_BUTTON_SIZE,
 			SMALL_BUTTON_SIZE
 		},
-		TextureEnum::BUTTON_MUSIC_3_TEXTURE,
+		musicTextureEnum,
 		{
 			{ESoundStatus::QUARTER_SOUND, TextureEnum::BUTTON_MUSIC_1_TEXTURE},
 			{ESoundStatus::HALF_SOUND, TextureEnum::BUTTON_MUSIC_2_TEXTURE},
 			{ESoundStatus::FULL_SOUND, TextureEnum::BUTTON_MUSIC_3_TEXTURE},
 			{ESoundStatus::MUTED_SOUND, TextureEnum::BUTTON_MUSIC_OFF_TEXTURE}
-		}
+		},
+		soundStatusData.musicStatus
 	);
 
 	Entity soundButton = makeSoundButton
@@ -287,13 +305,14 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			SMALL_BUTTON_SIZE,
 			SMALL_BUTTON_SIZE
 		},
-		TextureEnum::BUTTON_SOUND_3_TEXTURE,
+		soundTextureEnum,
 		{
 			{ESoundStatus::QUARTER_SOUND, TextureEnum::BUTTON_SOUND_1_TEXTURE},
 			{ESoundStatus::HALF_SOUND, TextureEnum::BUTTON_SOUND_2_TEXTURE},
 			{ESoundStatus::FULL_SOUND, TextureEnum::BUTTON_SOUND_3_TEXTURE},
 			{ESoundStatus::MUTED_SOUND, TextureEnum::BUTTON_SOUND_OFF_TEXTURE}
-		}
+		},
+		soundStatusData.soundStatus
 	);
 
 	Entity sceneTransition = makeSceneTransition
@@ -336,6 +355,12 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		{
 			if (event->is<Event::Closed>())
 			{
+				saveSoundStatusData_Update
+				(
+					soundStatusData,
+					soundButton,
+					musicButton
+				);
 				window.close();
 			}
 
@@ -375,7 +400,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		// update systems
 		doSoundControl_Update(soundButton);
 		doSoundControl_Update(musicButton);
-		changeSoundButtonTexture(loadedTextures);
+		changeSoundButtonTexture_Update(loadedTextures);
 		// NOTE: minor bug; one frame of the changed texture is not centered
 
 		button_Update
@@ -387,7 +412,6 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			),
 			dt
 		);
-
 		spawnHitbox_Update
 		(
 			hitbox,
@@ -454,6 +478,12 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			sceneTransition,
 			dt,
 			window
+		);
+		nextSceneSaveSoundStatusData_Update
+		(
+			soundStatusData,
+			soundButton,
+			musicButton
 		);
 		nextScene_Update
 		(

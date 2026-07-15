@@ -111,6 +111,23 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 	const float SMALL_BUTTON_SIZE = 75.f;
 	const float FIRST_SMALL_BUTTON_X = CORNER_DISTANCE + (SMALL_BUTTON_SIZE / 2.f);
 
+	DSoundStatus soundStatusData;
+	loadSoundStatusData_Start(soundStatusData);
+
+	TextureEnum soundTextureEnum = TextureEnum::BUTTON_SOUND_3_TEXTURE;
+	TextureEnum musicTextureEnum = TextureEnum::BUTTON_MUSIC_3_TEXTURE;
+
+	adjustSoundTextureEnum_Start
+	(
+		soundStatusData,
+		soundTextureEnum
+	);
+	adjustMusicTextureEnum_Start
+	(
+		soundStatusData,
+		musicTextureEnum
+	);
+
 	Entity musicButton = makeSoundButton
 	(
 		{
@@ -121,13 +138,14 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 			SMALL_BUTTON_SIZE,
 			SMALL_BUTTON_SIZE
 		},
-		TextureEnum::BUTTON_MUSIC_3_TEXTURE,
+		musicTextureEnum,
 		{
 			{ESoundStatus::QUARTER_SOUND, TextureEnum::BUTTON_MUSIC_1_TEXTURE},
 			{ESoundStatus::HALF_SOUND, TextureEnum::BUTTON_MUSIC_2_TEXTURE},
 			{ESoundStatus::FULL_SOUND, TextureEnum::BUTTON_MUSIC_3_TEXTURE},
 			{ESoundStatus::MUTED_SOUND, TextureEnum::BUTTON_MUSIC_OFF_TEXTURE}
-		}
+		},
+		soundStatusData.musicStatus
 	);
 
 	Entity soundButton = makeSoundButton
@@ -140,14 +158,17 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 			SMALL_BUTTON_SIZE,
 			SMALL_BUTTON_SIZE
 		},
-		TextureEnum::BUTTON_SOUND_3_TEXTURE,
+		soundTextureEnum,
 		{
 			{ESoundStatus::QUARTER_SOUND, TextureEnum::BUTTON_SOUND_1_TEXTURE},
 			{ESoundStatus::HALF_SOUND, TextureEnum::BUTTON_SOUND_2_TEXTURE},
 			{ESoundStatus::FULL_SOUND, TextureEnum::BUTTON_SOUND_3_TEXTURE},
 			{ESoundStatus::MUTED_SOUND, TextureEnum::BUTTON_SOUND_OFF_TEXTURE}
-		}
+		},
+		soundStatusData.soundStatus
 	);
+
+	CSoundControl& test = nc.getComponentArray<CSoundControl>()->getData(soundButton);
 
 	Entity sceneTransition = makeSceneTransition
 	(
@@ -165,7 +186,6 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 	loadMenuSoundEffects_Start(soundEffects);
 	loadMenuMusicTrack(musicTrack);
 
-
 	while (window.isOpen())
 	{
 		setText_Start(font); // font system is limited to one font
@@ -182,6 +202,12 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		{
 			if (event->is<Event::Closed>())
 			{
+				saveSoundStatusData_Update
+				(
+					soundStatusData,
+					soundButton,
+					musicButton
+				);
 				window.close();
 			}
 
@@ -205,7 +231,7 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		// update systems
 		doSoundControl_Update(soundButton);
 		doSoundControl_Update(musicButton);
-		changeSoundButtonTexture(loadedTextures);
+		changeSoundButtonTexture_Update(loadedTextures);
 
 		button_Update
 		(
@@ -234,6 +260,12 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 			sceneTransition,
 			dt,
 			window
+		);
+		nextSceneSaveSoundStatusData_Update
+		(
+			soundStatusData,
+			soundButton,
+			musicButton
 		);
 		nextScene_Update
 		(

@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <random>
+#include <fstream>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
@@ -35,6 +36,67 @@ float getDistance_Auxiliary
 // -------------------------------------------------------
 // start systems
 // -------------------------------------------------------
+void loadSoundStatusData_Start(DSoundStatus& soundStatusData)
+{
+    std::ifstream in("soundStatus.dat", std::ios::binary);
+
+    if (!in)
+    {
+        //std::cout << "soundStatus.dat not found!" << "\n";
+        soundStatusData.soundStatus = ESoundStatus::FULL_SOUND;
+        soundStatusData.musicStatus = ESoundStatus::FULL_SOUND;
+        return;
+    }
+    
+    //std::cout << "soundStatus.dat found!" << "\n";
+    in.read(reinterpret_cast<char*>(&soundStatusData), sizeof(DSoundStatus));
+}
+void adjustSoundTextureEnum_Start
+(
+    const DSoundStatus& soundStatusData, 
+    TextureEnum& soundTextureEnum
+)
+{
+    switch (soundStatusData.soundStatus)
+    {
+    case QUARTER_SOUND:
+        soundTextureEnum = TextureEnum::BUTTON_SOUND_1_TEXTURE;
+        break;
+    case HALF_SOUND:
+        soundTextureEnum = TextureEnum::BUTTON_SOUND_2_TEXTURE;
+        break;
+    case FULL_SOUND:
+        soundTextureEnum = TextureEnum::BUTTON_SOUND_3_TEXTURE;
+        break;
+    case MUTED_SOUND:
+    default:
+        soundTextureEnum = TextureEnum::BUTTON_SOUND_OFF_TEXTURE;
+        break;
+    }
+}
+void adjustMusicTextureEnum_Start
+(
+    const DSoundStatus& soundStatusData,
+    TextureEnum& musicTextureEnum
+)
+{
+    switch (soundStatusData.musicStatus)
+    {
+    case QUARTER_SOUND:
+        musicTextureEnum = TextureEnum::BUTTON_MUSIC_1_TEXTURE;
+        break;
+    case HALF_SOUND:
+        musicTextureEnum = TextureEnum::BUTTON_MUSIC_2_TEXTURE;
+        break;
+    case FULL_SOUND:
+        musicTextureEnum = TextureEnum::BUTTON_MUSIC_3_TEXTURE;
+        break;
+    case MUTED_SOUND:
+    default:
+        musicTextureEnum = TextureEnum::BUTTON_MUSIC_OFF_TEXTURE;
+        break;
+    }
+}
 void setText_Start(sf::Font& font)
 {
     auto& texts = systemsNC.getComponentArray<CText>();
@@ -300,7 +362,25 @@ const float HOVER_SCALE_Y = 1.1f;
 
 const float CLICKED_SCALE_X = 0.9f;
 const float CLICKED_SCALE_Y = 0.9f;
+void saveSoundStatusData_Update
+(
+    DSoundStatus& soundStatusData,
+    Entity soundButton,
+    Entity musicButton
+)
+{
+    //std::cout << "saved sound status!" << "\n";
+    std::ofstream out("soundStatus.dat", std::ios::binary);
 
+    auto& soundControlArray = systemsNC.getComponentArray<CSoundControl>();
+
+    soundStatusData.musicStatus = soundControlArray->getData(musicButton).current;
+    soundStatusData.soundStatus = soundControlArray->getData(soundButton).current;
+
+    out.write(reinterpret_cast<char*>(&soundStatusData), sizeof(DSoundStatus));
+
+    out.close();
+}
 void buttonClicks_Update
 (
     Entity sceneTransition,
@@ -378,7 +458,7 @@ void doSoundControl_Update(Entity soundButton)
     {
         return;
     }
-    //std::cout << "clicked" << "\n";
+    std::cout << "clicked" << "\n";
 
     switch (soundControlObj.current)
     {
@@ -401,7 +481,7 @@ void doSoundControl_Update(Entity soundButton)
         break;
     }
 }
-void changeSoundButtonTexture(Entity loadedTextures)
+void changeSoundButtonTexture_Update(Entity loadedTextures)
 {
     auto& texturesContainerArray = systemsNC.getComponentArray<CTexturesContainer>();
 
@@ -709,6 +789,37 @@ void doSceneTransition
 
     sceneTrans.box.setFillColor(col);
 
+}
+void nextSceneSaveSoundStatusData_Update
+(
+    DSoundStatus& soundStatusData,
+    Entity soundButton,
+    Entity musicButton
+)
+{
+    bool doSave = false;
+
+    for (auto& [entity, nextScene] : systemsNC.getComponentArray<CNextScene>()->getAll())
+    {
+        if (!nextScene.active)
+        {
+            continue;
+        }
+
+        doSave = true;
+    }
+
+    if (!doSave)
+    {
+        return;
+    }
+
+    saveSoundStatusData_Update
+    (
+        soundStatusData,
+        soundButton,
+        musicButton
+    );
 }
 void nextScene_Update
 (

@@ -328,4 +328,10 @@ struct CSoundStatusTextures
 	std::unordered_map<ESoundStatus, TextureEnum> map;
 };
 
+struct DSoundStatus
+{
+	ESoundStatus soundStatus = ESoundStatus::FULL_SOUND;
+	ESoundStatus musicStatus = ESoundStatus::FULL_SOUND;
+};
+
 #endif

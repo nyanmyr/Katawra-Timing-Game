@@ -527,7 +527,8 @@ Entity& makeSoundButton
 	sf::Vector2f pos,
 	sf::Vector2f size,
 	TextureEnum texture,
-	std::unordered_map<ESoundStatus, TextureEnum> map
+	std::unordered_map<ESoundStatus, TextureEnum> map,
+	ESoundStatus status
 )
 {
 	Entity entity = entityMakerNC.createEntity();
@@ -604,7 +605,7 @@ Entity& makeSoundButton
 	entityMakerNC.addComponent
 	(
 		entity,
-		CSoundControl{}
+		CSoundControl{ status }
 	);
 
 	entityMakerNC.addComponent
