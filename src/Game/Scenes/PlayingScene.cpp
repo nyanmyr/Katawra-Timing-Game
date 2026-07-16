@@ -13,8 +13,8 @@ using sf::Keyboard::Scancode;
 // TODO: are you sure button prompt main menu button (you should be able to save your progress)
 // TODO: save score (make it save when returning to menu)
 // TODO: ask to continue if window is abruptly closed
+// TODO: make the window resizeable?
 // TODO: bug fixing
-// FIX: no delay upon clicking button (directly enters next scene)
 // FIX: look into checking the sound array to see if its all actually deleted
 // TODO: publish
 
@@ -119,6 +119,18 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		startSize, // start size
 		minSize, // min size
 		sizeDecrease // size decrease
+	);
+
+	nc.addComponent
+	(
+		hitbox,
+		CColor{ sf::Color(0x0066cc) }
+	);
+
+	nc.addComponent
+	(
+		hitbox,
+		CSetColor{ }
 	);
 
 	Entity score = makeUIText
@@ -350,6 +362,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 
 		setTextOrigin_Start();
 		setSpriteOrigins_Start();
+		setColor_Update();
 
 		while (const std::optional event = window.pollEvent())
 		{

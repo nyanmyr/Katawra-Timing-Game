@@ -334,4 +334,14 @@ struct DSoundStatus
 	ESoundStatus musicStatus = ESoundStatus::FULL_SOUND;
 };
 
+struct CColor
+{
+	sf::Color col = sf::Color(0xffffff); // defaults to white
+};
+
+struct CSetColor
+{
+
+};
+
 #endif

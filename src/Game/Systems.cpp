@@ -362,6 +362,43 @@ const float HOVER_SCALE_Y = 1.1f;
 
 const float CLICKED_SCALE_X = 0.9f;
 const float CLICKED_SCALE_Y = 0.9f;
+void setColor_Update()
+{
+    auto& setColorArray = systemsNC.getComponentArray<CSetColor>();
+    auto& colorArray = systemsNC.getComponentArray<CColor>();
+    auto& spriteArray = systemsNC.getComponentArray<CSprite>();
+
+    if (setColorArray->getAll().empty())
+    {
+        return;
+    }
+
+    std::vector<Entity> toRemove;
+
+    for (auto& [entity, setColor] : setColorArray->getAll())
+    {
+        if 
+        (
+            !colorArray->hasData(entity) ||
+            !spriteArray->hasData(entity)
+        )
+        {
+            continue;
+        }
+
+        CColor& colorObj = colorArray->getData(entity);
+        CSprite& spriteObj = spriteArray->getData(entity);
+
+        spriteObj.body->setColor(colorObj.col);
+
+        toRemove.emplace_back(entity);
+    }
+
+    for (Entity entity : toRemove)
+    {
+        systemsNC.removeComponent<CSetColor>(entity);
+    }
+}
 void saveSoundStatusData_Update
 (
     DSoundStatus& soundStatusData,

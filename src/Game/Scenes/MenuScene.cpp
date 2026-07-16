@@ -38,6 +38,18 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		CMode{ GameMode::MODE_NORMAL }
 	);
 
+	nc.addComponent
+	(
+		normalMode,
+		CColor{ sf::Color(0x0066cc) }
+	);
+
+	nc.addComponent
+	(
+		normalMode,
+		CSetColor{ }
+	);
+
 	Entity hardMode = makeButton
 	(
 		{
@@ -197,6 +209,7 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 
 		setTextOrigin_Start();
 		setSpriteOrigins_Start();
+		setColor_Update();
 
 		while (const std::optional event = window.pollEvent())
 		{

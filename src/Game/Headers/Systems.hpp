@@ -42,6 +42,7 @@ void setSpriteOrigins_Start();
 // -------------------------------------------------------
 // update systems
 // -------------------------------------------------------
+void setColor_Update();
 void saveSoundStatusData_Update
 (
 	DSoundStatus& soundStatusData,

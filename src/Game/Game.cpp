@@ -58,6 +58,8 @@ void main() {
 	nc.registerComponent<CSceneTransition>();
 	nc.registerComponent<CSoundControl>();
 	nc.registerComponent<CSoundStatusTextures>();
+	nc.registerComponent<CColor>();
+	nc.registerComponent<CSetColor>();
 
 	sf::Font font;
 	if (!font.openFromFile(FONT_FILEPATH))
