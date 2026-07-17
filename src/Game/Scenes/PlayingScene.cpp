@@ -33,6 +33,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 	float sizeDecrease;
 	std::string difficultyStr;
 	sf::Color difficultyColor;
+	sf::Color themeColor = sf::Color(0, 102, 204);
 
 	switch (difficulty)
 	{
@@ -46,7 +47,12 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 
 			//std::cout << "difficulty: HARD\n";
 			difficultyStr = "HARD";
-			difficultyColor = sf::Color(204, 102, 0);
+			difficultyColor = sf::Color // gets the complementary color
+			(
+				255 - themeColor.r,
+				255 - themeColor.g,
+				255 - themeColor.b
+			);
 
 			break;
 		case DIFFICULTY_NORMAL:
@@ -60,7 +66,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 
 			//std::cout << "difficulty: NORMAL\n";
 			difficultyStr = "NORMAL";
-			difficultyColor = sf::Color(0, 102, 204);
+			difficultyColor = themeColor;
 
 			break;
 	}
@@ -78,7 +84,8 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			25.f
 		},
 		startingSpeed,
-		speedIncrease
+		speedIncrease,
+		themeColor
 	);
 
 	Entity inner = makeInnerBar
@@ -95,7 +102,8 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		{ // inner min/ max
 			0.f,
 			100.f
-		}
+		},
+		themeColor
 	);
 
 	Entity outer = makeObject
@@ -109,7 +117,8 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			509.f,
 			23.f
 		},
-		3
+		3,
+		themeColor
 	);
 
 	Entity hitbox = makeHitbox
@@ -118,7 +127,8 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		inner,
 		startSize, // start size
 		minSize, // min size
-		sizeDecrease // size decrease
+		sizeDecrease, // size decrease
+		themeColor
 	);
 
 	nc.addComponent
@@ -140,7 +150,9 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			25.f
 		},
 		font,
-		"Score: "
+		"Score: ",
+		32,
+		themeColor
 	);
 
 	Entity hits = makeUIText
@@ -150,7 +162,9 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			75.f
 		},
 		font,
-		"Hits: "
+		"Hits: ",
+		32,
+		themeColor
 	);
 
 	Entity intro1 = makeUIText
@@ -162,7 +176,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		font,
 		"TIME",
 		16,
-		sf::Color::Black,
+		themeColor,
 		false
 	);
 
@@ -175,7 +189,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		font,
 		"IT",
 		16,
-		sf::Color::Black,
+		themeColor,
 		false
 	);
 
@@ -188,7 +202,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		font,
 		"RIGHT!",
 		16,
-		sf::Color::Black,
+		themeColor,
 		false
 	);
 
@@ -228,7 +242,8 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		{
 			window.getDefaultView().getSize().x,
 			window.getDefaultView().getSize().y
-		}
+		},
+		themeColor
 	);
 	Entity intro = makeIntro
 	(
@@ -267,7 +282,8 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			SMALL_BUTTON_SIZE
 		},
 		TextureEnum::BUTTON_RETURN_TEXTURE,
-		Scene::MENU
+		Scene::MENU,
+		themeColor
 	);
 
 	DSoundStatus soundStatusData;
@@ -304,7 +320,8 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			{ESoundStatus::FULL_SOUND, TextureEnum::BUTTON_MUSIC_3_TEXTURE},
 			{ESoundStatus::MUTED_SOUND, TextureEnum::BUTTON_MUSIC_OFF_TEXTURE}
 		},
-		soundStatusData.musicStatus
+		soundStatusData.musicStatus,
+		themeColor
 	);
 
 	Entity soundButton = makeSoundButton
@@ -324,7 +341,8 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			{ESoundStatus::FULL_SOUND, TextureEnum::BUTTON_SOUND_3_TEXTURE},
 			{ESoundStatus::MUTED_SOUND, TextureEnum::BUTTON_SOUND_OFF_TEXTURE}
 		},
-		soundStatusData.soundStatus
+		soundStatusData.soundStatus,
+		themeColor
 	);
 
 	Entity sceneTransition = makeSceneTransition

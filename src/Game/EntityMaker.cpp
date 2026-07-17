@@ -5,62 +5,6 @@
 
 NacreCoordinator& entityMakerNC = NacreCoordinator::getInstance();
 
-// TODO: is it better to merge these into one?
-Entity makeUIText
-(
-	sf::Vector2f pos,
-	sf::Font& font,
-	std::string str
-)
-{
-	Entity entity = entityMakerNC.createEntity();
-
-	entityMakerNC.addComponent(
-		entity,
-		CPosition
-		{
-			pos.x,
-			pos.y
-		}
-	);
-
-	sf::Text text(font);
-	entityMakerNC.addComponent
-	(
-		entity,
-		CText
-		{
-			text,
-			str,
-			32,
-			sf::Color::White,
-			TextFormat::MIDDLE
-		}
-	);
-
-	entityMakerNC.addComponent
-	(
-		entity,
-		CZIndex
-		{
-			4,
-			true
-		}
-	);
-
-	entityMakerNC.addComponent
-	(
-		entity,
-		CTransform
-		{
-			0.f,
-			0.f
-		}
-	);
-
-	return entity;
-}
-
 Entity makeUIText
 (
 	sf::Vector2f pos,
@@ -252,7 +196,8 @@ Entity& makeButton
 	TextureEnum texture,
 	std::string str,
 	sf::Font& font,
-	Scene scene
+	Scene scene,
+	sf::Color col
 )
 {
 	Entity entity = entityMakerNC.createEntity();
@@ -349,6 +294,18 @@ Entity& makeButton
 		CDoSpriteCenter{}
 	);
 
+	entityMakerNC.addComponent
+	(
+		entity,
+		CColor{ col }
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSetColor{ }
+	);
+
 	return entity;
 }
 Entity& makeButton
@@ -356,7 +313,8 @@ Entity& makeButton
 	sf::Vector2f pos,
 	sf::Vector2f size,
 	TextureEnum texture,
-	Scene scene
+	Scene scene,
+	sf::Color col
 )
 {
 	Entity entity = entityMakerNC.createEntity();
@@ -440,13 +398,26 @@ Entity& makeButton
 		CDoSpriteCenter{}
 	);
 
+	entityMakerNC.addComponent
+	(
+		entity,
+		CColor{ col }
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSetColor{ }
+	);
+
 	return entity;
 }
 Entity& makeButton
 (
 	sf::Vector2f pos,
 	sf::Vector2f size,
-	TextureEnum texture
+	TextureEnum texture,
+	sf::Color col
 )
 {
 	Entity entity = entityMakerNC.createEntity();
@@ -520,6 +491,18 @@ Entity& makeButton
 		CDoSpriteCenter{}
 	);
 
+	entityMakerNC.addComponent
+	(
+		entity,
+		CColor{ col }
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSetColor{ }
+	);
+
 	return entity;
 }
 Entity& makeSoundButton
@@ -528,7 +511,8 @@ Entity& makeSoundButton
 	sf::Vector2f size,
 	TextureEnum texture,
 	std::unordered_map<ESoundStatus, TextureEnum> map,
-	ESoundStatus status
+	ESoundStatus status,
+	sf::Color col
 )
 {
 	Entity entity = entityMakerNC.createEntity();
@@ -614,6 +598,18 @@ Entity& makeSoundButton
 		CSoundStatusTextures{ map }
 	);
 
+	entityMakerNC.addComponent
+	(
+		entity,
+		CColor{ col }
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSetColor{ }
+	);
+
 	return entity;
 }
 
@@ -623,7 +619,8 @@ Entity& makeIndicator
 	sf::Vector2f pos,
 	sf::Vector2f size,
 	float speed,
-	float speedIncrease
+	float speedIncrease,
+	sf::Color col
 )
 {
 	Entity entity = entityMakerNC.createEntity();
@@ -699,6 +696,18 @@ Entity& makeIndicator
 		CDoSpriteCenter{}
 	);
 
+	entityMakerNC.addComponent
+	(
+		entity,
+		CColor{ col }
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSetColor{ }
+	);
+
 	return entity;
 }
 
@@ -707,7 +716,8 @@ Entity& makeInnerBar
 	TextureEnum texture,
 	sf::Vector2f pos,
 	sf::Vector2f size,
-	sf::Vector2f slider
+	sf::Vector2f slider,
+	sf::Color col
 )
 {
 	Entity entity = entityMakerNC.createEntity();
@@ -778,6 +788,18 @@ Entity& makeInnerBar
 		CDoSpriteCenter{}
 	);
 
+	entityMakerNC.addComponent
+	(
+		entity,
+		CColor{ col }
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSetColor{ }
+	);
+
 	return entity;
 }
 
@@ -786,7 +808,8 @@ Entity& makeObject
 	TextureEnum texture,
 	sf::Vector2f pos,
 	sf::Vector2f size,
-	int index
+	int index,
+	sf::Color col
 )
 {
 	Entity entity = entityMakerNC.createEntity();
@@ -847,6 +870,18 @@ Entity& makeObject
 		CDoSpriteCenter{}
 	);
 
+	entityMakerNC.addComponent
+	(
+		entity,
+		CColor{ col }
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSetColor{ }
+	);
+
 	return entity;
 }
 
@@ -856,7 +891,8 @@ Entity& makeHitbox
 	Entity slider,
 	float startSize,
 	float minSize,
-	float sizeDecrease
+	float sizeDecrease,
+	sf::Color col
 )
 {
 	Entity entity = entityMakerNC.createEntity();
@@ -950,13 +986,26 @@ Entity& makeHitbox
 		CDoSpriteCenter{}
 	);
 
+	entityMakerNC.addComponent
+	(
+		entity,
+		CColor{ col }
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSetColor{ }
+	);
+
 	return entity;
 }
 
 Entity& makeBackground
 (
 	TextureEnum texture,
-	sf::Vector2f size
+	sf::Vector2f size,
+	sf::Color col
 )
 {
 	Entity entity = entityMakerNC.createEntity();
@@ -1015,6 +1064,18 @@ Entity& makeBackground
 	(
 		entity,
 		CDoSpriteCenter{}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CColor{ col }
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSetColor{ }
 	);
 
 	return entity;

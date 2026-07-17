@@ -9,13 +9,6 @@ Entity makeUIText
 (
 	sf::Vector2f pos,
 	sf::Font& font,
-	std::string str
-);
-
-Entity makeUIText
-(
-	sf::Vector2f pos,
-	sf::Font& font,
 	std::string str,
 	int size,
 	sf::Color col
@@ -48,7 +41,8 @@ Entity& makeButton
 	TextureEnum texture,
 	std::string str,
 	sf::Font& font,
-	Scene scene
+	Scene scene,
+	sf::Color col
 );
 
 Entity& makeButton
@@ -56,13 +50,15 @@ Entity& makeButton
 	sf::Vector2f pos,
 	sf::Vector2f size,
 	TextureEnum texture,
-	Scene scene
+	Scene scene,
+	sf::Color col
 );
 Entity& makeButton
 (
 	sf::Vector2f pos,
 	sf::Vector2f size,
-	TextureEnum texture
+	TextureEnum texture,
+	sf::Color col
 );
 Entity& makeSoundButton
 (
@@ -70,7 +66,8 @@ Entity& makeSoundButton
 	sf::Vector2f size,
 	TextureEnum texture,
 	std::unordered_map<ESoundStatus, TextureEnum> map,
-	ESoundStatus status
+	ESoundStatus status,
+	sf::Color col
 );
 
 Entity& makeIndicator
@@ -79,7 +76,8 @@ Entity& makeIndicator
 	sf::Vector2f pos,
 	sf::Vector2f size,
 	float speed,
-	float speedIncrease
+	float speedIncrease,
+	sf::Color col
 );
 
 Entity& makeInnerBar
@@ -87,7 +85,8 @@ Entity& makeInnerBar
 	TextureEnum texture,
 	sf::Vector2f pos,
 	sf::Vector2f size,
-	sf::Vector2f slider
+	sf::Vector2f slider,
+	sf::Color col
 );
 
 Entity& makeObject
@@ -95,7 +94,8 @@ Entity& makeObject
 	TextureEnum texture,
 	sf::Vector2f pos,
 	sf::Vector2f size,
-	int index
+	int index,
+	sf::Color col
 );
 
 Entity& makeHitbox
@@ -104,13 +104,15 @@ Entity& makeHitbox
 	Entity slider,
 	float startSize,
 	float minSize,
-	float sizeDecrease
+	float sizeDecrease,
+	sf::Color col
 );
 
 Entity& makeBackground
 (
 	TextureEnum texture,
-	sf::Vector2f size
+	sf::Vector2f size,
+	sf::Color col
 );
 
 Entity makeCameraShake();

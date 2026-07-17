@@ -15,6 +15,8 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 	Clock clock;
 	std::queue<Entity> renderQueue;
 
+	sf::Color themeColor = sf::Color(0, 102, 204);
+
 	// entity instantiation
 	Entity normalMode = makeButton
 	(
@@ -29,25 +31,14 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		TextureEnum::BUTTON_TEXTURE,
 		"Normal",
 		font,
-		Scene::PLAYING
+		Scene::PLAYING,
+		themeColor
 	);
 
 	nc.addComponent
 	(
 		normalMode,
 		CMode{ GameMode::MODE_NORMAL }
-	);
-
-	nc.addComponent
-	(
-		normalMode,
-		CColor{ sf::Color(0x0066cc) }
-	);
-
-	nc.addComponent
-	(
-		normalMode,
-		CSetColor{ }
 	);
 
 	Entity hardMode = makeButton
@@ -63,7 +54,14 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		TextureEnum::BUTTON_TEXTURE,
 		"Hard",
 		font,
-		Scene::PLAYING
+		Scene::PLAYING,
+		themeColor
+	);
+
+	nc.addComponent
+	(
+		hardMode,
+		CMode{ GameMode::MODE_HARD }
 	);
 
 	Entity name = makeUIText
@@ -75,7 +73,7 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		font,
 		"Katawra's",
 		64,
-		sf::Color::White
+		themeColor
 	);
 
 	Entity title = makeUIText
@@ -87,7 +85,7 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		font,
 		"Timing Game",
 		128,
-		sf::Color::White
+		themeColor
 	);
 
 	Entity creator = makeUIText
@@ -99,14 +97,9 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		font,
 		"a game by Katawra",
 		32,
-		sf::Color::White
+		themeColor
 	);
 
-	nc.addComponent
-	(
-		hardMode,
-		CMode{ GameMode::MODE_HARD }
-	);
 
 	Entity loadedTextures = makeLoadedTexturesContainer();
 	Entity background = makeBackground
@@ -115,7 +108,8 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		{
 			window.getDefaultView().getSize().x,
 			window.getDefaultView().getSize().y
-		}
+		},
+		themeColor
 	);
 	Entity soundEffects = makeSoundEffectsContainer();
 
@@ -157,7 +151,8 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 			{ESoundStatus::FULL_SOUND, TextureEnum::BUTTON_MUSIC_3_TEXTURE},
 			{ESoundStatus::MUTED_SOUND, TextureEnum::BUTTON_MUSIC_OFF_TEXTURE}
 		},
-		soundStatusData.musicStatus
+		soundStatusData.musicStatus,
+		themeColor
 	);
 
 	Entity soundButton = makeSoundButton
@@ -177,7 +172,8 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 			{ESoundStatus::FULL_SOUND, TextureEnum::BUTTON_SOUND_3_TEXTURE},
 			{ESoundStatus::MUTED_SOUND, TextureEnum::BUTTON_SOUND_OFF_TEXTURE}
 		},
-		soundStatusData.soundStatus
+		soundStatusData.soundStatus,
+		themeColor
 	);
 
 	CSoundControl& test = nc.getComponentArray<CSoundControl>()->getData(soundButton);
