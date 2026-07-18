@@ -89,6 +89,8 @@ void playIntro_Update
 
 void hit_Control
 (
+	float themeBrightness,
+	sf::Color themeColor,
 	sf::Font& font,
 	Entity indicator,
 	Entity hitbox,

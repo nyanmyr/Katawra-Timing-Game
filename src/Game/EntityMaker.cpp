@@ -189,7 +189,7 @@ Entity makeLog
 	return entity;
 }
 
-Entity& makeButton
+Entity& makeTextButton
 (
 	sf::Vector2f pos,
 	sf::Vector2f size,
@@ -197,7 +197,8 @@ Entity& makeButton
 	std::string str,
 	sf::Font& font,
 	Scene scene,
-	sf::Color col
+	sf::Color col,
+	sf::Color textCol
 )
 {
 	Entity entity = entityMakerNC.createEntity();
@@ -260,7 +261,7 @@ Entity& makeButton
 			text,
 			str,
 			64,
-			sf::Color::Black,
+			textCol,
 			TextFormat::MIDDLE
 		}
 	);

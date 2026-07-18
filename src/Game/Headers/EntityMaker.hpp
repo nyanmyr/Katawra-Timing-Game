@@ -34,7 +34,7 @@ Entity makeLog
 	float fadeSet
 );
 
-Entity& makeButton
+Entity& makeTextButton
 (
 	sf::Vector2f pos,
 	sf::Vector2f size,
@@ -42,7 +42,8 @@ Entity& makeButton
 	std::string str,
 	sf::Font& font,
 	Scene scene,
-	sf::Color col
+	sf::Color col,
+	sf::Color textCol
 );
 
 Entity& makeButton

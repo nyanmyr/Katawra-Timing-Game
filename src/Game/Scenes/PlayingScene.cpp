@@ -9,6 +9,7 @@ using sf::Clock;
 using sf::Event;
 using sf::Keyboard::Scancode;
 
+// TOOD: create themeBrightness adjustment function
 // TODO: make adjustable color theme (must be saved)
 // TODO: are you sure button prompt main menu button (you should be able to save your progress)
 // TODO: save score (make it save when returning to menu)
@@ -16,6 +17,7 @@ using sf::Keyboard::Scancode;
 // TODO: make the window resizeable?
 // TODO: bug fixing
 // FIX: look into checking the sound array to see if its all actually deleted
+// FIX: when adjusting volume, sprite color is not adjusted
 // TODO: publish
 
 void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficulty) {
@@ -34,6 +36,19 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 	std::string difficultyStr;
 	sf::Color difficultyColor;
 	sf::Color themeColor = sf::Color(0, 102, 204);
+	sf::Color textColor = sf::Color::White;
+
+	const float themeBrightness =
+		(0.2126 * themeColor.r) +
+		(0.7152 * themeColor.g) +
+		(0.0722 * themeColor.b);
+
+	//std::cout << "luminance: " << themeBrightness << "\n";
+
+	if (themeBrightness > 186)
+	{
+		textColor = sf::Color::Black;
+	}
 
 	switch (difficulty)
 	{
@@ -85,7 +100,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		},
 		startingSpeed,
 		speedIncrease,
-		themeColor
+		sf::Color::White
 	);
 
 	Entity inner = makeInnerBar
@@ -103,7 +118,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			0.f,
 			100.f
 		},
-		themeColor
+		sf::Color::White
 	);
 
 	Entity outer = makeObject
@@ -118,7 +133,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			23.f
 		},
 		3,
-		themeColor
+		sf::Color::White
 	);
 
 	Entity hitbox = makeHitbox
@@ -152,7 +167,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		font,
 		"Score: ",
 		32,
-		themeColor
+		textColor
 	);
 
 	Entity hits = makeUIText
@@ -164,7 +179,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		font,
 		"Hits: ",
 		32,
-		themeColor
+		textColor
 	);
 
 	Entity intro1 = makeUIText
@@ -176,7 +191,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		font,
 		"TIME",
 		16,
-		themeColor,
+		textColor,
 		false
 	);
 
@@ -189,7 +204,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		font,
 		"IT",
 		16,
-		themeColor,
+		textColor,
 		false
 	);
 
@@ -202,7 +217,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		font,
 		"RIGHT!",
 		16,
-		themeColor,
+		textColor,
 		false
 	);
 
@@ -417,6 +432,8 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 				{
 					hit_Control
 					(
+						themeBrightness,
+						themeColor,
 						font,
 						indicator,
 						hitbox,

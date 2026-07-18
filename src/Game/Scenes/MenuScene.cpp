@@ -16,9 +16,23 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 	std::queue<Entity> renderQueue;
 
 	sf::Color themeColor = sf::Color(0, 102, 204);
+	sf::Color textColor = sf::Color::White;
+
+	// TODO: make into function
+	const float themeBrightness =
+		(0.2126 * themeColor.r) +
+		(0.7152 * themeColor.g) +
+		(0.0722 * themeColor.b);
+
+	//std::cout << "luminance: " << themeBrightness << "\n";
+
+	if (themeBrightness > 186)
+	{
+		textColor = sf::Color::Black;
+	}
 
 	// entity instantiation
-	Entity normalMode = makeButton
+	Entity normalMode = makeTextButton
 	(
 		{
 			window.getSize().x / 2.f,
@@ -32,7 +46,8 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		"Normal",
 		font,
 		Scene::PLAYING,
-		themeColor
+		themeColor,
+		textColor
 	);
 
 	nc.addComponent
@@ -41,7 +56,7 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		CMode{ GameMode::MODE_NORMAL }
 	);
 
-	Entity hardMode = makeButton
+	Entity hardMode = makeTextButton
 	(
 		{
 			window.getSize().x / 2.f,
@@ -55,7 +70,8 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		"Hard",
 		font,
 		Scene::PLAYING,
-		themeColor
+		themeColor,
+		textColor
 	);
 
 	nc.addComponent
@@ -73,7 +89,7 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		font,
 		"Katawra's",
 		64,
-		themeColor
+		textColor
 	);
 
 	Entity title = makeUIText
@@ -85,7 +101,7 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		font,
 		"Timing Game",
 		128,
-		themeColor
+		textColor
 	);
 
 	Entity creator = makeUIText
@@ -97,7 +113,7 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		font,
 		"a game by Katawra",
 		32,
-		themeColor
+		textColor
 	);
 
 

@@ -1054,11 +1054,10 @@ const float FADE_TIMER = .12f;
 
 const float FILL_TIMER = 1.f;
 
-const sf::Color SCORE_COLOR = sf::Color::White;
-const sf::Color FAIL_COLOR = sf::Color::Red;
-
 void hit_Control
 (
+    float themeBrightness,
+    sf::Color themeColor,
     sf::Font& font,
     Entity indicator,
     Entity hitbox,
@@ -1124,7 +1123,12 @@ void hit_Control
                     50
                 },
                 font,
-                FAIL_COLOR,
+                sf::Color
+                (
+                    255 - themeColor.r,
+                    255 - themeColor.g,
+                    255 - themeColor.b
+                ),
                 "FAIL!",
                 LOG_TIMER,
                 FADE_TIMER
@@ -1172,7 +1176,7 @@ void hit_Control
                 50
             },
             font,
-            SCORE_COLOR,
+            themeBrightness > 186 ? sf::Color::Black : sf::Color::White,
             "+" + std::to_string(HIT_SCORE) + " SCORE",
             LOG_TIMER,
             FADE_TIMER
@@ -1188,7 +1192,7 @@ void hit_Control
                 50
             },
             font,
-            SCORE_COLOR,
+            themeBrightness > 186 ? sf::Color::Black : sf::Color::White,
             "+" + std::to_string((int)(HIT_SCORE * dist)) + " CENTER",
             LOG_TIMER,
             FADE_TIMER
@@ -1210,7 +1214,7 @@ void hit_Control
                     50
                 },
                 font,
-                SCORE_COLOR,
+                themeBrightness > 186 ? sf::Color::Black : sf::Color::White,
                 "+" + std::to_string(BOUNCE_BONUS) + " BONUS",
                 LOG_TIMER,
                 FADE_TIMER
