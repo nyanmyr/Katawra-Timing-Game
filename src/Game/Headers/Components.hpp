@@ -336,12 +336,17 @@ struct DSoundStatus
 
 struct CColor
 {
-	sf::Color col = sf::Color(0xffffff); // defaults to white
+	sf::Color col = sf::Color(0xffffff);
 };
 
 struct CSetColor
 {
 
+};
+
+struct DThemeColor
+{
+	sf::Color themeColor = sf::Color(0, 102, 204);
 };
 
 #endif

@@ -77,17 +77,14 @@ Entity& makeIndicator
 	sf::Vector2f pos,
 	sf::Vector2f size,
 	float speed,
-	float speedIncrease,
-	sf::Color col
+	float speedIncrease
 );
 
 Entity& makeInnerBar
 (
 	TextureEnum texture,
 	sf::Vector2f pos,
-	sf::Vector2f size,
-	sf::Vector2f slider,
-	sf::Color col
+	sf::Vector2f size
 );
 
 Entity& makeObject
@@ -95,8 +92,7 @@ Entity& makeObject
 	TextureEnum texture,
 	sf::Vector2f pos,
 	sf::Vector2f size,
-	int index,
-	sf::Color col
+	int index
 );
 
 Entity& makeHitbox

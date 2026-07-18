@@ -620,8 +620,7 @@ Entity& makeIndicator
 	sf::Vector2f pos,
 	sf::Vector2f size,
 	float speed,
-	float speedIncrease,
-	sf::Color col
+	float speedIncrease
 )
 {
 	Entity entity = entityMakerNC.createEntity();
@@ -697,28 +696,15 @@ Entity& makeIndicator
 		CDoSpriteCenter{}
 	);
 
-	entityMakerNC.addComponent
-	(
-		entity,
-		CColor{ col }
-	);
-
-	entityMakerNC.addComponent
-	(
-		entity,
-		CSetColor{ }
-	);
-
 	return entity;
 }
 
+// FIX: FIGURE WHY NOT USING makeInnerBar BUGS TS OUT
 Entity& makeInnerBar
 (
 	TextureEnum texture,
 	sf::Vector2f pos,
-	sf::Vector2f size,
-	sf::Vector2f slider,
-	sf::Color col
+	sf::Vector2f size
 )
 {
 	Entity entity = entityMakerNC.createEntity();
@@ -789,18 +775,6 @@ Entity& makeInnerBar
 		CDoSpriteCenter{}
 	);
 
-	entityMakerNC.addComponent
-	(
-		entity,
-		CColor{ col }
-	);
-
-	entityMakerNC.addComponent
-	(
-		entity,
-		CSetColor{ }
-	);
-
 	return entity;
 }
 
@@ -809,8 +783,7 @@ Entity& makeObject
 	TextureEnum texture,
 	sf::Vector2f pos,
 	sf::Vector2f size,
-	int index,
-	sf::Color col
+	int index
 )
 {
 	Entity entity = entityMakerNC.createEntity();
@@ -869,18 +842,6 @@ Entity& makeObject
 	(
 		entity,
 		CDoSpriteCenter{}
-	);
-
-	entityMakerNC.addComponent
-	(
-		entity,
-		CColor{ col }
-	);
-
-	entityMakerNC.addComponent
-	(
-		entity,
-		CSetColor{ }
 	);
 
 	return entity;

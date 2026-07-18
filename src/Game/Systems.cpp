@@ -775,8 +775,8 @@ void doSceneTransition
     sceneTrans.box.setSize
     (
         {
-            (float)window.getSize().x,
-            (float)window.getSize().y
+            static_cast<float>(window.getSize().x),
+            static_cast<float>(window.getSize().y)
         }
     );
 
@@ -814,7 +814,6 @@ void doSceneTransition
     );
 
     uint8_t alpha = (255.f * progress) < 1 ? 1 : (255.f * progress);
-    //std::cout << "alpha: " << (int)alpha << "\n";
 
     sf::Color col =
     {
@@ -1193,7 +1192,7 @@ void hit_Control
             },
             font,
             themeBrightness > 186 ? sf::Color::Black : sf::Color::White,
-            "+" + std::to_string((int)(HIT_SCORE * dist)) + " CENTER",
+            "+" + std::to_string(static_cast<int>(HIT_SCORE * dist)) + " CENTER",
             LOG_TIMER,
             FADE_TIMER
         )
@@ -1579,8 +1578,8 @@ void shakeCamera_Update
     view.setCenter
     (
         {
-            (window.getDefaultView().getSize().x / 2.f) + (float)distrib(gen),
-            (window.getDefaultView().getSize().y / 2.f) + (float)distrib(gen)
+            (window.getDefaultView().getSize().x / 2.f) + static_cast<float>(distrib(gen)),
+            (window.getDefaultView().getSize().y / 2.f) + static_cast<float>(distrib(gen))
         }
     );
 

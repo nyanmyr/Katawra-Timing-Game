@@ -9,6 +9,7 @@ using sf::Clock;
 using sf::Event;
 using sf::Keyboard::Scancode;
 
+// TODO: make theme editor button
 // TOOD: create themeBrightness adjustment function
 // TODO: make adjustable color theme (must be saved)
 // TODO: are you sure button prompt main menu button (you should be able to save your progress)
@@ -26,7 +27,6 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 	// game state variables
 	Clock clock;
 	std::queue<Entity> renderQueue;
-	bool buttonClicked = false;
 
 	float startingSpeed;
 	float speedIncrease;
@@ -35,6 +35,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 	float sizeDecrease;
 	std::string difficultyStr;
 	sf::Color difficultyColor;
+
 	sf::Color themeColor = sf::Color(0, 102, 204);
 	sf::Color textColor = sf::Color::White;
 
@@ -99,8 +100,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			25.f
 		},
 		startingSpeed,
-		speedIncrease,
-		sf::Color::White
+		speedIncrease
 	);
 
 	Entity inner = makeInnerBar
@@ -113,12 +113,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		{ // xbounds is tied to size
 			501.f,
 			14.f
-		},
-		{ // inner min/ max
-			0.f,
-			100.f
-		},
-		sf::Color::White
+		}
 	);
 
 	Entity outer = makeObject
@@ -132,8 +127,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			509.f,
 			23.f
 		},
-		3,
-		sf::Color::White
+		3
 	);
 
 	Entity hitbox = makeHitbox
@@ -144,18 +138,6 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		minSize, // min size
 		sizeDecrease, // size decrease
 		themeColor
-	);
-
-	nc.addComponent
-	(
-		hitbox,
-		CColor{ sf::Color(0x0066cc) }
-	);
-
-	nc.addComponent
-	(
-		hitbox,
-		CSetColor{ }
 	);
 
 	Entity score = makeUIText
