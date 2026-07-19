@@ -967,6 +967,7 @@ Entity& makeBackground
 (
 	TextureEnum texture,
 	sf::Vector2f size,
+	sf::Vector2f pos,
 	sf::Color col
 )
 {
@@ -977,8 +978,8 @@ Entity& makeBackground
 		entity,
 		CPosition
 		{
-			size.x / 2.f,
-			size.y / 2.f
+			pos.x,
+			pos.y
 		}
 	);
 	entityMakerNC.addComponent

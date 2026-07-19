@@ -5,19 +5,26 @@ void playScene
 (
     sf::RenderWindow& window,
     Scene scene,
-    sf::Font& font,
+    sf::Font& normalFont,
+    sf::Font& titleFont,
     Difficulty difficulty
 )
 {
     switch (scene) {
     case MENU:
-        MenuScene(window, font);
-        break;
-    case PLAYING:
-        PlayingScene
+        menuScene
         (
             window,
-            font,
+            normalFont,
+            titleFont
+        );
+        break;
+    case PLAYING:
+        playingScene
+        (
+            window,
+            normalFont,
+            titleFont,
             difficulty
         );
         break;

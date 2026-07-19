@@ -8,7 +8,13 @@ using sf::Clock;
 using sf::Event;
 using sf::Keyboard::Scancode;
 
-void MenuScene(sf::RenderWindow& window, sf::Font& font) {
+void menuScene
+(
+	sf::RenderWindow& window,
+	sf::Font& normalFont,
+	sf::Font& titleFont
+)
+{
 	NacreCoordinator& nc = NacreCoordinator::getInstance();
 
 	// game state variables
@@ -44,7 +50,7 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		},
 		TextureEnum::BUTTON_TEXTURE,
 		"Normal",
-		font,
+		normalFont,
 		Scene::PLAYING,
 		themeColor,
 		textColor
@@ -68,7 +74,7 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		},
 		TextureEnum::BUTTON_TEXTURE,
 		"Hard",
-		font,
+		normalFont,
 		Scene::PLAYING,
 		themeColor,
 		textColor
@@ -86,7 +92,7 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 			window.getSize().x / 2.f,
 			45.f
 		},
-		font,
+		normalFont,
 		"Katawra's",
 		64,
 		textColor
@@ -98,9 +104,9 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 			window.getSize().x / 2.f,
 			150.f
 		},
-		font,
+		titleFont,
 		"Timing Game",
-		128,
+		48,
 		textColor
 	);
 
@@ -110,9 +116,9 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 			window.getSize().x / 2.f,
 			550.f
 		},
-		font,
+		normalFont,
 		"a game by Katawra",
-		32,
+		24,
 		textColor
 	);
 
@@ -122,8 +128,12 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 	(
 		TextureEnum::BACKGROUND_TEXTURE,
 		{
-			window.getDefaultView().getSize().x,
-			window.getDefaultView().getSize().y
+			window.getDefaultView().getSize().x + 75.f,
+			window.getDefaultView().getSize().y + 75.f
+		},
+		{
+			window.getDefaultView().getSize().x / 2.f,
+			window.getDefaultView().getSize().y / 2.f
 		},
 		themeColor
 	);
@@ -212,7 +222,7 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 
 	while (window.isOpen())
 	{
-		setText_Start(font); // font system is limited to one font
+		setText_Start(); // font system is limited to one font
 
 		DeltaTime dt = clock.restart().asSeconds();
 
@@ -296,7 +306,8 @@ void MenuScene(sf::RenderWindow& window, sf::Font& font) {
 		(
 			sceneTransition,
 			window,
-			font
+			normalFont,
+			titleFont
 		);
 
 		window.clear();

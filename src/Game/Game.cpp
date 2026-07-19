@@ -13,7 +13,8 @@ constexpr int SCREEN_HEIGHT = 600;
 
 constexpr int MAX_FPS = 60;
 
-const std::string FONT_FILEPATH = RESOURCES_PATH "arial.ttf";
+const std::string NORMAL_FONT_FILEPATH = RESOURCES_PATH "super_cartoon.ttf";
+const std::string TITLE_FONT_FILEPATH = RESOURCES_PATH "moogalator.ttf";
 
 void main() {
 	RenderWindow window(VideoMode({ SCREEN_WIDTH, SCREEN_HEIGHT }), "Katawra Timing Game", sf::Style::Close); // change of the window here
@@ -61,11 +62,25 @@ void main() {
 	nc.registerComponent<CColor>();
 	nc.registerComponent<CSetColor>();
 
-	sf::Font font;
-	if (!font.openFromFile(FONT_FILEPATH))
+	sf::Font normalFont;
+	sf::Font titleFont;
+
+	if (!normalFont.openFromFile(NORMAL_FONT_FILEPATH))
 	{
-		throw std::runtime_error("Font not found.");
+		throw std::runtime_error("Normal font not found.");
 	}
 
-	playScene(window, Scene::MENU, font, Difficulty::DIFFICULTY_NORMAL);
+	if (!titleFont.openFromFile(TITLE_FONT_FILEPATH))
+	{
+		throw std::runtime_error("Title font not found.");
+	}
+
+	playScene
+	(
+		window,
+		Scene::MENU,
+		normalFont,
+		titleFont,
+		Difficulty::DIFFICULTY_NORMAL
+	);
 }

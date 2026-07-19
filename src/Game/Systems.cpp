@@ -97,7 +97,7 @@ void adjustMusicTextureEnum_Start
         break;
     }
 }
-void setText_Start(sf::Font& font)
+void setText_Start()
 {
     auto& texts = systemsNC.getComponentArray<CText>();
 
@@ -861,7 +861,8 @@ void nextScene_Update
 (
     Entity sceneTransition,
     sf::RenderWindow& window,
-    sf::Font& font
+    sf::Font& normalFont,
+    sf::Font& titleFont
 )
 {
     auto& buttonArray = systemsNC.getComponentArray<CButton>();
@@ -948,7 +949,7 @@ void nextScene_Update
         //std::cout << "test: " << "\n";
 
         systemsNC.destroyAll();
-        playScene(window, playNextScene, font, diff);
+        playScene(window, playNextScene, normalFont, titleFont, diff);
         window.close();
     }
 }
@@ -1572,7 +1573,7 @@ void shakeCamera_Update
     uint32_t hashValue = hasher(dt);
 
     std::mt19937 gen(hashValue);
-    std::uniform_real_distribution<> distrib(0, shakeCam.intensity);
+    std::uniform_real_distribution<> distrib(-shakeCam.intensity, shakeCam.intensity);
 
     //std::cout << "x: " << cam.currentPos.x << "y: " << cam.currentPos.y << "\n";
     view.setCenter

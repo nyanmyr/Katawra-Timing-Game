@@ -24,7 +24,7 @@ void adjustMusicTextureEnum_Start
 	const DSoundStatus& soundStatusData,
 	TextureEnum& musicTextureEnum
 );
-void setText_Start(sf::Font& font);
+void setText_Start();
 void setTextOrigin_Start();
 
 void loadPlayingTextures_Start(Entity loadedTextures);
@@ -77,7 +77,8 @@ void nextScene_Update
 (
 	Entity sceneTransition,
 	sf::RenderWindow& window,
-	sf::Font& font
+	sf::Font& normalFont,
+	sf::Font& titleFont
 );
 
 void playIntro_Update

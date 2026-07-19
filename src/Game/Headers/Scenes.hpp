@@ -20,14 +20,21 @@ void playScene
 (
 	sf::RenderWindow& window,
 	Scene scene,
-	sf::Font& font,
+	sf::Font& normalFont,
+	sf::Font& titleFont,
 	Difficulty difficulty
 );
-void MenuScene(sf::RenderWindow& window, sf::Font& font);
-void PlayingScene
+void menuScene
 (
 	sf::RenderWindow& window,
-	sf::Font& font,
+	sf::Font& normalFont,
+	sf::Font& titleFont
+);
+void playingScene
+(
+	sf::RenderWindow& window,
+	sf::Font& normalFont,
+	sf::Font& titleFont,
 	Difficulty difficulty
 );
 

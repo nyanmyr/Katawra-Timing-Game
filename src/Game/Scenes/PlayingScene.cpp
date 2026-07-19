@@ -9,6 +9,7 @@ using sf::Clock;
 using sf::Event;
 using sf::Keyboard::Scancode;
 
+// TODO: remove difficulty coloring
 // TODO: make theme editor button
 // TOOD: create themeBrightness adjustment function
 // TODO: make adjustable color theme (must be saved)
@@ -19,9 +20,17 @@ using sf::Keyboard::Scancode;
 // TODO: bug fixing
 // FIX: look into checking the sound array to see if its all actually deleted
 // FIX: when adjusting volume, sprite color is not adjusted
+// FIX: indicator goes offscreen when fading
 // TODO: publish
 
-void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficulty) {
+void playingScene
+(
+	sf::RenderWindow& window,
+	sf::Font& normalFont,
+	sf::Font& titleFont,
+	Difficulty difficulty
+)
+{
 	NacreCoordinator& nc = NacreCoordinator::getInstance();
 
 	// game state variables
@@ -146,7 +155,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			100.f,
 			25.f
 		},
-		font,
+		normalFont,
 		"Score: ",
 		32,
 		textColor
@@ -158,7 +167,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			100.f,
 			75.f
 		},
-		font,
+		normalFont,
 		"Hits: ",
 		32,
 		textColor
@@ -170,7 +179,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			window.getSize().x / 2.f,
 			window.getSize().y / 2.f
 		},
-		font,
+		normalFont,
 		"TIME",
 		16,
 		textColor,
@@ -183,7 +192,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			window.getSize().x / 2.f,
 			window.getSize().y / 2.f
 		},
-		font,
+		normalFont,
 		"IT",
 		16,
 		textColor,
@@ -196,7 +205,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			window.getSize().x / 2.f,
 			window.getSize().y / 2.f
 		},
-		font,
+		normalFont,
 		"RIGHT!",
 		16,
 		textColor,
@@ -209,7 +218,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 			window.getSize().x / 2.f,
 			window.getSize().y / 2.f
 		},
-		font,
+		normalFont,
 		difficultyStr + " MODE",
 		16,
 		difficultyColor,
@@ -219,14 +228,13 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 	Entity difficultyText = makeUIText
 	(
 		{
-			window.getSize().x / 2.f,
-			window.getSize().y - 25.f
+			window.getSize().x - 200.f,
+			window.getSize().y - 50.f
 		},
-		font,
+		normalFont,
 		difficultyStr + " MODE",
-		16,
-		difficultyColor,
-		false
+		32,
+		textColor
 	);
 
 	Entity cameraShake = makeCameraShake();
@@ -237,8 +245,12 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 	(
 		TextureEnum::BACKGROUND_TEXTURE,
 		{
-			window.getDefaultView().getSize().x,
-			window.getDefaultView().getSize().y
+			window.getDefaultView().getSize().x + 75.f,
+			window.getDefaultView().getSize().y + 75.f
+		},
+		{
+			window.getDefaultView().getSize().x / 2.f,
+			window.getDefaultView().getSize().y / 2.f
 		},
 		themeColor
 	);
@@ -361,7 +373,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 	while (window.isOpen())
 	{
 		// in this case the extra baggage is afforable :p
-		setText_Start(font); // font system is limited to one font
+		setText_Start(); // font system is limited to one font
 
 		DeltaTime dt = clock.restart().asSeconds();
 
@@ -416,7 +428,7 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 					(
 						themeBrightness,
 						themeColor,
-						font,
+						normalFont,
 						indicator,
 						hitbox,
 						cameraShake,
@@ -519,7 +531,8 @@ void PlayingScene(sf::RenderWindow& window, sf::Font& font, Difficulty difficult
 		(
 			sceneTransition,
 			window,
-			font
+			normalFont,
+			titleFont
 		);
 		delete_Update(dt);
 
