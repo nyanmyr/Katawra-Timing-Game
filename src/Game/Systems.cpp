@@ -54,46 +54,46 @@ void loadSoundStatusData_Start(DSoundStatus& soundStatusData)
 void adjustSoundTextureEnum_Start
 (
     const DSoundStatus& soundStatusData, 
-    TextureEnum& soundTextureEnum
+    ETexture& soundTextureEnum
 )
 {
     switch (soundStatusData.soundStatus)
     {
     case QUARTER_SOUND:
-        soundTextureEnum = TextureEnum::BUTTON_SOUND_1_TEXTURE;
+        soundTextureEnum = ETexture::BUTTON_SOUND_1_TEXTURE;
         break;
     case HALF_SOUND:
-        soundTextureEnum = TextureEnum::BUTTON_SOUND_2_TEXTURE;
+        soundTextureEnum = ETexture::BUTTON_SOUND_2_TEXTURE;
         break;
     case FULL_SOUND:
-        soundTextureEnum = TextureEnum::BUTTON_SOUND_3_TEXTURE;
+        soundTextureEnum = ETexture::BUTTON_SOUND_3_TEXTURE;
         break;
     case MUTED_SOUND:
     default:
-        soundTextureEnum = TextureEnum::BUTTON_SOUND_OFF_TEXTURE;
+        soundTextureEnum = ETexture::BUTTON_SOUND_OFF_TEXTURE;
         break;
     }
 }
 void adjustMusicTextureEnum_Start
 (
     const DSoundStatus& soundStatusData,
-    TextureEnum& musicTextureEnum
+    ETexture& musicTextureEnum
 )
 {
     switch (soundStatusData.musicStatus)
     {
     case QUARTER_SOUND:
-        musicTextureEnum = TextureEnum::BUTTON_MUSIC_1_TEXTURE;
+        musicTextureEnum = ETexture::BUTTON_MUSIC_1_TEXTURE;
         break;
     case HALF_SOUND:
-        musicTextureEnum = TextureEnum::BUTTON_MUSIC_2_TEXTURE;
+        musicTextureEnum = ETexture::BUTTON_MUSIC_2_TEXTURE;
         break;
     case FULL_SOUND:
-        musicTextureEnum = TextureEnum::BUTTON_MUSIC_3_TEXTURE;
+        musicTextureEnum = ETexture::BUTTON_MUSIC_3_TEXTURE;
         break;
     case MUTED_SOUND:
     default:
-        musicTextureEnum = TextureEnum::BUTTON_MUSIC_OFF_TEXTURE;
+        musicTextureEnum = ETexture::BUTTON_MUSIC_OFF_TEXTURE;
         break;
     }
 }
@@ -154,17 +154,17 @@ void setTextOrigin_Start()
 
 void loadMusicButtons_Helper(CTexturesContainer& container)
 {
-    container.map.emplace(TextureEnum::BUTTON_MUSIC_1_TEXTURE, sf::Texture(SPRITES_PATH "button_music_1_texture.png"));
-    container.map.emplace(TextureEnum::BUTTON_MUSIC_2_TEXTURE, sf::Texture(SPRITES_PATH "button_music_2_texture.png"));
-    container.map.emplace(TextureEnum::BUTTON_MUSIC_3_TEXTURE, sf::Texture(SPRITES_PATH "button_music_3_texture.png"));
-    container.map.emplace(TextureEnum::BUTTON_MUSIC_OFF_TEXTURE, sf::Texture(SPRITES_PATH "button_music_off_texture.png"));
+    container.map.emplace(ETexture::BUTTON_MUSIC_1_TEXTURE, sf::Texture(SPRITES_PATH "button_music_1_texture.png"));
+    container.map.emplace(ETexture::BUTTON_MUSIC_2_TEXTURE, sf::Texture(SPRITES_PATH "button_music_2_texture.png"));
+    container.map.emplace(ETexture::BUTTON_MUSIC_3_TEXTURE, sf::Texture(SPRITES_PATH "button_music_3_texture.png"));
+    container.map.emplace(ETexture::BUTTON_MUSIC_OFF_TEXTURE, sf::Texture(SPRITES_PATH "button_music_off_texture.png"));
 }
 void loadSoundButtons_Helper(CTexturesContainer& container)
 {
-    container.map.emplace(TextureEnum::BUTTON_SOUND_1_TEXTURE, sf::Texture(SPRITES_PATH "button_sound_1_texture.png"));
-    container.map.emplace(TextureEnum::BUTTON_SOUND_2_TEXTURE, sf::Texture(SPRITES_PATH "button_sound_2_texture.png"));
-    container.map.emplace(TextureEnum::BUTTON_SOUND_3_TEXTURE, sf::Texture(SPRITES_PATH "button_sound_3_texture.png"));
-    container.map.emplace(TextureEnum::BUTTON_SOUND_OFF_TEXTURE, sf::Texture(SPRITES_PATH "button_sound_off_texture.png"));
+    container.map.emplace(ETexture::BUTTON_SOUND_1_TEXTURE, sf::Texture(SPRITES_PATH "button_sound_1_texture.png"));
+    container.map.emplace(ETexture::BUTTON_SOUND_2_TEXTURE, sf::Texture(SPRITES_PATH "button_sound_2_texture.png"));
+    container.map.emplace(ETexture::BUTTON_SOUND_3_TEXTURE, sf::Texture(SPRITES_PATH "button_sound_3_texture.png"));
+    container.map.emplace(ETexture::BUTTON_SOUND_OFF_TEXTURE, sf::Texture(SPRITES_PATH "button_sound_off_texture.png"));
 }
 
 void loadPlayingTextures_Start(Entity loadedTextures)
@@ -178,13 +178,13 @@ void loadPlayingTextures_Start(Entity loadedTextures)
 
     CTexturesContainer& container = texturesContainerArray->getData(loadedTextures);
 
-    container.map.emplace(TextureEnum::INDICATOR_TEXTURE, sf::Texture(SPRITES_PATH "indicator_texture.png"));
-    container.map.emplace(TextureEnum::FILL_TEXTURE, sf::Texture(SPRITES_PATH "hitbox_texture.jpg"));
-    container.map.emplace(TextureEnum::BACKGROUND_TEXTURE, sf::Texture(SPRITES_PATH "background_texture.jpg"));
-    container.map.emplace(TextureEnum::INNER_TEXTURE, sf::Texture(SPRITES_PATH "inner_texture.png"));
-    container.map.emplace(TextureEnum::OUTER_TEXTURE, sf::Texture(SPRITES_PATH "outer_texture.png"));
-    container.map.emplace(TextureEnum::TEXTURE_PLACEHOLDER_PLACEHOLDER, sf::Texture(SPRITES_PATH "placeholder_placeholder.jpg"));
-    container.map.emplace(TextureEnum::BUTTON_RETURN_TEXTURE, sf::Texture(SPRITES_PATH "button_return_texture.png"));
+    container.map.emplace(ETexture::INDICATOR_TEXTURE, sf::Texture(SPRITES_PATH "indicator_texture.png"));
+    container.map.emplace(ETexture::FILL_TEXTURE, sf::Texture(SPRITES_PATH "hitbox_texture.jpg"));
+    container.map.emplace(ETexture::BACKGROUND_TEXTURE, sf::Texture(SPRITES_PATH "background_texture.jpg"));
+    container.map.emplace(ETexture::INNER_TEXTURE, sf::Texture(SPRITES_PATH "inner_texture.png"));
+    container.map.emplace(ETexture::OUTER_TEXTURE, sf::Texture(SPRITES_PATH "outer_texture.png"));
+    container.map.emplace(ETexture::TEXTURE_PLACEHOLDER_PLACEHOLDER, sf::Texture(SPRITES_PATH "placeholder_placeholder.jpg"));
+    container.map.emplace(ETexture::BUTTON_RETURN_TEXTURE, sf::Texture(SPRITES_PATH "button_return_texture.png"));
     loadMusicButtons_Helper(container);
     loadSoundButtons_Helper(container);
 }
@@ -199,9 +199,13 @@ void loadMenuTextures_Start(Entity loadedTextures)
 
     CTexturesContainer& container = texturesContainerArray->getData(loadedTextures);
 
-    container.map.emplace(TextureEnum::BUTTON_TEXTURE, sf::Texture(SPRITES_PATH "button_texture.png"));
-    container.map.emplace(TextureEnum::BACKGROUND_TEXTURE, sf::Texture(SPRITES_PATH "background_texture.jpg"));
-    container.map.emplace(TextureEnum::TEXTURE_PLACEHOLDER_PLACEHOLDER, sf::Texture(SPRITES_PATH "placeholder_placeholder.jpg"));
+    container.map.emplace(ETexture::BUTTON_TEXTURE, sf::Texture(SPRITES_PATH "button_texture.png"));
+    container.map.emplace(ETexture::BACKGROUND_TEXTURE, sf::Texture(SPRITES_PATH "background_texture.jpg"));
+    container.map.emplace(ETexture::TEXTURE_PLACEHOLDER_PLACEHOLDER, sf::Texture(SPRITES_PATH "placeholder_placeholder.jpg"));
+    container.map.emplace(ETexture::SMALL_BUTTON_TEXTURE, sf::Texture(SPRITES_PATH "small_button_texture.png"));
+    container.map.emplace(ETexture::INNER_TEXTURE, sf::Texture(SPRITES_PATH "inner_texture.png"));
+    container.map.emplace(ETexture::OUTER_TEXTURE, sf::Texture(SPRITES_PATH "outer_texture.png"));
+    container.map.emplace(ETexture::INDICATOR_TEXTURE, sf::Texture(SPRITES_PATH "indicator_texture.png"));
     loadMusicButtons_Helper(container);
     loadSoundButtons_Helper(container);
 }

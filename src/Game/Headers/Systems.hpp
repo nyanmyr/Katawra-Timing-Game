@@ -17,12 +17,12 @@ void loadSoundStatusData_Start(DSoundStatus& soundStatusData);
 void adjustSoundTextureEnum_Start
 (
 	const DSoundStatus& soundStatusData,
-	TextureEnum& soundTextureEnum
+	ETexture& soundTextureEnum
 );
 void adjustMusicTextureEnum_Start
 (
 	const DSoundStatus& soundStatusData,
-	TextureEnum& musicTextureEnum
+	ETexture& musicTextureEnum
 );
 void setText_Start();
 void setTextOrigin_Start();

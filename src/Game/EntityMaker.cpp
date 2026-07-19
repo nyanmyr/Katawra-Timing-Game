@@ -193,7 +193,7 @@ Entity& makeTextButton
 (
 	sf::Vector2f pos,
 	sf::Vector2f size,
-	TextureEnum texture,
+	ETexture texture,
 	std::string str,
 	sf::Font& font,
 	Scene scene,
@@ -313,7 +313,7 @@ Entity& makeButton
 (
 	sf::Vector2f pos,
 	sf::Vector2f size,
-	TextureEnum texture,
+	ETexture texture,
 	Scene scene,
 	sf::Color col
 )
@@ -417,7 +417,7 @@ Entity& makeButton
 (
 	sf::Vector2f pos,
 	sf::Vector2f size,
-	TextureEnum texture,
+	ETexture texture,
 	sf::Color col
 )
 {
@@ -510,8 +510,8 @@ Entity& makeSoundButton
 (
 	sf::Vector2f pos,
 	sf::Vector2f size,
-	TextureEnum texture,
-	std::unordered_map<ESoundStatus, TextureEnum> map,
+	ETexture texture,
+	std::unordered_map<ESoundStatus, ETexture> map,
 	ESoundStatus status,
 	sf::Color col
 )
@@ -613,10 +613,89 @@ Entity& makeSoundButton
 
 	return entity;
 }
+Entity& makeThemeSliderPointer
+(
+	sf::Vector2f pos,
+	sf::Vector2f size,
+	ETexture texture
+)
+{
+	Entity entity = entityMakerNC.createEntity();
 
+	entityMakerNC.addComponent(
+		entity,
+		CPosition
+		{
+			pos.x,
+			pos.y
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CTransform
+		{
+			size.x,
+			size.y
+		}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CTexture{ texture }
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSprite{}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		COrigin
+		{
+			size.x / 2.f,
+			size.y / 2.f
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CButton
+		{
+			0.125f,
+			true
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CZIndex
+		{
+			4,
+			true
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CButtonSounds{}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CDoSpriteCenter{}
+	);
+
+	return entity;
+}
 Entity& makeIndicator
 (
-	TextureEnum texture,
+	ETexture texture,
 	sf::Vector2f pos,
 	sf::Vector2f size,
 	float speed,
@@ -702,7 +781,7 @@ Entity& makeIndicator
 // FIX: FIGURE WHY NOT USING makeInnerBar BUGS TS OUT
 Entity& makeInnerBar
 (
-	TextureEnum texture,
+	ETexture texture,
 	sf::Vector2f pos,
 	sf::Vector2f size
 )
@@ -780,7 +859,7 @@ Entity& makeInnerBar
 
 Entity& makeObject
 (
-	TextureEnum texture,
+	ETexture texture,
 	sf::Vector2f pos,
 	sf::Vector2f size,
 	int index
@@ -847,9 +926,90 @@ Entity& makeObject
 	return entity;
 }
 
+Entity& makeThemeSlider
+(
+	ETexture texture,
+	sf::Vector2f pos,
+	sf::Vector2f size,
+	sf::Color col
+)
+{
+	Entity entity = entityMakerNC.createEntity();
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CPosition
+		{
+			pos.x,
+			pos.y
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		CTransform
+		{
+			size.x,
+			size.y
+		}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CTexture{ texture }
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSprite{}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CZIndex
+		{
+			2,
+			true
+		}
+	);
+	entityMakerNC.addComponent
+	(
+		entity,
+		COrigin
+		{
+			size.x / 2.f,
+			size.y / 2.f
+		}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CDoSpriteCenter{}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CColor{ col }
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CSetColor{ }
+	);
+
+	return entity;
+}
+
 Entity& makeHitbox
 (
-	TextureEnum texture,
+	ETexture texture,
 	Entity slider,
 	float startSize,
 	float minSize,
@@ -965,7 +1125,7 @@ Entity& makeHitbox
 
 Entity& makeBackground
 (
-	TextureEnum texture,
+	ETexture texture,
 	sf::Vector2f size,
 	sf::Vector2f pos,
 	sf::Color col

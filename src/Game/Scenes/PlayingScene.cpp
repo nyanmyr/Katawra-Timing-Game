@@ -9,8 +9,8 @@ using sf::Clock;
 using sf::Event;
 using sf::Keyboard::Scancode;
 
-// TODO: remove difficulty coloring
-// TODO: make theme editor button
+// TODO: make theme editor button function (create a system for holding down buttons)
+// TOOD: make slider pointer functional
 // TOOD: create themeBrightness adjustment function
 // TODO: make adjustable color theme (must be saved)
 // TODO: are you sure button prompt main menu button (you should be able to save your progress)
@@ -43,7 +43,6 @@ void playingScene
 	float minSize;
 	float sizeDecrease;
 	std::string difficultyStr;
-	sf::Color difficultyColor;
 
 	sf::Color themeColor = sf::Color(0, 102, 204);
 	sf::Color textColor = sf::Color::White;
@@ -72,7 +71,7 @@ void playingScene
 
 			//std::cout << "difficulty: HARD\n";
 			difficultyStr = "HARD";
-			difficultyColor = sf::Color // gets the complementary color
+			themeColor = sf::Color // gets the complementary color
 			(
 				255 - themeColor.r,
 				255 - themeColor.g,
@@ -91,15 +90,13 @@ void playingScene
 
 			//std::cout << "difficulty: NORMAL\n";
 			difficultyStr = "NORMAL";
-			difficultyColor = themeColor;
-
 			break;
 	}
 
 	// entity instantiation
 	Entity indicator = makeIndicator
 	(
-		TextureEnum::INDICATOR_TEXTURE,
+		ETexture::INDICATOR_TEXTURE,
 		{
 			window.getSize().x / 2.f,
 			(window.getSize().y / 2.f) - 11.f
@@ -114,7 +111,7 @@ void playingScene
 
 	Entity inner = makeInnerBar
 	(
-		TextureEnum::INNER_TEXTURE,
+		ETexture::INNER_TEXTURE,
 		{
 			window.getSize().x / 2.f,
 			window.getSize().y / 2.f
@@ -127,7 +124,7 @@ void playingScene
 
 	Entity outer = makeObject
 	(
-		TextureEnum::OUTER_TEXTURE,
+		ETexture::OUTER_TEXTURE,
 		{
 			window.getSize().x / 2.f,
 			window.getSize().y / 2.f
@@ -141,7 +138,7 @@ void playingScene
 
 	Entity hitbox = makeHitbox
 	(
-		TextureEnum::FILL_TEXTURE,
+		ETexture::FILL_TEXTURE,
 		inner,
 		startSize, // start size
 		minSize, // min size
@@ -221,7 +218,7 @@ void playingScene
 		normalFont,
 		difficultyStr + " MODE",
 		16,
-		difficultyColor,
+		textColor,
 		false
 	);
 
@@ -243,7 +240,7 @@ void playingScene
 	Entity soundEffects = makeSoundEffectsContainer();
 	Entity background = makeBackground
 	(
-		TextureEnum::BACKGROUND_TEXTURE,
+		ETexture::BACKGROUND_TEXTURE,
 		{
 			window.getDefaultView().getSize().x + 75.f,
 			window.getDefaultView().getSize().y + 75.f
@@ -290,7 +287,7 @@ void playingScene
 			SMALL_BUTTON_SIZE,
 			SMALL_BUTTON_SIZE
 		},
-		TextureEnum::BUTTON_RETURN_TEXTURE,
+		ETexture::BUTTON_RETURN_TEXTURE,
 		Scene::MENU,
 		themeColor
 	);
@@ -298,8 +295,8 @@ void playingScene
 	DSoundStatus soundStatusData;
 	loadSoundStatusData_Start(soundStatusData);
 
-	TextureEnum soundTextureEnum = TextureEnum::BUTTON_SOUND_3_TEXTURE;
-	TextureEnum musicTextureEnum = TextureEnum::BUTTON_MUSIC_3_TEXTURE;
+	ETexture soundTextureEnum = ETexture::BUTTON_SOUND_3_TEXTURE;
+	ETexture musicTextureEnum = ETexture::BUTTON_MUSIC_3_TEXTURE;
 
 	adjustSoundTextureEnum_Start
 	(
@@ -324,10 +321,10 @@ void playingScene
 		},
 		musicTextureEnum,
 		{
-			{ESoundStatus::QUARTER_SOUND, TextureEnum::BUTTON_MUSIC_1_TEXTURE},
-			{ESoundStatus::HALF_SOUND, TextureEnum::BUTTON_MUSIC_2_TEXTURE},
-			{ESoundStatus::FULL_SOUND, TextureEnum::BUTTON_MUSIC_3_TEXTURE},
-			{ESoundStatus::MUTED_SOUND, TextureEnum::BUTTON_MUSIC_OFF_TEXTURE}
+			{ESoundStatus::QUARTER_SOUND, ETexture::BUTTON_MUSIC_1_TEXTURE},
+			{ESoundStatus::HALF_SOUND, ETexture::BUTTON_MUSIC_2_TEXTURE},
+			{ESoundStatus::FULL_SOUND, ETexture::BUTTON_MUSIC_3_TEXTURE},
+			{ESoundStatus::MUTED_SOUND, ETexture::BUTTON_MUSIC_OFF_TEXTURE}
 		},
 		soundStatusData.musicStatus,
 		themeColor
@@ -345,10 +342,10 @@ void playingScene
 		},
 		soundTextureEnum,
 		{
-			{ESoundStatus::QUARTER_SOUND, TextureEnum::BUTTON_SOUND_1_TEXTURE},
-			{ESoundStatus::HALF_SOUND, TextureEnum::BUTTON_SOUND_2_TEXTURE},
-			{ESoundStatus::FULL_SOUND, TextureEnum::BUTTON_SOUND_3_TEXTURE},
-			{ESoundStatus::MUTED_SOUND, TextureEnum::BUTTON_SOUND_OFF_TEXTURE}
+			{ESoundStatus::QUARTER_SOUND, ETexture::BUTTON_SOUND_1_TEXTURE},
+			{ESoundStatus::HALF_SOUND, ETexture::BUTTON_SOUND_2_TEXTURE},
+			{ESoundStatus::FULL_SOUND, ETexture::BUTTON_SOUND_3_TEXTURE},
+			{ESoundStatus::MUTED_SOUND, ETexture::BUTTON_SOUND_OFF_TEXTURE}
 		},
 		soundStatusData.soundStatus,
 		themeColor

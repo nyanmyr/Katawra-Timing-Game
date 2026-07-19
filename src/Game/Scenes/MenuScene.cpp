@@ -48,7 +48,7 @@ void menuScene
 			300.f,
 			100.f
 		},
-		TextureEnum::BUTTON_TEXTURE,
+		ETexture::BUTTON_TEXTURE,
 		"Normal",
 		normalFont,
 		Scene::PLAYING,
@@ -72,7 +72,7 @@ void menuScene
 			300.f,
 			100.f
 		},
-		TextureEnum::BUTTON_TEXTURE,
+		ETexture::BUTTON_TEXTURE,
 		"Hard",
 		normalFont,
 		Scene::PLAYING,
@@ -94,7 +94,7 @@ void menuScene
 		},
 		normalFont,
 		"Katawra's",
-		64,
+		54,
 		textColor
 	);
 
@@ -106,7 +106,7 @@ void menuScene
 		},
 		titleFont,
 		"Timing Game",
-		48,
+		56,
 		textColor
 	);
 
@@ -126,7 +126,7 @@ void menuScene
 	Entity loadedTextures = makeLoadedTexturesContainer();
 	Entity background = makeBackground
 	(
-		TextureEnum::BACKGROUND_TEXTURE,
+		ETexture::BACKGROUND_TEXTURE,
 		{
 			window.getDefaultView().getSize().x + 75.f,
 			window.getDefaultView().getSize().y + 75.f
@@ -146,8 +146,8 @@ void menuScene
 	DSoundStatus soundStatusData;
 	loadSoundStatusData_Start(soundStatusData);
 
-	TextureEnum soundTextureEnum = TextureEnum::BUTTON_SOUND_3_TEXTURE;
-	TextureEnum musicTextureEnum = TextureEnum::BUTTON_MUSIC_3_TEXTURE;
+	ETexture soundTextureEnum = ETexture::BUTTON_SOUND_3_TEXTURE;
+	ETexture musicTextureEnum = ETexture::BUTTON_MUSIC_3_TEXTURE;
 
 	adjustSoundTextureEnum_Start
 	(
@@ -172,10 +172,10 @@ void menuScene
 		},
 		musicTextureEnum,
 		{
-			{ESoundStatus::QUARTER_SOUND, TextureEnum::BUTTON_MUSIC_1_TEXTURE},
-			{ESoundStatus::HALF_SOUND, TextureEnum::BUTTON_MUSIC_2_TEXTURE},
-			{ESoundStatus::FULL_SOUND, TextureEnum::BUTTON_MUSIC_3_TEXTURE},
-			{ESoundStatus::MUTED_SOUND, TextureEnum::BUTTON_MUSIC_OFF_TEXTURE}
+			{ESoundStatus::QUARTER_SOUND, ETexture::BUTTON_MUSIC_1_TEXTURE},
+			{ESoundStatus::HALF_SOUND, ETexture::BUTTON_MUSIC_2_TEXTURE},
+			{ESoundStatus::FULL_SOUND, ETexture::BUTTON_MUSIC_3_TEXTURE},
+			{ESoundStatus::MUTED_SOUND, ETexture::BUTTON_MUSIC_OFF_TEXTURE}
 		},
 		soundStatusData.musicStatus,
 		themeColor
@@ -193,10 +193,10 @@ void menuScene
 		},
 		soundTextureEnum,
 		{
-			{ESoundStatus::QUARTER_SOUND, TextureEnum::BUTTON_SOUND_1_TEXTURE},
-			{ESoundStatus::HALF_SOUND, TextureEnum::BUTTON_SOUND_2_TEXTURE},
-			{ESoundStatus::FULL_SOUND, TextureEnum::BUTTON_SOUND_3_TEXTURE},
-			{ESoundStatus::MUTED_SOUND, TextureEnum::BUTTON_SOUND_OFF_TEXTURE}
+			{ESoundStatus::QUARTER_SOUND, ETexture::BUTTON_SOUND_1_TEXTURE},
+			{ESoundStatus::HALF_SOUND, ETexture::BUTTON_SOUND_2_TEXTURE},
+			{ESoundStatus::FULL_SOUND, ETexture::BUTTON_SOUND_3_TEXTURE},
+			{ESoundStatus::MUTED_SOUND, ETexture::BUTTON_SOUND_OFF_TEXTURE}
 		},
 		soundStatusData.soundStatus,
 		themeColor
@@ -208,6 +208,127 @@ void menuScene
 	(
 		.5f, // fade in
 		.5f // fade out
+	);
+
+	Entity themeButton = makeButton
+	(
+		{
+			window.getSize().x - FIRST_SMALL_BUTTON_X,
+			window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)
+		},
+		{
+			SMALL_BUTTON_SIZE,
+			SMALL_BUTTON_SIZE
+		},
+		ETexture::SMALL_BUTTON_TEXTURE,
+		themeColor
+	);
+
+	const float BUTTON_GAP = 20.f;
+	const float SLIDER_GAP = 40.f;
+
+	Entity blueSliderInner = makeThemeSlider
+	(
+		ETexture::INNER_TEXTURE,
+		{
+			window.getSize().x - FIRST_SMALL_BUTTON_X,
+			(window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)) -
+			BUTTON_GAP - SLIDER_GAP * 3
+		},
+		{ 
+			101.8f,
+			4.6f
+		},
+		sf::Color::Blue
+	);
+
+	Entity blueSliderOuter = makeObject
+	(
+		ETexture::OUTER_TEXTURE,
+		{
+			window.getSize().x - FIRST_SMALL_BUTTON_X,
+			(window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)) -
+			BUTTON_GAP - SLIDER_GAP * 3
+		},
+		{ 
+			102.8f,
+			5.6f
+		},
+		3
+	);
+
+	Entity greenSliderInner = makeThemeSlider
+	(
+		ETexture::INNER_TEXTURE,
+		{
+			window.getSize().x - FIRST_SMALL_BUTTON_X,
+			(window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)) -
+			BUTTON_GAP - SLIDER_GAP * 2
+		},
+		{ 
+			101.8f,
+			4.6f
+		},
+		sf::Color::Green
+	);
+
+	Entity greenSliderOuter = makeObject
+	(
+		ETexture::OUTER_TEXTURE,
+		{
+			window.getSize().x - FIRST_SMALL_BUTTON_X,
+			(window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)) -
+			BUTTON_GAP - SLIDER_GAP * 2
+		},
+		{
+			102.8f,
+			5.6f
+		},
+		3
+	);
+
+	Entity redSliderInner = makeThemeSlider
+	(
+		ETexture::INNER_TEXTURE,
+		{
+			window.getSize().x - FIRST_SMALL_BUTTON_X,
+			(window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)) -
+			BUTTON_GAP - SLIDER_GAP * 1
+		},
+		{ 
+			101.8f,
+			4.6f
+		},
+		sf::Color::Red
+	);
+
+	Entity redSliderOuter = makeObject
+	(
+		ETexture::OUTER_TEXTURE,
+		{
+			window.getSize().x - FIRST_SMALL_BUTTON_X,
+			(window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)) -
+			BUTTON_GAP - SLIDER_GAP * 1
+		},
+		{
+			102.8f,
+			5.6f
+		},
+		3
+	);
+
+	Entity redSliderPointer = makeThemeSliderPointer
+	(
+		{
+			window.getSize().x - FIRST_SMALL_BUTTON_X,
+			(window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)) -
+			BUTTON_GAP - SLIDER_GAP * 1
+		},
+		{
+			25.f,
+			25.f
+		},
+		ETexture::INDICATOR_TEXTURE
 	);
 
 	Entity musicTrack = makeMusicTrack();

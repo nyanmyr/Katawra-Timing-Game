@@ -38,7 +38,7 @@ Entity& makeTextButton
 (
 	sf::Vector2f pos,
 	sf::Vector2f size,
-	TextureEnum texture,
+	ETexture texture,
 	std::string str,
 	sf::Font& font,
 	Scene scene,
@@ -50,7 +50,7 @@ Entity& makeButton
 (
 	sf::Vector2f pos,
 	sf::Vector2f size,
-	TextureEnum texture,
+	ETexture texture,
 	Scene scene,
 	sf::Color col
 );
@@ -58,22 +58,28 @@ Entity& makeButton
 (
 	sf::Vector2f pos,
 	sf::Vector2f size,
-	TextureEnum texture,
+	ETexture texture,
 	sf::Color col
 );
 Entity& makeSoundButton
 (
 	sf::Vector2f pos,
 	sf::Vector2f size,
-	TextureEnum texture,
-	std::unordered_map<ESoundStatus, TextureEnum> map,
+	ETexture texture,
+	std::unordered_map<ESoundStatus, ETexture> map,
 	ESoundStatus status,
 	sf::Color col
+);
+Entity& makeThemeSliderPointer
+(
+	sf::Vector2f pos,
+	sf::Vector2f size,
+	ETexture texture
 );
 
 Entity& makeIndicator
 (
-	TextureEnum texture,
+	ETexture texture,
 	sf::Vector2f pos,
 	sf::Vector2f size,
 	float speed,
@@ -82,22 +88,30 @@ Entity& makeIndicator
 
 Entity& makeInnerBar
 (
-	TextureEnum texture,
+	ETexture texture,
 	sf::Vector2f pos,
 	sf::Vector2f size
 );
 
 Entity& makeObject
 (
-	TextureEnum texture,
+	ETexture texture,
 	sf::Vector2f pos,
 	sf::Vector2f size,
 	int index
 );
 
+Entity& makeThemeSlider
+(
+	ETexture texture,
+	sf::Vector2f pos,
+	sf::Vector2f size,
+	sf::Color col
+);
+
 Entity& makeHitbox
 (
-	TextureEnum texture,
+	ETexture texture,
 	Entity slider,
 	float startSize,
 	float minSize,
@@ -107,7 +121,7 @@ Entity& makeHitbox
 
 Entity& makeBackground
 (
-	TextureEnum texture,
+	ETexture texture,
 	sf::Vector2f size,
 	sf::Vector2f pos,
 	sf::Color col

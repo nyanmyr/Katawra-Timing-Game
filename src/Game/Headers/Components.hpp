@@ -171,7 +171,7 @@ struct CSprite
 };
 
 // might reorganize this later
-enum TextureEnum
+enum ETexture
 {
 	INDICATOR_TEXTURE,
 	FILL_TEXTURE,
@@ -188,22 +188,23 @@ enum TextureEnum
 	BUTTON_SOUND_2_TEXTURE,
 	BUTTON_SOUND_3_TEXTURE,
 	BUTTON_SOUND_OFF_TEXTURE,
-	BUTTON_RETURN_TEXTURE
+	BUTTON_RETURN_TEXTURE,
+	SMALL_BUTTON_TEXTURE
 };
 
 struct CTexture
 {
-	TextureEnum data;
+	ETexture data;
 
 	CTexture() = default;
-	CTexture(TextureEnum texture) :
+	CTexture(ETexture texture) :
 		data(texture) {
 	};
 };
 
 struct CTexturesContainer
 {
-	std::unordered_map<TextureEnum, sf::Texture> map;
+	std::unordered_map<ETexture, sf::Texture> map;
 };
 
 enum SoundEffect
@@ -325,7 +326,7 @@ struct CSoundControl
 
 struct CSoundStatusTextures
 {
-	std::unordered_map<ESoundStatus, TextureEnum> map;
+	std::unordered_map<ESoundStatus, ETexture> map;
 };
 
 struct DSoundStatus
