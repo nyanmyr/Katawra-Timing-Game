@@ -36,6 +36,28 @@ float getDistance_Auxiliary
 // -------------------------------------------------------
 // start systems
 // -------------------------------------------------------
+void getThemeBrightness
+(
+    float& themeBrightness,
+    const sf::Color& themeColor
+) 
+{
+    themeBrightness =
+        (0.2126 * themeColor.r) +
+        (0.7152 * themeColor.g) +
+        (0.0722 * themeColor.b);
+}
+void adjustTextColor
+(
+    float themeBrightness,
+    sf::Color& textColor
+)
+{
+    if (themeBrightness > 186)
+    {
+        textColor = sf::Color::Black;
+    }
+}
 void loadSoundStatusData_Start(DSoundStatus& soundStatusData)
 {
     std::ifstream in("soundStatus.dat", std::ios::binary);
@@ -499,26 +521,26 @@ void doSoundControl_Update(Entity soundButton)
     {
         return;
     }
-    std::cout << "clicked" << "\n";
+    //std::cout << "clicked" << "\n";
 
     switch (soundControlObj.current)
     {
     case QUARTER_SOUND:
         soundControlObj.current = ESoundStatus::HALF_SOUND;
-        std::cout << "half sound" << "\n";
+        //std::cout << "half sound" << "\n";
         break;
     case HALF_SOUND:
         soundControlObj.current = ESoundStatus::FULL_SOUND;
-        std::cout << "full sound" << "\n";
+        //std::cout << "full sound" << "\n";
         break;
     case FULL_SOUND:
         soundControlObj.current = ESoundStatus::MUTED_SOUND;
-        std::cout << "muted sound" << "\n";
+        //std::cout << "muted sound" << "\n";
         break;
     case MUTED_SOUND:
     default:
         soundControlObj.current = ESoundStatus::QUARTER_SOUND;
-        std::cout << "quarter sound" << "\n";
+        //std::cout << "quarter sound" << "\n";
         break;
     }
 }
@@ -575,6 +597,12 @@ void changeSoundButtonTexture_Update(Entity loadedTextures)
         (
             entity,
             CDoSpriteCenter{}
+        );
+
+        systemsNC.addComponent
+        (
+            entity,
+            CSetColor{}
         );
     }
 }
@@ -779,8 +807,8 @@ void doSceneTransition
     sceneTrans.box.setSize
     (
         {
-            static_cast<float>(window.getSize().x),
-            static_cast<float>(window.getSize().y)
+            static_cast<float>(window.getDefaultView().getSize().x),
+            static_cast<float>(window.getDefaultView().getSize().y)
         }
     );
 
@@ -1246,11 +1274,14 @@ void moveIndicator_Update
     Entity sceneTransition
 )
 {
+    CVelocity& vel = systemsNC.getComponentArray<CVelocity>()->getData(indicator);
+
     if
     (
         systemsNC.getComponentArray<CSceneTransition>()->getData(sceneTransition).timer > 0
     )
     {
+        vel.x = 0.f;
         return;
     }
 
@@ -1259,7 +1290,6 @@ void moveIndicator_Update
     const CPosition& hitboxPos = systemsNC.getComponentArray<CPosition>()->getData(hitbox);
     const CTransform& hitTrans = systemsNC.getComponentArray<CTransform>()->getData(hitbox);
     CPosition& pos = systemsNC.getComponentArray<CPosition>()->getData(indicator);
-    CVelocity& vel = systemsNC.getComponentArray<CVelocity>()->getData(indicator);
     CScore& score = systemsNC.getComponentArray<CScore>()->getData(hitbox);
     CSound& humSound = systemsNC.getComponentArray<CSound>()->getData(hum);
 

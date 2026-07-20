@@ -16,11 +16,9 @@ using sf::Keyboard::Scancode;
 // TODO: are you sure button prompt main menu button (you should be able to save your progress)
 // TODO: save score (make it save when returning to menu)
 // TODO: ask to continue if window is abruptly closed
-// TODO: make the window resizeable?
+// TODO: make the screen actually go full screen
 // TODO: bug fixing
 // FIX: look into checking the sound array to see if its all actually deleted
-// FIX: when adjusting volume, sprite color is not adjusted
-// FIX: indicator goes offscreen when fading
 // TODO: publish
 
 void playingScene
@@ -44,20 +42,20 @@ void playingScene
 	float sizeDecrease;
 	std::string difficultyStr;
 
-	sf::Color themeColor = sf::Color(0, 102, 204);
+	sf::Color themeColor = sf::Color(0, 102, 204); // TEMPORARY 
 	sf::Color textColor = sf::Color::White;
+	float themeBrightness;
 
-	const float themeBrightness =
-		(0.2126 * themeColor.r) +
-		(0.7152 * themeColor.g) +
-		(0.0722 * themeColor.b);
-
-	//std::cout << "luminance: " << themeBrightness << "\n";
-
-	if (themeBrightness > 186)
-	{
-		textColor = sf::Color::Black;
-	}
+	getThemeBrightness
+	(
+		themeBrightness,
+		themeColor
+	);
+	adjustTextColor
+	(
+		themeBrightness,
+		textColor
+	);
 
 	switch (difficulty)
 	{
@@ -98,8 +96,8 @@ void playingScene
 	(
 		ETexture::INDICATOR_TEXTURE,
 		{
-			window.getSize().x / 2.f,
-			(window.getSize().y / 2.f) - 11.f
+			window.getDefaultView().getSize().x / 2.f,
+			(window.getDefaultView().getSize().y / 2.f) - 11.f
 		},
 		{
 			25.f,
@@ -113,8 +111,8 @@ void playingScene
 	(
 		ETexture::INNER_TEXTURE,
 		{
-			window.getSize().x / 2.f,
-			window.getSize().y / 2.f
+			window.getDefaultView().getSize().x / 2.f,
+			window.getDefaultView().getSize().y / 2.f
 		},
 		{ // xbounds is tied to size
 			501.f,
@@ -126,8 +124,8 @@ void playingScene
 	(
 		ETexture::OUTER_TEXTURE,
 		{
-			window.getSize().x / 2.f,
-			window.getSize().y / 2.f
+			window.getDefaultView().getSize().x / 2.f,
+			window.getDefaultView().getSize().y / 2.f
 		},
 		{ // xbounds is tied to size
 			509.f,
@@ -173,8 +171,8 @@ void playingScene
 	Entity intro1 = makeUIText
 	(
 		{
-			window.getSize().x / 2.f,
-			window.getSize().y / 2.f
+			window.getDefaultView().getSize().x / 2.f,
+			window.getDefaultView().getSize().y / 2.f
 		},
 		normalFont,
 		"TIME",
@@ -186,8 +184,8 @@ void playingScene
 	Entity intro2 = makeUIText
 	(
 		{
-			window.getSize().x / 2.f,
-			window.getSize().y / 2.f
+			window.getDefaultView().getSize().x / 2.f,
+			window.getDefaultView().getSize().y / 2.f
 		},
 		normalFont,
 		"IT",
@@ -199,8 +197,8 @@ void playingScene
 	Entity intro3 = makeUIText
 	(
 		{
-			window.getSize().x / 2.f,
-			window.getSize().y / 2.f
+			window.getDefaultView().getSize().x / 2.f,
+			window.getDefaultView().getSize().y / 2.f
 		},
 		normalFont,
 		"RIGHT!",
@@ -212,8 +210,8 @@ void playingScene
 	Entity difficultyIntro = makeUIText
 	(
 		{
-			window.getSize().x / 2.f,
-			window.getSize().y / 2.f
+			window.getDefaultView().getSize().x / 2.f,
+			window.getDefaultView().getSize().y / 2.f
 		},
 		normalFont,
 		difficultyStr + " MODE",
@@ -222,11 +220,15 @@ void playingScene
 		false
 	);
 
+	const float CORNER_DISTANCE = 50.f;
+	const float SMALL_BUTTON_SIZE = 75.f;
+	const float FIRST_SMALL_BUTTON_X = CORNER_DISTANCE + (SMALL_BUTTON_SIZE / 2.f);
+
 	Entity difficultyText = makeUIText
 	(
 		{
-			window.getSize().x - 200.f,
-			window.getSize().y - 50.f
+			window.getDefaultView().getSize().x - 150.f,
+			window.getDefaultView().getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)
 		},
 		normalFont,
 		difficultyStr + " MODE",
@@ -273,15 +275,11 @@ void playingScene
 		}
 	);
 
-	const float CORNER_DISTANCE = 50.f;
-	const float SMALL_BUTTON_SIZE = 75.f;
-	const float FIRST_SMALL_BUTTON_X = CORNER_DISTANCE + (SMALL_BUTTON_SIZE / 2.f);
-
 	Entity menuReturn = makeButton
 	(
 		{
 			FIRST_SMALL_BUTTON_X,
-			window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)
+			window.getDefaultView().getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)
 		},
 		{
 			SMALL_BUTTON_SIZE,
@@ -313,7 +311,7 @@ void playingScene
 	(
 		{
 			FIRST_SMALL_BUTTON_X * 2,
-			window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)
+			window.getDefaultView().getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)
 		},
 		{
 			SMALL_BUTTON_SIZE,
@@ -334,7 +332,7 @@ void playingScene
 	(
 		{
 			FIRST_SMALL_BUTTON_X * 3,
-			window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)
+			window.getDefaultView().getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)
 		},
 		{
 			SMALL_BUTTON_SIZE,
@@ -493,7 +491,7 @@ void playingScene
 		doFeed_Update
 		(
 			{
-				window.getSize().x / 2.f,
+				window.getDefaultView().getSize().x / 2.f,
 				25.f
 			},
 			dt,

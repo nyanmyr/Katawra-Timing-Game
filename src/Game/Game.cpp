@@ -8,8 +8,8 @@
 using sf::RenderWindow;
 using sf::VideoMode;
 
-constexpr int SCREEN_WIDTH = 800;
-constexpr int SCREEN_HEIGHT = 600;
+constexpr int SCREEN_WIDTH = 1280;
+constexpr int SCREEN_HEIGHT = 720;
 
 constexpr int MAX_FPS = 60;
 
@@ -17,7 +17,7 @@ const std::string NORMAL_FONT_FILEPATH = RESOURCES_PATH "super_cartoon.ttf";
 const std::string TITLE_FONT_FILEPATH = RESOURCES_PATH "moogalator.ttf";
 
 void main() {
-	RenderWindow window(VideoMode({ SCREEN_WIDTH, SCREEN_HEIGHT }), "Katawra Timing Game", sf::Style::Close); // change of the window here
+	RenderWindow window(VideoMode({ SCREEN_WIDTH, SCREEN_HEIGHT }), "Katawra Timing Game", sf::Style::Default); // change of the window here
 	window.setFramerateLimit(MAX_FPS);
 	sf::Image icon(SPRITES_PATH "favicon_icon.png");
 	window.setIcon(icon);

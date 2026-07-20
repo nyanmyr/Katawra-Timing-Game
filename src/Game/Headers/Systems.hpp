@@ -13,6 +13,16 @@
 // -------------------------------------------------------
 // start systems
 // -------------------------------------------------------
+void getThemeBrightness
+(
+	float& themeBrightness,
+	const sf::Color& themeColor
+);
+void adjustTextColor
+(
+	float themeBrightness,
+	sf::Color& textColor
+);
 void loadSoundStatusData_Start(DSoundStatus& soundStatusData);
 void adjustSoundTextureEnum_Start
 (

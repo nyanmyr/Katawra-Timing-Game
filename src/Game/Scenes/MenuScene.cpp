@@ -23,26 +23,25 @@ void menuScene
 
 	sf::Color themeColor = sf::Color(0, 102, 204);
 	sf::Color textColor = sf::Color::White;
+	float themeBrightness;
 
-	// TODO: make into function
-	const float themeBrightness =
-		(0.2126 * themeColor.r) +
-		(0.7152 * themeColor.g) +
-		(0.0722 * themeColor.b);
-
-	//std::cout << "luminance: " << themeBrightness << "\n";
-
-	if (themeBrightness > 186)
-	{
-		textColor = sf::Color::Black;
-	}
+	getThemeBrightness
+	(
+		themeBrightness,
+		themeColor
+	);
+	adjustTextColor
+	(
+		themeBrightness,
+		textColor
+	);
 
 	// entity instantiation
 	Entity normalMode = makeTextButton
 	(
 		{
-			window.getSize().x / 2.f,
-			window.getSize().y / 2.f
+			window.getDefaultView().getSize().x / 2.f,
+			window.getDefaultView().getSize().y / 2.f
 		},
 		{
 			300.f,
@@ -65,8 +64,8 @@ void menuScene
 	Entity hardMode = makeTextButton
 	(
 		{
-			window.getSize().x / 2.f,
-			window.getSize().y / 2.f + 150.f
+			window.getDefaultView().getSize().x / 2.f,
+			window.getDefaultView().getSize().y / 2.f + 150.f
 		},
 		{
 			300.f,
@@ -89,7 +88,7 @@ void menuScene
 	Entity name = makeUIText
 	(
 		{
-			window.getSize().x / 2.f,
+			window.getDefaultView().getSize().x / 2.f,
 			45.f
 		},
 		normalFont,
@@ -101,7 +100,7 @@ void menuScene
 	Entity title = makeUIText
 	(
 		{
-			window.getSize().x / 2.f,
+			window.getDefaultView().getSize().x / 2.f,
 			150.f
 		},
 		titleFont,
@@ -113,8 +112,8 @@ void menuScene
 	Entity creator = makeUIText
 	(
 		{
-			window.getSize().x / 2.f,
-			550.f
+			window.getDefaultView().getSize().x / 2.f,
+			window.getDefaultView().getSize().y - 50.f
 		},
 		normalFont,
 		"a game by Katawra",
@@ -164,7 +163,7 @@ void menuScene
 	(
 		{
 			FIRST_SMALL_BUTTON_X,
-			window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)
+			window.getDefaultView().getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)
 		},
 		{
 			SMALL_BUTTON_SIZE,
@@ -185,7 +184,7 @@ void menuScene
 	(
 		{
 			FIRST_SMALL_BUTTON_X * 2,
-			window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)
+			window.getDefaultView().getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)
 		},
 		{
 			SMALL_BUTTON_SIZE,
@@ -213,8 +212,8 @@ void menuScene
 	Entity themeButton = makeButton
 	(
 		{
-			window.getSize().x - FIRST_SMALL_BUTTON_X,
-			window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)
+			window.getDefaultView().getSize().x - FIRST_SMALL_BUTTON_X,
+			window.getDefaultView().getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)
 		},
 		{
 			SMALL_BUTTON_SIZE,
@@ -231,8 +230,8 @@ void menuScene
 	(
 		ETexture::INNER_TEXTURE,
 		{
-			window.getSize().x - FIRST_SMALL_BUTTON_X,
-			(window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)) -
+			window.getDefaultView().getSize().x - FIRST_SMALL_BUTTON_X,
+			(window.getDefaultView().getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)) -
 			BUTTON_GAP - SLIDER_GAP * 3
 		},
 		{ 
@@ -246,8 +245,8 @@ void menuScene
 	(
 		ETexture::OUTER_TEXTURE,
 		{
-			window.getSize().x - FIRST_SMALL_BUTTON_X,
-			(window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)) -
+			window.getDefaultView().getSize().x - FIRST_SMALL_BUTTON_X,
+			(window.getDefaultView().getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)) -
 			BUTTON_GAP - SLIDER_GAP * 3
 		},
 		{ 
@@ -261,8 +260,8 @@ void menuScene
 	(
 		ETexture::INNER_TEXTURE,
 		{
-			window.getSize().x - FIRST_SMALL_BUTTON_X,
-			(window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)) -
+			window.getDefaultView().getSize().x - FIRST_SMALL_BUTTON_X,
+			(window.getDefaultView().getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)) -
 			BUTTON_GAP - SLIDER_GAP * 2
 		},
 		{ 
@@ -276,8 +275,8 @@ void menuScene
 	(
 		ETexture::OUTER_TEXTURE,
 		{
-			window.getSize().x - FIRST_SMALL_BUTTON_X,
-			(window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)) -
+			window.getDefaultView().getSize().x - FIRST_SMALL_BUTTON_X,
+			(window.getDefaultView().getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)) -
 			BUTTON_GAP - SLIDER_GAP * 2
 		},
 		{
@@ -291,8 +290,8 @@ void menuScene
 	(
 		ETexture::INNER_TEXTURE,
 		{
-			window.getSize().x - FIRST_SMALL_BUTTON_X,
-			(window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)) -
+			window.getDefaultView().getSize().x - FIRST_SMALL_BUTTON_X,
+			(window.getDefaultView().getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)) -
 			BUTTON_GAP - SLIDER_GAP * 1
 		},
 		{ 
@@ -306,8 +305,8 @@ void menuScene
 	(
 		ETexture::OUTER_TEXTURE,
 		{
-			window.getSize().x - FIRST_SMALL_BUTTON_X,
-			(window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)) -
+			window.getDefaultView().getSize().x - FIRST_SMALL_BUTTON_X,
+			(window.getDefaultView().getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)) -
 			BUTTON_GAP - SLIDER_GAP * 1
 		},
 		{
@@ -320,8 +319,8 @@ void menuScene
 	Entity redSliderPointer = makeThemeSliderPointer
 	(
 		{
-			window.getSize().x - FIRST_SMALL_BUTTON_X,
-			(window.getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)) -
+			window.getDefaultView().getSize().x - FIRST_SMALL_BUTTON_X,
+			(window.getDefaultView().getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)) -
 			BUTTON_GAP - SLIDER_GAP * 1
 		},
 		{
