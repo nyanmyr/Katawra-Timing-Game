@@ -9,8 +9,6 @@ using sf::Clock;
 using sf::Event;
 using sf::Keyboard::Scancode;
 
-// TODO: make theme editor button function (create a system for holding down buttons)
-// TOOD: make slider pointer functional
 // TODO: make adjustable color theme (must be saved)
 // TODO: are you sure button prompt main menu button (you should be able to save your progress)
 // TODO: save score (make it save when returning to menu)

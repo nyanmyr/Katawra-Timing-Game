@@ -349,6 +349,7 @@ struct CSetColor
 
 };
 
+// TODO: give it actual functionality
 struct DThemeColor
 {
 	sf::Color themeColor = sf::Color(0, 102, 204);

@@ -85,6 +85,12 @@ void nextSceneSaveSoundStatusData_Update
 	Entity soundButton,
 	Entity musicButton
 );
+void doThemeColor
+(
+	Entity redSliderPointer,
+	Entity greenSliderPointer,
+	Entity blueSliderPointer
+);
 void nextScene_Update
 (
 	Entity sceneTransition,

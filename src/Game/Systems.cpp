@@ -958,6 +958,95 @@ void nextSceneSaveSoundStatusData_Update
         musicButton
     );
 }
+void doThemeColor
+(
+    Entity redSliderPointer,
+    Entity greenSliderPointer,
+    Entity blueSliderPointer
+)
+{
+    auto& buttonArray = systemsNC.getComponentArray<CButton>();
+    auto& themeSliderArray = systemsNC.getComponentArray<CThemeSlider>();
+    auto& positionArray = systemsNC.getComponentArray<CPosition>();
+    auto& xBoundsArray = systemsNC.getComponentArray<CXBounds>();
+
+    if (!buttonArray->hasData(redSliderPointer) ||
+        !buttonArray->hasData(greenSliderPointer) ||
+        !buttonArray->hasData(blueSliderPointer) ||
+        !themeSliderArray->hasData(redSliderPointer) ||
+        !themeSliderArray->hasData(greenSliderPointer) ||
+        !themeSliderArray->hasData(blueSliderPointer) ||
+        !positionArray->hasData(redSliderPointer) ||
+        !positionArray->hasData(greenSliderPointer) ||
+        !positionArray->hasData(blueSliderPointer))
+    {
+        return;
+    }
+
+    const CButton& redButton = buttonArray->getData(redSliderPointer);
+    const CButton& greenButton = buttonArray->getData(greenSliderPointer);
+    const CButton& blueButton = buttonArray->getData(blueSliderPointer);
+
+    if (!redButton.clicked &&
+        !greenButton.clicked &&
+        !blueButton.clicked)
+    {
+        return;
+    }
+
+    const CThemeSlider& redThemeSlider = themeSliderArray->getData(redSliderPointer);
+    const CThemeSlider& greenThemeSlider = themeSliderArray->getData(greenSliderPointer);
+    const CThemeSlider& blueThemeSlider = themeSliderArray->getData(blueSliderPointer);
+
+    const CPosition& redPos = positionArray->getData(redSliderPointer);
+    const CPosition& greenPos = positionArray->getData(greenSliderPointer);
+    const CPosition& bluePos = positionArray->getData(blueSliderPointer);
+
+    if (!xBoundsArray->hasData(redThemeSlider.themeSlider) ||
+        !xBoundsArray->hasData(greenThemeSlider.themeSlider) ||
+        !xBoundsArray->hasData(blueThemeSlider.themeSlider))
+    {
+        return;
+    }
+
+    const CXBounds& redXBounds = xBoundsArray->getData(redThemeSlider.themeSlider);
+    const CXBounds& greenXBounds = xBoundsArray->getData(greenThemeSlider.themeSlider);
+    const CXBounds& blueXBounds = xBoundsArray->getData(blueThemeSlider.themeSlider);
+
+    std::uint8_t newRed = 255 *
+    (
+        inverseLerp_Auxiliary
+        (
+            redXBounds.min,
+            redXBounds.max,
+            redPos.x
+        )
+    );
+
+    std::uint8_t newGreen = 255 *
+    (
+        inverseLerp_Auxiliary
+        (
+            greenXBounds.min,
+            greenXBounds.max,
+            greenPos.x
+        )
+    );
+
+    std::uint8_t newBlue = 255 *
+    (
+        inverseLerp_Auxiliary
+        (
+            blueXBounds.min,
+            blueXBounds.max,
+            bluePos.x
+        )
+    );
+
+    //std::cout << "R: " << static_cast<int>(newRed) 
+    //    << " G: " << static_cast<int>(newGreen)
+    //    << " B: " << static_cast<int>(newBlue) << "\n";
+}
 void nextScene_Update
 (
     Entity sceneTransition,

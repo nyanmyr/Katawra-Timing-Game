@@ -256,6 +256,21 @@ void menuScene
 		3
 	);
 
+	Entity blueSliderPointer = makeThemeSliderPointer
+	(
+		{
+			window.getDefaultView().getSize().x - FIRST_SMALL_BUTTON_X,
+			(window.getDefaultView().getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)) -
+			BUTTON_GAP - SLIDER_GAP * 3
+		},
+		{
+			25.f,
+			25.f
+		},
+		ETexture::INDICATOR_TEXTURE,
+		blueSliderInner
+	);
+
 	Entity greenSliderInner = makeThemeSlider
 	(
 		ETexture::INNER_TEXTURE,
@@ -284,6 +299,21 @@ void menuScene
 			5.6f
 		},
 		3
+	);
+
+	Entity greenSliderPointer = makeThemeSliderPointer
+	(
+		{
+			window.getDefaultView().getSize().x - FIRST_SMALL_BUTTON_X,
+			(window.getDefaultView().getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)) -
+			BUTTON_GAP - SLIDER_GAP * 2
+		},
+		{
+			25.f,
+			25.f
+		},
+		ETexture::INDICATOR_TEXTURE,
+		greenSliderInner
 	);
 
 	Entity redSliderInner = makeThemeSlider
@@ -438,6 +468,12 @@ void menuScene
 			soundStatusData,
 			soundButton,
 			musicButton
+		);
+		doThemeColor
+		(
+			redSliderPointer,
+			greenSliderPointer,
+			blueSliderPointer
 		);
 		nextScene_Update
 		(
