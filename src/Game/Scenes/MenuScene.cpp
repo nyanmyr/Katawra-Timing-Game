@@ -327,7 +327,8 @@ void menuScene
 			25.f,
 			25.f
 		},
-		ETexture::INDICATOR_TEXTURE
+		ETexture::INDICATOR_TEXTURE,
+		redSliderInner
 	);
 
 	Entity musicTrack = makeMusicTrack();
@@ -381,6 +382,14 @@ void menuScene
 					);
 				}
 			}
+
+			if (const auto& mouseRelease = event->getIf<sf::Event::MouseButtonReleased>())
+			{
+				if (mouseRelease->button == sf::Mouse::Button::Left)
+				{
+					releaseButton_Update();
+				}
+			}
 		}
 
 		// update systems
@@ -396,6 +405,14 @@ void menuScene
 				worldPos.y
 			),
 			dt
+		);
+		buttonFollowMouse_Update
+		(
+			sf::Vector2i
+			(
+				worldPos.x,
+				worldPos.y
+			)
 		);
 		playSounds_Update
 		(

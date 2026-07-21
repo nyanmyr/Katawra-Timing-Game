@@ -458,7 +458,6 @@ void buttonClicks_Update
         return;
     }
 
-    auto& spriteArray = systemsNC.getComponentArray<CSprite>();
     auto& buttonArray = systemsNC.getComponentArray<CButton>();
     auto& originArray = systemsNC.getComponentArray<COrigin>();
     auto& transformArray = systemsNC.getComponentArray<CTransform>();
@@ -466,37 +465,61 @@ void buttonClicks_Update
 
     for (auto& [entity, button] : buttonArray->getAll())
     {
-        if (!button.enabled)
+        if
+        (
+            !button.enabled ||
+            !originArray->hasData(entity) ||
+            !positionArray->hasData(entity) ||
+            !transformArray->hasData(entity)
+        )
         {
             continue;
         }
 
         // buttonArray must have a shape, origin, and text
+        ////std::cout << "button.top: " << button.top << "\n";
+        ////std::cout << "button.left: " << button.left << "\n";
+        const COrigin& origin = originArray->getData(entity);
+        const CTransform& transform = transformArray->getData(entity);
+        const CPosition& position = positionArray->getData(entity);
+
         if 
         (
-            originArray->hasData(entity) &&
-            positionArray->hasData(entity) &&
-            spriteArray->hasData(entity)
+            mouseVector.x > position.x - origin.offsetX &&
+            mouseVector.x < position.x + transform.width - origin.offsetX &&
+            mouseVector.y > position.y - origin.offsetY &&
+            mouseVector.y < position.y + transform.height - origin.offsetY
         )
         {
-            ////std::cout << "button.top: " << button.top << "\n";
-            ////std::cout << "button.left: " << button.left << "\n";
-            COrigin& origin = originArray->getData(entity);
-            CTransform& transform = transformArray->getData(entity);
-            CPosition& position = positionArray->getData(entity);
-            CSprite& sprite = spriteArray->getData(entity);
-
-            if 
-            (
-                mouseVector.x > position.x - origin.offsetX &&
-                mouseVector.x < position.x + transform.width - origin.offsetX &&
-                mouseVector.y > position.y - origin.offsetY &&
-                mouseVector.y < position.y + transform.height - origin.offsetY
-            )
+            if (button.hold)
             {
-                button.clickedTimer = button.clickedDuration;
+                button.clicked = true;
+                continue;
             }
+                
+            button.clickedTimer = button.clickedDuration;
         }
+    }
+}
+void releaseButton_Update()
+{
+    auto& buttonArray = systemsNC.getComponentArray<CButton>();
+    auto& buttonSoundsArray = systemsNC.getComponentArray<CButtonSounds>();
+
+    for (auto& [entity, button] : buttonArray->getAll())
+    {
+        if (!button.enabled ||
+            !button.hold ||
+            !buttonSoundsArray->hasData(entity))
+        {
+            continue;
+        }
+
+        CButtonSounds& buttonSoundsObj = buttonSoundsArray->getData(entity);
+
+        button.clicked = false;
+        button.sound = false;
+        buttonSoundsObj.clicked = false;
     }
 }
 void doSoundControl_Update(Entity soundButton)
@@ -672,7 +695,10 @@ void button_Update
                 );
             }
 
-            button.clicked = false; // reset
+            if (!button.hold)
+            {
+                button.clicked = false; // reset
+            }
         }
         else
         {
@@ -752,8 +778,13 @@ void button_Update
         }
 
         // button clicking
-        if (button.clickedTimer > 0)
+        if 
+        (
+            button.clickedTimer > 0 ||
+            (button.clicked && button.hold)
+        )
         {
+
             if
             (
                 !buttonSounds.clicked
@@ -762,8 +793,6 @@ void button_Update
                 button.sound = makeSound(SoundEffect::BUTTON_SOUND_EFFECT);
                 buttonSounds.clicked = true;
             }
-
-
 
             sprite.body->setScale
             (
@@ -786,6 +815,46 @@ void button_Update
                     )
                 );
             }
+        }
+    }
+}
+void buttonFollowMouse_Update(sf::Vector2i mouseVector)
+{
+    auto& buttonArray = systemsNC.getComponentArray<CButton>();
+    auto& themeSliderArray = systemsNC.getComponentArray<CThemeSlider>();
+    auto& positionArray = systemsNC.getComponentArray<CPosition>();
+    auto& xBoundsArray = systemsNC.getComponentArray<CXBounds>();
+
+    for (auto& [entity, button] : buttonArray->getAll())
+    {
+        if (!button.enabled ||
+            !button.hold ||
+            !button.clicked ||
+            !positionArray->hasData(entity) ||
+            !themeSliderArray->hasData(entity))
+        {
+            continue;
+        }
+
+        const CThemeSlider& themeSliderObj = themeSliderArray->getData(entity);
+
+        if (!xBoundsArray->hasData(themeSliderObj.themeSlider))
+        {
+            continue;
+        }
+
+        CPosition& posObj = positionArray->getData(entity);
+        const CXBounds& xBoundsObj = xBoundsArray->getData(themeSliderObj.themeSlider);
+        
+        posObj.x = mouseVector.x;
+
+        if (posObj.x < xBoundsObj.min)
+        {
+            posObj.x = xBoundsObj.min;
+        }
+        else if (posObj.x > xBoundsObj.max)
+        {
+            posObj.x = xBoundsObj.max;
         }
     }
 }

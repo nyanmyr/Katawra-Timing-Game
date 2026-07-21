@@ -40,12 +40,16 @@ struct COrigin
 struct CButton
 {
 	float clickedDuration, clickedTimer = 0.f;
-	bool clicked = false, enabled = true;
+	bool clicked = false, enabled = true, hold = false;
 	Entity sound;
 
 	CButton() = default;
-	CButton(const float clickedDuration, const bool enabled) :
-		clickedDuration(clickedDuration), enabled(enabled) {};
+	CButton(float clickedDuration, bool enabled) :
+		clickedDuration(clickedDuration), enabled(enabled) {
+	};
+	CButton(bool enabled, bool hold) :
+		enabled(enabled), hold(hold) {
+	};
 };
 
 struct CText
@@ -348,6 +352,11 @@ struct CSetColor
 struct DThemeColor
 {
 	sf::Color themeColor = sf::Color(0, 102, 204);
+};
+
+struct CThemeSlider
+{
+	Entity themeSlider;
 };
 
 #endif

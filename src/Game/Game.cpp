@@ -61,6 +61,7 @@ void main() {
 	nc.registerComponent<CSoundStatusTextures>();
 	nc.registerComponent<CColor>();
 	nc.registerComponent<CSetColor>();
+	nc.registerComponent<CThemeSlider>();
 
 	sf::Font normalFont;
 	sf::Font titleFont;

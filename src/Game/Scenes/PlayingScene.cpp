@@ -11,12 +11,12 @@ using sf::Keyboard::Scancode;
 
 // TODO: make theme editor button function (create a system for holding down buttons)
 // TOOD: make slider pointer functional
-// TOOD: create themeBrightness adjustment function
 // TODO: make adjustable color theme (must be saved)
 // TODO: are you sure button prompt main menu button (you should be able to save your progress)
 // TODO: save score (make it save when returning to menu)
 // TODO: ask to continue if window is abruptly closed
 // TODO: make the screen actually go full screen
+// TODO: organize components registration in game.cpp
 // TODO: bug fixing
 // FIX: look into checking the sound array to see if its all actually deleted
 // TODO: publish

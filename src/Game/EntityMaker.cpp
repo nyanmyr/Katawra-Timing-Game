@@ -617,7 +617,8 @@ Entity& makeThemeSliderPointer
 (
 	sf::Vector2f pos,
 	sf::Vector2f size,
-	ETexture texture
+	ETexture texture,
+	Entity themeSlider
 )
 {
 	Entity entity = entityMakerNC.createEntity();
@@ -666,7 +667,7 @@ Entity& makeThemeSliderPointer
 		entity,
 		CButton
 		{
-			0.125f,
+			true,
 			true
 		}
 	);
@@ -689,6 +690,12 @@ Entity& makeThemeSliderPointer
 	(
 		entity,
 		CDoSpriteCenter{}
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CThemeSlider{ themeSlider }
 	);
 
 	return entity;
@@ -1002,6 +1009,16 @@ Entity& makeThemeSlider
 	(
 		entity,
 		CSetColor{ }
+	);
+
+	entityMakerNC.addComponent
+	(
+		entity,
+		CXBounds
+		{
+			pos.x - (size.x / 2.f),
+			pos.x + (size.x / 2.f)
+		}
 	);
 
 	return entity;

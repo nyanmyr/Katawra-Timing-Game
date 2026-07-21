@@ -64,6 +64,7 @@ void buttonClicks_Update
 	Entity sceneTransition,
 	sf::Vector2i mouseVector
 );
+void releaseButton_Update();
 void doSoundControl_Update(Entity soundButton);
 void changeSoundButtonTexture_Update(Entity loadedTextures);
 void button_Update
@@ -71,6 +72,7 @@ void button_Update
 	sf::Vector2i mouseVector,
 	DeltaTime dt
 );
+void buttonFollowMouse_Update(sf::Vector2i mouseVector);
 void doSceneTransition
 (
 	Entity sceneTransition,

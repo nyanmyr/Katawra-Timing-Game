@@ -74,7 +74,8 @@ Entity& makeThemeSliderPointer
 (
 	sf::Vector2f pos,
 	sf::Vector2f size,
-	ETexture texture
+	ETexture texture,
+	Entity themeSlider
 );
 
 Entity& makeIndicator
