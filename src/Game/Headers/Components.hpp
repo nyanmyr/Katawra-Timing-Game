@@ -342,6 +342,7 @@ struct DSoundStatus
 struct CColor
 {
 	sf::Color col = sf::Color(0xffffff);
+	bool fixed = false;
 };
 
 struct CSetColor

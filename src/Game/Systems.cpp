@@ -3,6 +3,7 @@
 #include <iostream>
 #include <random>
 #include <fstream>
+#include <algorithm>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
@@ -22,6 +23,16 @@ float inverseLerp_Auxiliary
 )
 {
     return (current - min) / (max - min);
+}
+
+float lerp_Auxiliary
+(
+    float min,
+    float max,
+    float percentile
+)
+{
+    return min + (max - min) * percentile;
 }
 
 float getDistance_Auxiliary
@@ -72,6 +83,20 @@ void loadSoundStatusData_Start(DSoundStatus& soundStatusData)
     
     //std::cout << "soundStatus.dat found!" << "\n";
     in.read(reinterpret_cast<char*>(&soundStatusData), sizeof(DSoundStatus));
+}
+void loadSoundStatusData_Start(DThemeColor& themeColorData)
+{
+    std::ifstream in("themeColor.dat", std::ios::binary);
+
+    if (!in)
+    {
+        //std::cout << "themeColor.dat not found!" << "\n";
+        themeColorData.themeColor = sf::Color(0, 102, 204);
+        return;
+    }
+    
+    //std::cout << "themeColor.dat found!" << "\n";
+    in.read(reinterpret_cast<char*>(&themeColorData), sizeof(DThemeColor));
 }
 void adjustSoundTextureEnum_Start
 (
@@ -172,6 +197,87 @@ void setTextOrigin_Start()
             }
         );
     }
+}
+
+void updateSliderPointers_Start
+(
+    Entity redSliderPointer,
+    Entity greenSliderPointer,
+    Entity blueSliderPointer,
+    sf::Color& themeColor
+)
+{
+    auto& themeSliderArray = systemsNC.getComponentArray<CThemeSlider>();
+    auto& positionArray = systemsNC.getComponentArray<CPosition>();
+    auto& xBoundsArray = systemsNC.getComponentArray<CXBounds>();
+    auto& colorArray = systemsNC.getComponentArray<CColor>();
+
+    if (!themeSliderArray->hasData(redSliderPointer) ||
+        !themeSliderArray->hasData(greenSliderPointer) ||
+        !themeSliderArray->hasData(blueSliderPointer) ||
+        !positionArray->hasData(redSliderPointer) ||
+        !positionArray->hasData(greenSliderPointer) ||
+        !positionArray->hasData(blueSliderPointer))
+    {
+        return;
+    }
+
+    const CThemeSlider& redThemeSlider = themeSliderArray->getData(redSliderPointer);
+    const CThemeSlider& greenThemeSlider = themeSliderArray->getData(greenSliderPointer);
+    const CThemeSlider& blueThemeSlider = themeSliderArray->getData(blueSliderPointer);
+
+    CPosition& redPos = positionArray->getData(redSliderPointer);
+    CPosition& greenPos = positionArray->getData(greenSliderPointer);
+    CPosition& bluePos = positionArray->getData(blueSliderPointer);
+
+    if (!xBoundsArray->hasData(redThemeSlider.themeSlider) ||
+        !xBoundsArray->hasData(greenThemeSlider.themeSlider) ||
+        !xBoundsArray->hasData(blueThemeSlider.themeSlider))
+    {
+        return;
+    }
+
+    const CXBounds& redXBounds = xBoundsArray->getData(redThemeSlider.themeSlider);
+    const CXBounds& greenXBounds = xBoundsArray->getData(greenThemeSlider.themeSlider);
+    const CXBounds& blueXBounds = xBoundsArray->getData(blueThemeSlider.themeSlider);
+    
+    float redPercentile = inverseLerp_Auxiliary
+    (
+        0,
+        255,
+        themeColor.r
+    );
+    float greenPercentile = inverseLerp_Auxiliary
+    (
+        0,
+        255,
+        themeColor.g
+    );
+    float bluePercentile = inverseLerp_Auxiliary
+    (
+        0,
+        255,
+        themeColor.b
+    );
+
+    redPos.x = lerp_Auxiliary
+    (
+        redXBounds.min,
+        redXBounds.max,
+        redPercentile
+    );
+    greenPos.x = lerp_Auxiliary
+    (
+        greenXBounds.min,
+        greenXBounds.max,
+        greenPercentile
+    );
+    bluePos.x = lerp_Auxiliary
+    (
+        blueXBounds.min,
+        blueXBounds.max,
+        bluePercentile
+    );
 }
 
 void loadMusicButtons_Helper(CTexturesContainer& container)
@@ -441,6 +547,21 @@ void saveSoundStatusData_Update
     soundStatusData.soundStatus = soundControlArray->getData(soundButton).current;
 
     out.write(reinterpret_cast<char*>(&soundStatusData), sizeof(DSoundStatus));
+
+    out.close();
+}
+void saveThemeColorData_Update
+(
+    DThemeColor& themeColorData,
+    const sf::Color themeColor
+)
+{
+    themeColorData.themeColor = themeColor;
+
+    //std::cout << "saved theme color!" << "\n";
+    std::ofstream out("themeColor.dat", std::ios::binary);
+
+    out.write(reinterpret_cast<char*>(&themeColorData), sizeof(DThemeColor));
 
     out.close();
 }
@@ -958,17 +1079,52 @@ void nextSceneSaveSoundStatusData_Update
         musicButton
     );
 }
-void doThemeColor
+void nextSceneSaveThemeColorData_Update
+(
+    DThemeColor& themeColorData,
+    const sf::Color themeColor
+)
+{
+    bool doSave = false;
+
+    for (auto& [entity, nextScene] : systemsNC.getComponentArray<CNextScene>()->getAll())
+    {
+        if (!nextScene.active)
+        {
+            continue;
+        }
+
+        doSave = true;
+    }
+
+    if (!doSave)
+    {
+        return;
+    }
+
+    saveThemeColorData_Update
+    (
+        themeColorData,
+        themeColor
+    );
+}
+
+const std::uint8_t MIN_COLOR_VALUE = 25;
+const std::uint8_t MAX_COLOR_VALUE = 255 - MIN_COLOR_VALUE;
+
+void doThemeColor_Update
 (
     Entity redSliderPointer,
     Entity greenSliderPointer,
-    Entity blueSliderPointer
+    Entity blueSliderPointer,
+    sf::Color& themeColor
 )
 {
     auto& buttonArray = systemsNC.getComponentArray<CButton>();
     auto& themeSliderArray = systemsNC.getComponentArray<CThemeSlider>();
     auto& positionArray = systemsNC.getComponentArray<CPosition>();
     auto& xBoundsArray = systemsNC.getComponentArray<CXBounds>();
+    auto& colorArray = systemsNC.getComponentArray<CColor>();
 
     if (!buttonArray->hasData(redSliderPointer) ||
         !buttonArray->hasData(greenSliderPointer) ||
@@ -1013,39 +1169,77 @@ void doThemeColor
     const CXBounds& greenXBounds = xBoundsArray->getData(greenThemeSlider.themeSlider);
     const CXBounds& blueXBounds = xBoundsArray->getData(blueThemeSlider.themeSlider);
 
-    std::uint8_t newRed = 255 *
+    std::uint8_t newRed = std::clamp
     (
-        inverseLerp_Auxiliary
+        static_cast<std::uint8_t>(255 *
         (
-            redXBounds.min,
-            redXBounds.max,
-            redPos.x
-        )
+            inverseLerp_Auxiliary
+            (
+                redXBounds.min,
+                redXBounds.max,
+                redPos.x
+            )
+        )),
+        MIN_COLOR_VALUE,
+        MAX_COLOR_VALUE
     );
 
-    std::uint8_t newGreen = 255 *
+    std::uint8_t newGreen = std::clamp
     (
-        inverseLerp_Auxiliary
+        static_cast<std::uint8_t>(255 *
         (
-            greenXBounds.min,
-            greenXBounds.max,
-            greenPos.x
-        )
+            inverseLerp_Auxiliary
+            (
+                greenXBounds.min,
+                greenXBounds.max,
+                greenPos.x
+            )
+        )),
+        MIN_COLOR_VALUE,
+        MAX_COLOR_VALUE
     );
 
-    std::uint8_t newBlue = 255 *
+    std::uint8_t newBlue = std::clamp
     (
-        inverseLerp_Auxiliary
+        static_cast<std::uint8_t>(255 *
         (
-            blueXBounds.min,
-            blueXBounds.max,
-            bluePos.x
-        )
+            inverseLerp_Auxiliary
+            (
+                blueXBounds.min,
+                blueXBounds.max,
+                bluePos.x
+            )
+        )),
+        MIN_COLOR_VALUE,
+        MAX_COLOR_VALUE
     );
 
     //std::cout << "R: " << static_cast<int>(newRed) 
     //    << " G: " << static_cast<int>(newGreen)
     //    << " B: " << static_cast<int>(newBlue) << "\n";
+
+    themeColor = sf::Color
+    (
+        newRed,
+        newGreen,
+        newBlue
+    );
+
+    for (auto& [entity, color] : colorArray->getAll())
+    {
+        if (color.fixed)
+        {
+            continue;
+        }
+
+        color.col = themeColor;
+
+        systemsNC.addComponent
+        (
+            entity,
+            CSetColor{}
+        );
+    }
 }
 void nextScene_Update
 (

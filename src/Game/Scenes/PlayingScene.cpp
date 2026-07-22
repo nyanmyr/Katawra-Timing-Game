@@ -9,7 +9,8 @@ using sf::Clock;
 using sf::Event;
 using sf::Keyboard::Scancode;
 
-// TODO: make adjustable color theme (must be saved)
+// FIX: playing on hard mode breaks the themeColor (flips it)
+// TODO: update text color when theme color is adjusted
 // TODO: are you sure button prompt main menu button (you should be able to save your progress)
 // TODO: save score (make it save when returning to menu)
 // TODO: ask to continue if window is abruptly closed
@@ -17,6 +18,7 @@ using sf::Keyboard::Scancode;
 // TODO: organize components registration in game.cpp
 // TODO: bug fixing
 // FIX: look into checking the sound array to see if its all actually deleted
+// FIX: saving of theme color and sound data is repeated (use a test print to find out)
 // TODO: publish
 
 void playingScene
@@ -40,7 +42,10 @@ void playingScene
 	float sizeDecrease;
 	std::string difficultyStr;
 
-	sf::Color themeColor = sf::Color(0, 102, 204); // TEMPORARY 
+	DThemeColor themeColorData;
+	loadSoundStatusData_Start(themeColorData);
+
+	sf::Color themeColor = themeColorData.themeColor;
 	sf::Color textColor = sf::Color::White;
 	float themeBrightness;
 
@@ -394,6 +399,11 @@ void playingScene
 					soundButton,
 					musicButton
 				);
+				saveThemeColorData_Update
+				(
+					themeColorData,
+					themeColor
+				);
 				window.close();
 			}
 
@@ -519,6 +529,11 @@ void playingScene
 			soundStatusData,
 			soundButton,
 			musicButton
+		);
+		nextSceneSaveThemeColorData_Update
+		(
+			themeColorData,
+			themeColor
 		);
 		nextScene_Update
 		(

@@ -1002,7 +1002,7 @@ Entity& makeThemeSlider
 	entityMakerNC.addComponent
 	(
 		entity,
-		CColor{ col }
+		CColor{ col, true }
 	);
 
 	entityMakerNC.addComponent

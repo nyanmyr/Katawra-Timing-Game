@@ -21,7 +21,10 @@ void menuScene
 	Clock clock;
 	std::queue<Entity> renderQueue;
 
-	sf::Color themeColor = sf::Color(0, 102, 204);
+	DThemeColor themeColorData;
+	loadSoundStatusData_Start(themeColorData);
+
+	sf::Color themeColor = themeColorData.themeColor;
 	sf::Color textColor = sf::Color::White;
 	float themeBrightness;
 
@@ -361,6 +364,14 @@ void menuScene
 		redSliderInner
 	);
 
+	updateSliderPointers_Start
+	(
+		redSliderPointer,
+		greenSliderPointer,
+		blueSliderPointer,
+		themeColor
+	);
+
 	Entity musicTrack = makeMusicTrack();
 
 	std::optional<sf::Music> music;
@@ -393,6 +404,11 @@ void menuScene
 					soundStatusData,
 					soundButton,
 					musicButton
+				);
+				saveThemeColorData_Update
+				(
+					themeColorData,
+					themeColor
 				);
 				window.close();
 			}
@@ -469,11 +485,17 @@ void menuScene
 			soundButton,
 			musicButton
 		);
-		doThemeColor
+		nextSceneSaveThemeColorData_Update
+		(
+			themeColorData,
+			themeColor
+		);
+		doThemeColor_Update
 		(
 			redSliderPointer,
 			greenSliderPointer,
-			blueSliderPointer
+			blueSliderPointer,
+			themeColor
 		);
 		nextScene_Update
 		(

@@ -24,6 +24,7 @@ void adjustTextColor
 	sf::Color& textColor
 );
 void loadSoundStatusData_Start(DSoundStatus& soundStatusData);
+void loadSoundStatusData_Start(DThemeColor& themeColorData);
 void adjustSoundTextureEnum_Start
 (
 	const DSoundStatus& soundStatusData,
@@ -36,6 +37,14 @@ void adjustMusicTextureEnum_Start
 );
 void setText_Start();
 void setTextOrigin_Start();
+
+void updateSliderPointers_Start
+(
+	Entity redSliderPointer,
+	Entity greenSliderPointer,
+	Entity blueSliderPointer,
+	sf::Color& themeColor
+);
 
 void loadPlayingTextures_Start(Entity loadedTextures);
 void loadMenuTextures_Start(Entity loadedTextures);
@@ -58,6 +67,11 @@ void saveSoundStatusData_Update
 	DSoundStatus& soundStatusData,
 	Entity soundButton,
 	Entity musicButton
+);
+void saveThemeColorData_Update
+(
+	DThemeColor& themeColorData,
+	const sf::Color themeColor
 );
 void buttonClicks_Update
 (
@@ -85,11 +99,17 @@ void nextSceneSaveSoundStatusData_Update
 	Entity soundButton,
 	Entity musicButton
 );
-void doThemeColor
+void nextSceneSaveThemeColorData_Update
+(
+	DThemeColor& themeColorData,
+	const sf::Color themeColor
+);
+void doThemeColor_Update
 (
 	Entity redSliderPointer,
 	Entity greenSliderPointer,
-	Entity blueSliderPointer
+	Entity blueSliderPointer,
+	sf::Color& themeColor
 );
 void nextScene_Update
 (
