@@ -9,8 +9,7 @@ using sf::Clock;
 using sf::Event;
 using sf::Keyboard::Scancode;
 
-// FIX: playing on hard mode breaks the themeColor (flips it)
-// TODO: update text color when theme color is adjusted
+// TODO: add the easter egg
 // TODO: are you sure button prompt main menu button (you should be able to save your progress)
 // TODO: save score (make it save when returning to menu)
 // TODO: ask to continue if window is abruptly closed
@@ -49,16 +48,7 @@ void playingScene
 	sf::Color textColor = sf::Color::White;
 	float themeBrightness;
 
-	getThemeBrightness
-	(
-		themeBrightness,
-		themeColor
-	);
-	adjustTextColor
-	(
-		themeBrightness,
-		textColor
-	);
+	sf::Color elementsColor = themeColor;
 
 	switch (difficulty)
 	{
@@ -72,7 +62,7 @@ void playingScene
 
 			//std::cout << "difficulty: HARD\n";
 			difficultyStr = "HARD";
-			themeColor = sf::Color // gets the complementary color
+			elementsColor = sf::Color // gets the complementary color
 			(
 				255 - themeColor.r,
 				255 - themeColor.g,
@@ -93,6 +83,17 @@ void playingScene
 			difficultyStr = "NORMAL";
 			break;
 	}
+
+	getThemeBrightness
+	(
+		themeBrightness,
+		elementsColor
+	);
+	adjustTextColor
+	(
+		themeBrightness,
+		textColor
+	);
 
 	// entity instantiation
 	Entity indicator = makeIndicator
@@ -144,7 +145,7 @@ void playingScene
 		startSize, // start size
 		minSize, // min size
 		sizeDecrease, // size decrease
-		themeColor
+		elementsColor
 	);
 
 	Entity score = makeUIText
@@ -254,7 +255,7 @@ void playingScene
 			window.getDefaultView().getSize().x / 2.f,
 			window.getDefaultView().getSize().y / 2.f
 		},
-		themeColor
+		elementsColor
 	);
 	Entity intro = makeIntro
 	(
@@ -290,7 +291,7 @@ void playingScene
 		},
 		ETexture::BUTTON_RETURN_TEXTURE,
 		Scene::MENU,
-		themeColor
+		elementsColor
 	);
 
 	DSoundStatus soundStatusData;
@@ -328,7 +329,7 @@ void playingScene
 			{ESoundStatus::MUTED_SOUND, ETexture::BUTTON_MUSIC_OFF_TEXTURE}
 		},
 		soundStatusData.musicStatus,
-		themeColor
+		elementsColor
 	);
 
 	Entity soundButton = makeSoundButton
@@ -349,7 +350,7 @@ void playingScene
 			{ESoundStatus::MUTED_SOUND, ETexture::BUTTON_SOUND_OFF_TEXTURE}
 		},
 		soundStatusData.soundStatus,
-		themeColor
+		elementsColor
 	);
 
 	Entity sceneTransition = makeSceneTransition
@@ -387,7 +388,7 @@ void playingScene
 
 		setTextOrigin_Start();
 		setSpriteOrigins_Start();
-		setColor_Update();
+		resetColor_Update();
 
 		while (const std::optional event = window.pollEvent())
 		{
@@ -430,7 +431,6 @@ void playingScene
 					hit_Control
 					(
 						themeBrightness,
-						themeColor,
 						normalFont,
 						indicator,
 						hitbox,

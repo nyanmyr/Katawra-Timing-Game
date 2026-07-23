@@ -65,6 +65,11 @@ struct CText
 		box(box), string(string), size(size), color(color), format(format) {};
 };
 
+struct CResetTextColor
+{
+
+};
+
 struct CNextScene
 {
 	Scene next;
@@ -345,7 +350,7 @@ struct CColor
 	bool fixed = false;
 };
 
-struct CSetColor
+struct CResetColor
 {
 
 };

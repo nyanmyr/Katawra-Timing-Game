@@ -304,7 +304,7 @@ Entity& makeTextButton
 	entityMakerNC.addComponent
 	(
 		entity,
-		CSetColor{ }
+		CResetColor{ }
 	);
 
 	return entity;
@@ -408,7 +408,7 @@ Entity& makeButton
 	entityMakerNC.addComponent
 	(
 		entity,
-		CSetColor{ }
+		CResetColor{ }
 	);
 
 	return entity;
@@ -501,7 +501,7 @@ Entity& makeButton
 	entityMakerNC.addComponent
 	(
 		entity,
-		CSetColor{ }
+		CResetColor{ }
 	);
 
 	return entity;
@@ -608,7 +608,7 @@ Entity& makeSoundButton
 	entityMakerNC.addComponent
 	(
 		entity,
-		CSetColor{ }
+		CResetColor{ }
 	);
 
 	return entity;
@@ -1008,7 +1008,7 @@ Entity& makeThemeSlider
 	entityMakerNC.addComponent
 	(
 		entity,
-		CSetColor{ }
+		CResetColor{ }
 	);
 
 	entityMakerNC.addComponent
@@ -1134,7 +1134,7 @@ Entity& makeHitbox
 	entityMakerNC.addComponent
 	(
 		entity,
-		CSetColor{ }
+		CResetColor{ }
 	);
 
 	return entity;
@@ -1215,7 +1215,7 @@ Entity& makeBackground
 	entityMakerNC.addComponent
 	(
 		entity,
-		CSetColor{ }
+		CResetColor{ }
 	);
 
 	return entity;

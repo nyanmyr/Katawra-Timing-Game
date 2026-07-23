@@ -61,7 +61,8 @@ void setSpriteOrigins_Start();
 // -------------------------------------------------------
 // update systems
 // -------------------------------------------------------
-void setColor_Update();
+void resetColor_Update();
+void resetTextColor_Update();
 void saveSoundStatusData_Update
 (
 	DSoundStatus& soundStatusData,
@@ -109,7 +110,9 @@ void doThemeColor_Update
 	Entity redSliderPointer,
 	Entity greenSliderPointer,
 	Entity blueSliderPointer,
-	sf::Color& themeColor
+	sf::Color& themeColor,
+	sf::Color& textColor,
+	float& themeBrightness
 );
 void nextScene_Update
 (
@@ -129,7 +132,6 @@ void playIntro_Update
 void hit_Control
 (
 	float themeBrightness,
-	sf::Color themeColor,
 	sf::Font& font,
 	Entity indicator,
 	Entity hitbox,

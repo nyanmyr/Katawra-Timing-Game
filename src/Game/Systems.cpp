@@ -150,9 +150,9 @@ void setText_Start()
 
     for (auto& [entity, text] : texts->getAll())
     {
-        text.box.value().setString(text.string);
-        text.box.value().setCharacterSize(text.size);
-        text.box.value().setFillColor(text.color);
+        text.box->setString(text.string);
+        text.box->setCharacterSize(text.size);
+        text.box->setFillColor(text.color);
     }
 }
 void setTextOrigin_Start()
@@ -175,21 +175,21 @@ void setTextOrigin_Start()
         switch (text.format)
         {
         case TOP:
-            offsetX = text.box.value().getLocalBounds().size.x / 2;
-            offsetY = text.box.value().getLocalBounds().size.y;
+            offsetX = text.box->getLocalBounds().size.x / 2;
+            offsetY = text.box->getLocalBounds().size.y;
             break;
         case BOTTOM:
-            offsetX = text.box.value().getLocalBounds().size.x / 2;
-            offsetY = text.box.value().getLocalBounds().size.y / 2;
+            offsetX = text.box->getLocalBounds().size.x / 2;
+            offsetY = text.box->getLocalBounds().size.y / 2;
             break;
         case MIDDLE:
         default:
-            offsetX = text.box.value().getLocalBounds().size.x / 2;
-            offsetY = (text.box.value().getLocalBounds().size.y / 2) + (text.box.value().getLocalBounds().size.y / 4);
+            offsetX = text.box->getLocalBounds().size.x / 2;
+            offsetY = (text.box->getLocalBounds().size.y / 2) + (text.box->getLocalBounds().size.y / 4);
             break;
         }
 
-        text.box.value().setOrigin
+        text.box->setOrigin
         (
             {
                 offsetX,
@@ -494,20 +494,20 @@ const float HOVER_SCALE_Y = 1.1f;
 
 const float CLICKED_SCALE_X = 0.9f;
 const float CLICKED_SCALE_Y = 0.9f;
-void setColor_Update()
+void resetColor_Update()
 {
-    auto& setColorArray = systemsNC.getComponentArray<CSetColor>();
+    auto& resetColorArray = systemsNC.getComponentArray<CResetColor>();
     auto& colorArray = systemsNC.getComponentArray<CColor>();
     auto& spriteArray = systemsNC.getComponentArray<CSprite>();
 
-    if (setColorArray->getAll().empty())
+    if (resetColorArray->getAll().empty())
     {
         return;
     }
 
     std::vector<Entity> toRemove;
 
-    for (auto& [entity, setColor] : setColorArray->getAll())
+    for (auto& [entity, setColor] : resetColorArray->getAll())
     {
         if 
         (
@@ -528,7 +528,38 @@ void setColor_Update()
 
     for (Entity entity : toRemove)
     {
-        systemsNC.removeComponent<CSetColor>(entity);
+        systemsNC.removeComponent<CResetColor>(entity);
+    }
+}
+void resetTextColor_Update()
+{
+    auto& resetTextColorArray = systemsNC.getComponentArray<CResetTextColor>();
+    auto& textArray = systemsNC.getComponentArray<CText>();
+
+    if (resetTextColorArray->getAll().empty())
+    {
+        return;
+    }
+
+    std::vector<Entity> toRemove;
+
+    for (auto& [entity, setColor] : resetTextColorArray->getAll())
+    {
+        if (!textArray->hasData(entity))
+        {
+            continue;
+        }
+
+        CText& textObj = textArray->getData(entity);
+
+        textObj.box->setFillColor(textObj.color);
+
+        toRemove.emplace_back(entity);
+    }
+
+    for (Entity entity : toRemove)
+    {
+        systemsNC.removeComponent<CResetTextColor>(entity);
     }
 }
 void saveSoundStatusData_Update
@@ -746,7 +777,7 @@ void changeSoundButtonTexture_Update(Entity loadedTextures)
         systemsNC.addComponent
         (
             entity,
-            CSetColor{}
+            CResetColor{}
         );
     }
 }
@@ -806,7 +837,7 @@ void button_Update
             if (textArray->hasData(entity))
             {
                 CText& text = textArray->getData(entity);
-                text.box.value().setScale
+                text.box->setScale
                 (
                     sf::Vector2f
                     (
@@ -871,7 +902,7 @@ void button_Update
             if (textArray->hasData(entity))
             {
                 CText& text = textArray->getData(entity);
-                text.box.value().setScale
+                text.box->setScale
                 (
                     sf::Vector2f
                     (
@@ -927,7 +958,7 @@ void button_Update
             if (textArray->hasData(entity))
             {
                 CText& text = textArray->getData(entity);
-                text.box.value().setScale
+                text.box->setScale
                 (
                     sf::Vector2f
                     (
@@ -1117,7 +1148,9 @@ void doThemeColor_Update
     Entity redSliderPointer,
     Entity greenSliderPointer,
     Entity blueSliderPointer,
-    sf::Color& themeColor
+    sf::Color& themeColor,
+    sf::Color& textColor,
+    float& themeBrightness
 )
 {
     auto& buttonArray = systemsNC.getComponentArray<CButton>();
@@ -1125,6 +1158,7 @@ void doThemeColor_Update
     auto& positionArray = systemsNC.getComponentArray<CPosition>();
     auto& xBoundsArray = systemsNC.getComponentArray<CXBounds>();
     auto& colorArray = systemsNC.getComponentArray<CColor>();
+    auto& textArray = systemsNC.getComponentArray<CText>();
 
     if (!buttonArray->hasData(redSliderPointer) ||
         !buttonArray->hasData(greenSliderPointer) ||
@@ -1224,6 +1258,19 @@ void doThemeColor_Update
         newGreen,
         newBlue
     );
+    textColor = sf::Color::White;
+
+    getThemeBrightness
+    (
+        themeBrightness,
+        themeColor
+    );
+
+    adjustTextColor
+    (
+        themeBrightness,
+        textColor
+    );
 
     for (auto& [entity, color] : colorArray->getAll())
     {
@@ -1237,7 +1284,18 @@ void doThemeColor_Update
         systemsNC.addComponent
         (
             entity,
-            CSetColor{}
+            CResetColor{}
+        );
+    }
+
+    for (auto& [entity, text] : textArray->getAll())
+    {
+        text.color = textColor;
+
+        systemsNC.addComponent
+        (
+            entity,
+            CResetTextColor{}
         );
     }
 }
@@ -1441,7 +1499,6 @@ const float FILL_TIMER = 1.f;
 void hit_Control
 (
     float themeBrightness,
-    sf::Color themeColor,
     sf::Font& font,
     Entity indicator,
     Entity hitbox,
@@ -1507,12 +1564,7 @@ void hit_Control
                     50
                 },
                 font,
-                sf::Color
-                (
-                    255 - themeColor.r,
-                    255 - themeColor.g,
-                    255 - themeColor.b
-                ),
+                themeBrightness > 186 ? sf::Color::Black : sf::Color::White,
                 "FAIL!",
                 LOG_TIMER,
                 FADE_TIMER
@@ -2042,13 +2094,13 @@ void doFeed_Update
     {
         scoreLog.fadeTimer -= dt;
         //std::cout << "fadeTimer: " << scoreLog.fadeTimer << "\n";
-        scoreText.box.value().setFillColor
+        scoreText.box->setFillColor
         (
             sf::Color
             (
-                scoreText.box.value().getFillColor().r,
-                scoreText.box.value().getFillColor().g,
-                scoreText.box.value().getFillColor().b,
+                scoreText.box->getFillColor().r,
+                scoreText.box->getFillColor().g,
+                scoreText.box->getFillColor().b,
                 inverseLerp_Auxiliary
                 (
                     0.f,
@@ -2398,7 +2450,7 @@ void render
         {
             CText& text = textArray->getData(popped);
 
-            text.box.value().setPosition
+            text.box->setPosition
             (
                 {
                     pos.x,

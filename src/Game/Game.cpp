@@ -30,6 +30,7 @@ void main() {
 	nc.registerComponent<COrigin>();
 	nc.registerComponent<CButton>();
 	nc.registerComponent<CText>();
+	nc.registerComponent<CResetTextColor>();
 	nc.registerComponent<CNextScene>();
 	nc.registerComponent<CZIndex>();
 	nc.registerComponent<CVelocity>();
@@ -60,7 +61,7 @@ void main() {
 	nc.registerComponent<CSoundControl>();
 	nc.registerComponent<CSoundStatusTextures>();
 	nc.registerComponent<CColor>();
-	nc.registerComponent<CSetColor>();
+	nc.registerComponent<CResetColor>();
 	nc.registerComponent<CThemeSlider>();
 
 	sf::Font normalFont;

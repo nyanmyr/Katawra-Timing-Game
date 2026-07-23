@@ -212,20 +212,6 @@ void menuScene
 		.5f // fade out
 	);
 
-	Entity themeButton = makeButton
-	(
-		{
-			window.getDefaultView().getSize().x - FIRST_SMALL_BUTTON_X,
-			window.getDefaultView().getSize().y - CORNER_DISTANCE - (SMALL_BUTTON_SIZE / 2.f)
-		},
-		{
-			SMALL_BUTTON_SIZE,
-			SMALL_BUTTON_SIZE
-		},
-		ETexture::SMALL_BUTTON_TEXTURE,
-		themeColor
-	);
-
 	const float BUTTON_GAP = 20.f;
 	const float SLIDER_GAP = 40.f;
 
@@ -393,7 +379,8 @@ void menuScene
 
 		setTextOrigin_Start();
 		setSpriteOrigins_Start();
-		setColor_Update();
+		resetColor_Update();
+		resetTextColor_Update();
 
 		while (const std::optional event = window.pollEvent())
 		{
@@ -495,7 +482,9 @@ void menuScene
 			redSliderPointer,
 			greenSliderPointer,
 			blueSliderPointer,
-			themeColor
+			themeColor,
+			textColor,
+			themeBrightness
 		);
 		nextScene_Update
 		(
