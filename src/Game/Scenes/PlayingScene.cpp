@@ -18,6 +18,7 @@ using sf::Keyboard::Scancode;
 // TODO: bug fixing
 // FIX: look into checking the sound array to see if its all actually deleted
 // FIX: saving of theme color and sound data is repeated (use a test print to find out)
+// FIX: get rid of as many magic numbers as you can
 // TODO: publish
 
 void playingScene

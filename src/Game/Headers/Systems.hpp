@@ -38,14 +38,6 @@ void adjustMusicTextureEnum_Start
 void setText_Start();
 void setTextOrigin_Start();
 
-void updateSliderPointers_Start
-(
-	Entity redSliderPointer,
-	Entity greenSliderPointer,
-	Entity blueSliderPointer,
-	sf::Color& themeColor
-);
-
 void loadPlayingTextures_Start(Entity loadedTextures);
 void loadMenuTextures_Start(Entity loadedTextures);
 void loadSprites_Start(Entity loadedTextures);
@@ -61,8 +53,17 @@ void setSpriteOrigins_Start();
 // -------------------------------------------------------
 // update systems
 // -------------------------------------------------------
+void updateSliderPointers_Update
+(
+	Entity redSliderPointer,
+	Entity greenSliderPointer,
+	Entity blueSliderPointer,
+	sf::Color& themeColor
+);
+
 void resetColor_Update();
 void resetTextColor_Update();
+
 void saveSoundStatusData_Update
 (
 	DSoundStatus& soundStatusData,
@@ -74,12 +75,26 @@ void saveThemeColorData_Update
 	DThemeColor& themeColorData,
 	const sf::Color themeColor
 );
+void easterEggKeyReleased
+(
+	std::queue<sf::Keyboard::Scancode>& easterEggKeys,
+	std::queue<sf::Keyboard::Scancode>& enteredKeys,
+	const sf::Event::KeyReleased* const keyReleased
+);
 void buttonClicks_Update
 (
 	Entity sceneTransition,
 	sf::Vector2i mouseVector
 );
 void releaseButton_Update();
+void doEasterEgg_Update
+(
+	std::queue<sf::Keyboard::Scancode>& easterEggKeys,
+	std::queue<sf::Keyboard::Scancode>& enteredKeys,
+	sf::Color& themeColor,
+	sf::Color& textColor,
+	float& themeBrightness
+);
 void doSoundControl_Update(Entity soundButton);
 void changeSoundButtonTexture_Update(Entity loadedTextures);
 void button_Update

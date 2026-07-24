@@ -350,17 +350,17 @@ void menuScene
 		redSliderInner
 	);
 
-	updateSliderPointers_Start
-	(
-		redSliderPointer,
-		greenSliderPointer,
-		blueSliderPointer,
-		themeColor
-	);
-
 	Entity musicTrack = makeMusicTrack();
 
 	std::optional<sf::Music> music;
+
+	std::queue<sf::Keyboard::Scancode> easterEggKeys;
+
+	easterEggKeys.push(sf::Keyboard::Scancode::V);
+	easterEggKeys.push(sf::Keyboard::Scancode::A);
+	easterEggKeys.push(sf::Keyboard::Scancode::L);
+
+	std::queue<sf::Keyboard::Scancode> enteredKeys;
 
 	// onstart systems
 	loadMenuTextures_Start(loadedTextures);
@@ -379,6 +379,15 @@ void menuScene
 
 		setTextOrigin_Start();
 		setSpriteOrigins_Start();
+
+		updateSliderPointers_Update
+		(
+			redSliderPointer,
+			greenSliderPointer,
+			blueSliderPointer,
+			themeColor
+		);
+
 		resetColor_Update();
 		resetTextColor_Update();
 
@@ -398,6 +407,16 @@ void menuScene
 					themeColor
 				);
 				window.close();
+			}
+
+			if (const auto& keyReleased = event->getIf<sf::Event::KeyReleased>())
+			{
+				easterEggKeyReleased
+				(
+					easterEggKeys,
+					enteredKeys,
+					keyReleased
+				);
 			}
 
 			if (const auto& mousePress = event->getIf<sf::Event::MouseButtonPressed>())
@@ -426,6 +445,15 @@ void menuScene
 		}
 
 		// update systems
+		doEasterEgg_Update
+		(
+			easterEggKeys,
+			enteredKeys,
+			themeColor,
+			textColor,
+			themeBrightness
+		);
+
 		doSoundControl_Update(soundButton);
 		doSoundControl_Update(musicButton);
 		changeSoundButtonTexture_Update(loadedTextures);

@@ -199,87 +199,6 @@ void setTextOrigin_Start()
     }
 }
 
-void updateSliderPointers_Start
-(
-    Entity redSliderPointer,
-    Entity greenSliderPointer,
-    Entity blueSliderPointer,
-    sf::Color& themeColor
-)
-{
-    auto& themeSliderArray = systemsNC.getComponentArray<CThemeSlider>();
-    auto& positionArray = systemsNC.getComponentArray<CPosition>();
-    auto& xBoundsArray = systemsNC.getComponentArray<CXBounds>();
-    auto& colorArray = systemsNC.getComponentArray<CColor>();
-
-    if (!themeSliderArray->hasData(redSliderPointer) ||
-        !themeSliderArray->hasData(greenSliderPointer) ||
-        !themeSliderArray->hasData(blueSliderPointer) ||
-        !positionArray->hasData(redSliderPointer) ||
-        !positionArray->hasData(greenSliderPointer) ||
-        !positionArray->hasData(blueSliderPointer))
-    {
-        return;
-    }
-
-    const CThemeSlider& redThemeSlider = themeSliderArray->getData(redSliderPointer);
-    const CThemeSlider& greenThemeSlider = themeSliderArray->getData(greenSliderPointer);
-    const CThemeSlider& blueThemeSlider = themeSliderArray->getData(blueSliderPointer);
-
-    CPosition& redPos = positionArray->getData(redSliderPointer);
-    CPosition& greenPos = positionArray->getData(greenSliderPointer);
-    CPosition& bluePos = positionArray->getData(blueSliderPointer);
-
-    if (!xBoundsArray->hasData(redThemeSlider.themeSlider) ||
-        !xBoundsArray->hasData(greenThemeSlider.themeSlider) ||
-        !xBoundsArray->hasData(blueThemeSlider.themeSlider))
-    {
-        return;
-    }
-
-    const CXBounds& redXBounds = xBoundsArray->getData(redThemeSlider.themeSlider);
-    const CXBounds& greenXBounds = xBoundsArray->getData(greenThemeSlider.themeSlider);
-    const CXBounds& blueXBounds = xBoundsArray->getData(blueThemeSlider.themeSlider);
-    
-    float redPercentile = inverseLerp_Auxiliary
-    (
-        0,
-        255,
-        themeColor.r
-    );
-    float greenPercentile = inverseLerp_Auxiliary
-    (
-        0,
-        255,
-        themeColor.g
-    );
-    float bluePercentile = inverseLerp_Auxiliary
-    (
-        0,
-        255,
-        themeColor.b
-    );
-
-    redPos.x = lerp_Auxiliary
-    (
-        redXBounds.min,
-        redXBounds.max,
-        redPercentile
-    );
-    greenPos.x = lerp_Auxiliary
-    (
-        greenXBounds.min,
-        greenXBounds.max,
-        greenPercentile
-    );
-    bluePos.x = lerp_Auxiliary
-    (
-        blueXBounds.min,
-        blueXBounds.max,
-        bluePercentile
-    );
-}
-
 void loadMusicButtons_Helper(CTexturesContainer& container)
 {
     container.map.emplace(ETexture::BUTTON_MUSIC_1_TEXTURE, sf::Texture(SPRITES_PATH "button_music_1_texture.png"));
@@ -486,14 +405,94 @@ void setSpriteOrigins_Start()
 // -------------------------------------------------------
 // update systems
 // -------------------------------------------------------
-const float DEFAULT_SCALE_X = 1.0f;
-const float DEFAULT_SCALE_Y = 1.0f;
+void updateSliderPointers_Update
+(
+    Entity redSliderPointer,
+    Entity greenSliderPointer,
+    Entity blueSliderPointer,
+    sf::Color& themeColor
+)
+{
+    if (systemsNC.getComponentArray<CResetTextColor>()->getAll().empty() &&
+        systemsNC.getComponentArray<CResetColor>()->getAll().empty())
+    {
+        return;
+    }
 
-const float HOVER_SCALE_X = 1.1f;
-const float HOVER_SCALE_Y = 1.1f;
+    //std::cout << "test" << "\n";
 
-const float CLICKED_SCALE_X = 0.9f;
-const float CLICKED_SCALE_Y = 0.9f;
+    auto& themeSliderArray = systemsNC.getComponentArray<CThemeSlider>();
+    auto& positionArray = systemsNC.getComponentArray<CPosition>();
+    auto& xBoundsArray = systemsNC.getComponentArray<CXBounds>();
+
+    if (!themeSliderArray->hasData(redSliderPointer) ||
+        !themeSliderArray->hasData(greenSliderPointer) ||
+        !themeSliderArray->hasData(blueSliderPointer) ||
+        !positionArray->hasData(redSliderPointer) ||
+        !positionArray->hasData(greenSliderPointer) ||
+        !positionArray->hasData(blueSliderPointer))
+    {
+        return;
+    }
+
+    const CThemeSlider& redThemeSlider = themeSliderArray->getData(redSliderPointer);
+    const CThemeSlider& greenThemeSlider = themeSliderArray->getData(greenSliderPointer);
+    const CThemeSlider& blueThemeSlider = themeSliderArray->getData(blueSliderPointer);
+
+    CPosition& redPos = positionArray->getData(redSliderPointer);
+    CPosition& greenPos = positionArray->getData(greenSliderPointer);
+    CPosition& bluePos = positionArray->getData(blueSliderPointer);
+
+    if (!xBoundsArray->hasData(redThemeSlider.themeSlider) ||
+        !xBoundsArray->hasData(greenThemeSlider.themeSlider) ||
+        !xBoundsArray->hasData(blueThemeSlider.themeSlider))
+    {
+        return;
+    }
+
+    const CXBounds& redXBounds = xBoundsArray->getData(redThemeSlider.themeSlider);
+    const CXBounds& greenXBounds = xBoundsArray->getData(greenThemeSlider.themeSlider);
+    const CXBounds& blueXBounds = xBoundsArray->getData(blueThemeSlider.themeSlider);
+
+    float redPercentile = inverseLerp_Auxiliary
+    (
+        0,
+        255,
+        themeColor.r
+    );
+    float greenPercentile = inverseLerp_Auxiliary
+    (
+        0,
+        255,
+        themeColor.g
+    );
+    float bluePercentile = inverseLerp_Auxiliary
+    (
+        0,
+        255,
+        themeColor.b
+    );
+
+    redPos.x = lerp_Auxiliary
+    (
+        redXBounds.min,
+        redXBounds.max,
+        redPercentile
+    );
+    greenPos.x = lerp_Auxiliary
+    (
+        greenXBounds.min,
+        greenXBounds.max,
+        greenPercentile
+    );
+    bluePos.x = lerp_Auxiliary
+    (
+        blueXBounds.min,
+        blueXBounds.max,
+        bluePercentile
+    );
+}
+
 void resetColor_Update()
 {
     auto& resetColorArray = systemsNC.getComponentArray<CResetColor>();
@@ -596,6 +595,53 @@ void saveThemeColorData_Update
 
     out.close();
 }
+void easterEggKeyReleased
+(
+    std::queue<sf::Keyboard::Scancode>& easterEggKeys,
+    std::queue<sf::Keyboard::Scancode>& enteredKeys,
+    const sf::Event::KeyReleased* const keyReleased
+)
+{
+    if (easterEggKeys.empty())
+    {
+        //std::cout << "complete" << "\n";
+        return;
+    }
+
+    if (easterEggKeys.front() != keyReleased->scancode)
+    {
+        //std::cout << "incorrect" << "\n";
+        if (!enteredKeys.empty())
+        {
+            while (!easterEggKeys.empty())
+            {
+                enteredKeys.push(easterEggKeys.front());
+                easterEggKeys.pop();
+            }
+
+            while (!enteredKeys.empty())
+            {
+                easterEggKeys.push(enteredKeys.front());
+                enteredKeys.pop();
+            }
+        }
+
+        return;
+    }
+
+    //std::cout << "worked?" << "\n";
+
+    enteredKeys.push(easterEggKeys.front());
+    easterEggKeys.pop();
+}
+const float DEFAULT_SCALE_X = 1.0f;
+const float DEFAULT_SCALE_Y = 1.0f;
+
+const float HOVER_SCALE_X = 1.1f;
+const float HOVER_SCALE_Y = 1.1f;
+
+const float CLICKED_SCALE_X = 0.9f;
+const float CLICKED_SCALE_Y = 0.9f;
 void buttonClicks_Update
 (
     Entity sceneTransition,
@@ -672,6 +718,81 @@ void releaseButton_Update()
         button.clicked = false;
         button.sound = false;
         buttonSoundsObj.clicked = false;
+    }
+}
+
+const std::uint8_t VAL_RED = 25;
+const std::uint8_t VAL_GREEN = 25;
+const std::uint8_t VAL_BLUE = 112;
+
+void doEasterEgg_Update
+(
+    std::queue<sf::Keyboard::Scancode>& easterEggKeys,
+    std::queue<sf::Keyboard::Scancode>& enteredKeys,
+    sf::Color& themeColor,
+    sf::Color& textColor,
+    float& themeBrightness
+)
+{
+    if (!easterEggKeys.empty())
+    {
+        return;
+    }
+    //std::cout << "complete" << "\n";
+    auto& colorArray = systemsNC.getComponentArray<CColor>();
+    auto& textArray = systemsNC.getComponentArray<CText>();
+
+    while (!enteredKeys.empty())
+    {
+        easterEggKeys.push(enteredKeys.front());
+        enteredKeys.pop();
+    }
+
+    themeColor = sf::Color
+    (
+        VAL_RED,
+        VAL_GREEN,
+        VAL_BLUE
+    );
+    textColor = sf::Color::White;
+
+    getThemeBrightness
+    (
+        themeBrightness,
+        themeColor
+    );
+
+    adjustTextColor
+    (
+        themeBrightness,
+        textColor
+    );
+
+    for (auto& [entity, color] : colorArray->getAll())
+    {
+        if (color.fixed)
+        {
+            continue;
+        }
+
+        color.col = themeColor;
+
+        systemsNC.addComponent
+        (
+            entity,
+            CResetColor{}
+        );
+    }
+
+    for (auto& [entity, text] : textArray->getAll())
+    {
+        text.color = textColor;
+
+        systemsNC.addComponent
+        (
+            entity,
+            CResetTextColor{}
+        );
     }
 }
 void doSoundControl_Update(Entity soundButton)
