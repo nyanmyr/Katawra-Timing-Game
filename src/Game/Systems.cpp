@@ -721,9 +721,9 @@ void releaseButton_Update()
     }
 }
 
-const std::uint8_t VAL_RED = 25;
-const std::uint8_t VAL_GREEN = 25;
-const std::uint8_t VAL_BLUE = 112;
+const std::uint8_t VAL_RED = 24;
+const std::uint8_t VAL_GREEN = 33;
+const std::uint8_t VAL_BLUE = 56;
 
 void doEasterEgg_Update
 (
@@ -1668,6 +1668,12 @@ void hit_Control
         {
             shakeCam.timer = FAIL_SHAKE_TIMER;
         }
+
+        std::cout << "count: " << score.count << "\n";
+        std::cout << "hits: " << score.hits << "\n";
+
+        ScoreHit testing = ScoreHit(score.count, score.hits);
+        std::cout << "final score: " << testing.getFinalScore() << "\n";
 
         //std::cout << "Missed!" << "\n";
         score.count = 0;

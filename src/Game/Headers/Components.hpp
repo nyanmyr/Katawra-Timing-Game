@@ -143,6 +143,40 @@ struct CScore
 	float fillTimer = 0.f;
 };
 
+class ScoreHit
+{
+private:
+	int count = 0, hits = 0;
+public:
+	ScoreHit(int count, int hits) : count(count), hits(hits) {}
+	float getFinalScore() 
+	{
+		if (count <= 0 || hits <= 0)
+		{
+			return 0;
+		}
+
+		return std::log10(count + 1) / std::log10(hits + 1);
+	}
+
+	int getCount()
+	{
+		return count;
+	}
+
+	int getHit()
+	{
+		return hits;
+	}
+};
+
+struct DSavedScores
+{
+	float maxSize = 3;
+	std::vector<std::pair<float, ScoreHit>> normal;
+	std::vector<std::pair<float, ScoreHit>> hard;
+};
+
 enum GameMode
 {
 	MODE_NORMAL,
@@ -365,5 +399,6 @@ struct CThemeSlider
 {
 	Entity themeSlider;
 };
+
 
 #endif

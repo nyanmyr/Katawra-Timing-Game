@@ -9,12 +9,12 @@ using sf::Clock;
 using sf::Event;
 using sf::Keyboard::Scancode;
 
-// TODO: add the easter egg
-// TODO: are you sure button prompt main menu button (you should be able to save your progress)
 // TODO: save score (make it save when returning to menu)
+// TODO: are you sure button prompt main menu button (you should be able to save your progress)
 // TODO: ask to continue if window is abruptly closed
 // TODO: make the screen actually go full screen
 // TODO: organize components registration in game.cpp
+// TODO: organize components and group them together
 // TODO: bug fixing
 // FIX: look into checking the sound array to see if its all actually deleted
 // FIX: saving of theme color and sound data is repeated (use a test print to find out)
