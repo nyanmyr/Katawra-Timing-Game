@@ -10,6 +10,7 @@ using sf::Event;
 using sf::Keyboard::Scancode;
 
 // TODO: save score (make it save when returning to menu)
+// TODO: reuse intro system to also display new highest score achieved
 // TODO: are you sure button prompt main menu button (you should be able to save your progress)
 // TODO: ask to continue if window is abruptly closed
 // TODO: make the screen actually go full screen
@@ -19,6 +20,7 @@ using sf::Keyboard::Scancode;
 // FIX: look into checking the sound array to see if its all actually deleted
 // FIX: saving of theme color and sound data is repeated (use a test print to find out)
 // FIX: get rid of as many magic numbers as you can
+// FIX: there's one frame where the small buttons haven't been centered or changed color
 // TODO: publish
 
 void playingScene
@@ -447,7 +449,6 @@ void playingScene
 		doSoundControl_Update(soundButton);
 		doSoundControl_Update(musicButton);
 		changeSoundButtonTexture_Update(loadedTextures);
-		// NOTE: minor bug; one frame of the changed texture is not centered
 
 		button_Update
 		(

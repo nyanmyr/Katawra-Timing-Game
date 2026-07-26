@@ -149,22 +149,22 @@ private:
 	int count = 0, hits = 0;
 public:
 	ScoreHit(int count, int hits) : count(count), hits(hits) {}
-	float getFinalScore() 
+	float getFinalScore() const
 	{
 		if (count <= 0 || hits <= 0)
 		{
 			return 0;
 		}
 
-		return std::log10(count + 1) / std::log10(hits + 1);
+		return 10 - (std::log10(count + 1) / std::log10(hits + 1));
 	}
 
-	int getCount()
+	int getCount() const
 	{
 		return count;
 	}
 
-	int getHit()
+	int getHit() const
 	{
 		return hits;
 	}
