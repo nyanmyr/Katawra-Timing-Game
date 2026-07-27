@@ -173,8 +173,8 @@ public:
 struct DSavedScores
 {
 	float maxSize = 3;
-	std::vector<std::pair<float, ScoreHit>> normal;
-	std::vector<std::pair<float, ScoreHit>> hard;
+	std::vector<std::pair<float, ScoreHit>> normal = {};
+	std::vector<std::pair<float, ScoreHit>> hard = {};
 };
 
 enum GameMode

@@ -24,7 +24,8 @@ void adjustTextColor
 	sf::Color& textColor
 );
 void loadSoundStatusData_Start(DSoundStatus& soundStatusData);
-void loadSoundStatusData_Start(DThemeColor& themeColorData);
+void loadThemeColorData_Start(DThemeColor& themeColorData);
+void loadSavedScoresData_Start(DSavedScores& savedScoresData);
 void adjustSoundTextureEnum_Start
 (
 	const DSoundStatus& soundStatusData,
@@ -152,7 +153,9 @@ void hit_Control
 	Entity hitbox,
 	Entity cameraShake,
 	Entity scoreFeed,
-	Entity sceneTransition
+	Entity sceneTransition,
+	const Difficulty difficulty,
+	DSavedScores& savedScores
 );
 void moveIndicator_Update
 (

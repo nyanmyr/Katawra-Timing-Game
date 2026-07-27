@@ -22,7 +22,7 @@ void menuScene
 	std::queue<Entity> renderQueue;
 
 	DThemeColor themeColorData;
-	loadSoundStatusData_Start(themeColorData);
+	loadThemeColorData_Start(themeColorData);
 
 	sf::Color themeColor = themeColorData.themeColor;
 	sf::Color textColor = sf::Color::White;

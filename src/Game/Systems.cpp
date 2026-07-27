@@ -84,7 +84,7 @@ void loadSoundStatusData_Start(DSoundStatus& soundStatusData)
     //std::cout << "soundStatus.dat found!" << "\n";
     in.read(reinterpret_cast<char*>(&soundStatusData), sizeof(DSoundStatus));
 }
-void loadSoundStatusData_Start(DThemeColor& themeColorData)
+void loadThemeColorData_Start(DThemeColor& themeColorData)
 {
     std::ifstream in("themeColor.dat", std::ios::binary);
 
@@ -97,6 +97,19 @@ void loadSoundStatusData_Start(DThemeColor& themeColorData)
     
     //std::cout << "themeColor.dat found!" << "\n";
     in.read(reinterpret_cast<char*>(&themeColorData), sizeof(DThemeColor));
+}
+void loadSavedScoresData_Start(DSavedScores& savedScoresData)
+{
+    std::ifstream in("savedScores.dat", std::ios::binary);
+
+    if (!in)
+    {
+        std::cout << "savedScores.dat not found!" << "\n";
+        return;
+    }
+    
+    std::cout << "savedScores.dat found!" << "\n";
+    in.read(reinterpret_cast<char*>(&savedScoresData), sizeof(DSavedScores));
 }
 void adjustSoundTextureEnum_Start
 (
@@ -1625,7 +1638,9 @@ void hit_Control
     Entity hitbox,
     Entity cameraShake,
     Entity scoreFeed,
-    Entity sceneTransition
+    Entity sceneTransition,
+    const Difficulty difficulty,
+    DSavedScores& savedScores
 )
 {
     if
@@ -1669,12 +1684,6 @@ void hit_Control
             shakeCam.timer = FAIL_SHAKE_TIMER;
         }
 
-        std::cout << "count: " << score.count << "\n";
-        std::cout << "hits: " << score.hits << "\n";
-
-        ScoreHit testing = ScoreHit(score.count, score.hits);
-        std::cout << "final score: " << testing.getFinalScore() << "\n";
-
         //std::cout << "Missed!" << "\n";
         score.count = 0;
         score.hits = 0;
@@ -1699,6 +1708,59 @@ void hit_Control
         );
 
         feed.clear = true;
+
+        //std::cout << "count: " << score.count << "\n";
+        //std::cout << "hits: " << score.hits << "\n";
+
+        ScoreHit scoreHitObj = ScoreHit(score.count, score.hits);
+        //std::cout << "final score: " << testing.getFinalScore() << "\n";
+        std::vector<std::pair<float, ScoreHit>>* difficultyScores;
+
+        switch (difficulty)
+        {
+        case DIFFICULTY_HARD:
+            difficultyScores = &savedScores.hard;
+            break;
+        case DIFFICULTY_NORMAL:
+        default:
+            difficultyScores = &savedScores.normal;
+            break;
+        }
+
+        if (difficultyScores->empty())
+        {
+            difficultyScores->emplace_back
+            (
+                scoreHitObj.getFinalScore(),
+                scoreHitObj
+            );
+
+            std::cout << "first score saved!" << "\n";
+            return;
+        }
+
+        difficultyScores->emplace_back
+        (
+            scoreHitObj.getFinalScore(),
+            scoreHitObj
+        );
+
+        std::sort
+        (
+            difficultyScores->begin(), 
+            difficultyScores->end(),
+            [](const auto& a, const auto& b)
+            {
+                return a.first < b.first;
+            }
+        );
+
+        if (difficultyScores->size() > savedScores.maxSize)
+        {
+            difficultyScores->erase(difficultyScores->begin() + savedScores.maxSize, difficultyScores->end());
+        }
+
+        std::cout << "saved scores: " << difficultyScores->size() << "\n";
 
         return;
     }

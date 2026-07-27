@@ -45,7 +45,7 @@ void playingScene
 	std::string difficultyStr;
 
 	DThemeColor themeColorData;
-	loadSoundStatusData_Start(themeColorData);
+	loadThemeColorData_Start(themeColorData);
 
 	sf::Color themeColor = themeColorData.themeColor;
 	sf::Color textColor = sf::Color::White;
@@ -95,6 +95,23 @@ void playingScene
 	adjustTextColor
 	(
 		themeBrightness,
+		textColor
+	);
+
+	const float FEED_STARTING_Y = 25.f;
+
+	DSavedScores savedScores;
+	loadSavedScoresData_Start(savedScores);
+
+	Entity scoreHeader = makeUIText
+	(
+		{
+			window.getDefaultView().getSize().x - 150.f,
+			FEED_STARTING_Y
+		},
+		normalFont,
+		"No saved scores!",
+		32,
 		textColor
 	);
 
@@ -371,7 +388,7 @@ void playingScene
 	std::optional<sf::Music> music;
 
 	Entity hum = makeLoopSound(SoundEffect::HUM_SOUND_EFFECT, 6.25f);
-
+	 
 	while (window.isOpen())
 	{
 		// in this case the extra baggage is afforable :p
@@ -439,7 +456,9 @@ void playingScene
 						hitbox,
 						cameraShake,
 						feed,
-						sceneTransition
+						sceneTransition,
+						difficulty,
+						savedScores
 					);
 				}
 			}
@@ -502,7 +521,7 @@ void playingScene
 		(
 			{
 				window.getDefaultView().getSize().x / 2.f,
-				25.f
+				FEED_STARTING_Y
 			},
 			dt,
 			feed
