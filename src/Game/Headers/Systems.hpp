@@ -96,6 +96,17 @@ void doEasterEgg_Update
 	sf::Color& textColor,
 	float& themeBrightness
 );
+void scoreboard_Update
+(
+	bool isSavedScoresModified,
+	Entity scoreHeader,
+	sf::Font& normalFont,
+	sf::Color textColor,
+	sf::Vector2f startPos,
+	DSavedScores& savedScores,
+	const Difficulty difficulty,
+	std::vector<Entity>& scores
+);
 void doSoundControl_Update(Entity soundButton);
 void changeSoundButtonTexture_Update(Entity loadedTextures);
 void button_Update
@@ -147,6 +158,7 @@ void playIntro_Update
 
 void hit_Control
 (
+	bool& isSavedScoresModified,
 	float themeBrightness,
 	sf::Font& font,
 	Entity indicator,

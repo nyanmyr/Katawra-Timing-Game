@@ -808,6 +808,84 @@ void doEasterEgg_Update
         );
     }
 }
+
+const float LOG_SPACING_Y = 40.f;
+
+void scoreboard_Update
+(
+    bool isSavedScoresModified,
+    Entity scoreHeader,
+    sf::Font& normalFont,
+    sf::Color textColor,
+    sf::Vector2f startPos,
+    DSavedScores& savedScores,
+    const Difficulty difficulty,
+    std::vector<Entity>& scores
+)
+{
+    if (!isSavedScoresModified ||
+        !systemsNC.getComponentArray<CText>()->hasData(scoreHeader))
+    {
+        return;
+    }
+
+    isSavedScoresModified = false;
+
+    std::vector<ScoreHit>* difficultyScores;
+
+    switch (difficulty)
+    {
+    case DIFFICULTY_HARD:
+        difficultyScores = &savedScores.hard;
+        break;
+    case DIFFICULTY_NORMAL:
+    default:
+        difficultyScores = &savedScores.normal;
+        break;
+    }
+
+    if (difficultyScores->empty())
+    {
+        return;
+    }
+
+    CText& scoreHeaderTextObj = systemsNC.getComponentArray<CText>()->getData(scoreHeader);
+    scoreHeaderTextObj.string = "Highest Scores:";
+
+    for (Entity entity : scores)
+    {
+        systemsNC.addComponent
+        (
+            entity,
+            CDelete{}
+        );
+    }
+
+    scores.clear();
+
+    int count = 1;
+
+    for (ScoreHit scoreHit : *difficultyScores)
+    {
+        std::cout << "test: " << count << "\n";
+
+        Entity entity = makeUIText
+        (
+            {
+                startPos.x,
+                startPos.y + (LOG_SPACING_Y * count)
+            },
+            normalFont,
+            std::to_string(scoreHit.getFinalScore()) +
+            " " + std::to_string(scoreHit.getCount()) +
+            " " + std::to_string(scoreHit.getHit()),
+            32,
+            textColor
+        );
+
+        ++count;
+    }
+}
 void doSoundControl_Update(Entity soundButton)
 {
     if
@@ -1632,6 +1710,7 @@ const float FILL_TIMER = 1.f;
 
 void hit_Control
 (
+    bool& isSavedScoresModified,
     float themeBrightness,
     sf::Font& font,
     Entity indicator,
@@ -1714,7 +1793,7 @@ void hit_Control
 
         ScoreHit scoreHitObj = ScoreHit(score.count, score.hits);
         //std::cout << "final score: " << testing.getFinalScore() << "\n";
-        std::vector<std::pair<float, ScoreHit>>* difficultyScores;
+        std::vector<ScoreHit>* difficultyScores;
 
         switch (difficulty)
         {
@@ -1731,17 +1810,16 @@ void hit_Control
         {
             difficultyScores->emplace_back
             (
-                scoreHitObj.getFinalScore(),
                 scoreHitObj
             );
 
-            std::cout << "first score saved!" << "\n";
+            isSavedScoresModified = true;
+            //std::cout << "first score saved!" << "\n";
             return;
         }
 
         difficultyScores->emplace_back
         (
-            scoreHitObj.getFinalScore(),
             scoreHitObj
         );
 
@@ -1749,18 +1827,21 @@ void hit_Control
         (
             difficultyScores->begin(), 
             difficultyScores->end(),
-            [](const auto& a, const auto& b)
+            [](const ScoreHit& a, const ScoreHit& b)
             {
-                return a.first < b.first;
+                return a.getFinalScore() < b.getFinalScore();
             }
         );
 
-        if (difficultyScores->size() > savedScores.maxSize)
+        if (difficultyScores->size() < savedScores.maxSize + 1)
         {
-            difficultyScores->erase(difficultyScores->begin() + savedScores.maxSize, difficultyScores->end());
+            return;
         }
 
-        std::cout << "saved scores: " << difficultyScores->size() << "\n";
+        isSavedScoresModified = true;
+        difficultyScores->erase(difficultyScores->begin() + savedScores.maxSize, difficultyScores->end());
+
+        //std::cout << "saved scores: " << difficultyScores->size() << "\n";
 
         return;
     }
@@ -2215,8 +2296,6 @@ void shakeCamera_Update
 
     window.setView(view);
 }
-
-const float LOG_SPACING_Y = 40.f;
 
 void doFeed_Update
 (

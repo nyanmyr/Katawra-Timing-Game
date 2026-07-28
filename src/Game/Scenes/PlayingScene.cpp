@@ -17,6 +17,7 @@ using sf::Keyboard::Scancode;
 // TODO: organize components registration in game.cpp
 // TODO: organize components and group them together
 // TODO: bug fixing
+// FIX: initialize every use of vector to empty braces (for discipline)
 // FIX: look into checking the sound array to see if its all actually deleted
 // FIX: saving of theme color and sound data is repeated (use a test print to find out)
 // FIX: get rid of as many magic numbers as you can
@@ -102,6 +103,9 @@ void playingScene
 
 	DSavedScores savedScores;
 	loadSavedScoresData_Start(savedScores);
+
+	bool isSavedScoresModified = false;
+	std::vector<Entity> scores = {};
 
 	Entity scoreHeader = makeUIText
 	(
@@ -450,6 +454,7 @@ void playingScene
 				{
 					hit_Control
 					(
+						isSavedScoresModified,
 						themeBrightness,
 						normalFont,
 						indicator,
@@ -465,6 +470,21 @@ void playingScene
 		}
 
 		// update systems
+		scoreboard_Update
+		(
+			isSavedScoresModified,
+			scoreHeader,
+			normalFont,
+			textColor,
+			{
+				window.getDefaultView().getSize().x / 2.f,
+				FEED_STARTING_Y
+			},
+			savedScores,
+			difficulty,
+			scores
+		);
+
 		doSoundControl_Update(soundButton);
 		doSoundControl_Update(musicButton);
 		changeSoundButtonTexture_Update(loadedTextures);

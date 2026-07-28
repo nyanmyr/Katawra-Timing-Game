@@ -148,6 +148,7 @@ class ScoreHit
 private:
 	int count = 0, hits = 0;
 public:
+	ScoreHit() = default;
 	ScoreHit(int count, int hits) : count(count), hits(hits) {}
 	float getFinalScore() const
 	{
@@ -173,8 +174,8 @@ public:
 struct DSavedScores
 {
 	float maxSize = 3;
-	std::vector<std::pair<float, ScoreHit>> normal = {};
-	std::vector<std::pair<float, ScoreHit>> hard = {};
+	std::vector<ScoreHit> normal = {};
+	std::vector<ScoreHit> hard = {};
 };
 
 enum GameMode
