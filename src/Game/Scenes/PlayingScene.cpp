@@ -22,6 +22,7 @@ using sf::Keyboard::Scancode;
 // FIX: saving of theme color and sound data is repeated (use a test print to find out)
 // FIX: get rid of as many magic numbers as you can
 // FIX: there's one frame where the small buttons haven't been centered or changed color
+// FIX: review const correctness for systems
 // TODO: publish
 
 void playingScene
@@ -477,7 +478,7 @@ void playingScene
 			normalFont,
 			textColor,
 			{
-				window.getDefaultView().getSize().x / 2.f,
+				window.getDefaultView().getSize().x - 150.f,
 				FEED_STARTING_Y
 			},
 			savedScores,

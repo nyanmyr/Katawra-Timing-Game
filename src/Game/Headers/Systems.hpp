@@ -98,7 +98,7 @@ void doEasterEgg_Update
 );
 void scoreboard_Update
 (
-	bool isSavedScoresModified,
+	bool& isSavedScoresModified,
 	Entity scoreHeader,
 	sf::Font& normalFont,
 	sf::Color textColor,

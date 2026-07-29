@@ -157,7 +157,7 @@ public:
 			return 0;
 		}
 
-		return 10 - (std::log10(count + 1) / std::log10(hits + 1));
+		return static_cast<float>(count + 1) / static_cast<float>(hits + 1);
 	}
 
 	int getCount() const

@@ -813,7 +813,7 @@ const float LOG_SPACING_Y = 40.f;
 
 void scoreboard_Update
 (
-    bool isSavedScoresModified,
+    bool& isSavedScoresModified,
     Entity scoreHeader,
     sf::Font& normalFont,
     sf::Color textColor,
@@ -852,6 +852,9 @@ void scoreboard_Update
     CText& scoreHeaderTextObj = systemsNC.getComponentArray<CText>()->getData(scoreHeader);
     scoreHeaderTextObj.string = "Highest Scores:";
 
+    //std::cout << "scores: " << scores.size() << "\n";
+
+
     for (Entity entity : scores)
     {
         systemsNC.addComponent
@@ -865,9 +868,12 @@ void scoreboard_Update
 
     int count = 1;
 
+    //std::cout << "scores again: " << scores.size() << "\n";
+    //std::cout << "size: " << difficultyScores->size() << "\n";
+
     for (ScoreHit scoreHit : *difficultyScores)
     {
-        std::cout << "test: " << count << "\n";
+        //std::cout << "finalScore: " << scoreHit.getFinalScore() << "\n";
 
         Entity entity = makeUIText
         (
@@ -876,14 +882,15 @@ void scoreboard_Update
                 startPos.y + (LOG_SPACING_Y * count)
             },
             normalFont,
-            std::to_string(scoreHit.getFinalScore()) +
-            " " + std::to_string(scoreHit.getCount()) +
-            " " + std::to_string(scoreHit.getHit()),
+            "Hits: " + std::to_string(scoreHit.getHit()) +
+            ", Score: " + std::to_string(scoreHit.getCount()),
             32,
             textColor
         );
 
         ++count;
+
+        scores.emplace_back(entity);
     }
 }
 void doSoundControl_Update(Entity soundButton)
@@ -1763,6 +1770,10 @@ void hit_Control
             shakeCam.timer = FAIL_SHAKE_TIMER;
         }
 
+        //std::cout << "count: " << score.count << "\n";
+        //std::cout << "hits: " << score.hits << "\n";
+        ScoreHit scoreHitObj = ScoreHit(score.count, score.hits);
+
         //std::cout << "Missed!" << "\n";
         score.count = 0;
         score.hits = 0;
@@ -1770,28 +1781,8 @@ void hit_Control
         score.unaccounted = 0;
         score.fillTimer = 0;
 
-        feed.feed.push
-        (
-            makeLog
-            (
-                {
-                    50,
-                    50
-                },
-                font,
-                themeBrightness > 186 ? sf::Color::Black : sf::Color::White,
-                "FAIL!",
-                LOG_TIMER,
-                FADE_TIMER
-            )
-        );
-
         feed.clear = true;
 
-        //std::cout << "count: " << score.count << "\n";
-        //std::cout << "hits: " << score.hits << "\n";
-
-        ScoreHit scoreHitObj = ScoreHit(score.count, score.hits);
         //std::cout << "final score: " << testing.getFinalScore() << "\n";
         std::vector<ScoreHit>* difficultyScores;
 
@@ -1806,6 +1797,8 @@ void hit_Control
             break;
         }
 
+        std::string logStr = "FAIL!";
+
         if (difficultyScores->empty())
         {
             difficultyScores->emplace_back
@@ -1814,34 +1807,76 @@ void hit_Control
             );
 
             isSavedScoresModified = true;
+            logStr = "NEW HIGHSCORE!";
             //std::cout << "first score saved!" << "\n";
-            return;
         }
 
-        difficultyScores->emplace_back
-        (
-            scoreHitObj
-        );
+        bool gotAdded = false;
 
-        std::sort
-        (
-            difficultyScores->begin(), 
-            difficultyScores->end(),
-            [](const ScoreHit& a, const ScoreHit& b)
-            {
-                return a.getFinalScore() < b.getFinalScore();
-            }
-        );
-
-        if (difficultyScores->size() < savedScores.maxSize + 1)
+        if (difficultyScores->size() == savedScores.maxSize)
         {
-            return;
+            for (const ScoreHit scoreHit : *difficultyScores)
+            {
+                //std::cout << scoreHitObj.getFinalScore() <<
+                //    " > " << scoreHit.getFinalScore() <<
+                //    " == " << (scoreHitObj.getFinalScore() > scoreHit.getFinalScore()) << "\n";
+
+                if (scoreHitObj.getFinalScore() > scoreHit.getFinalScore())
+                {
+                    //std::cout << "got a better score!" << "\n";
+                    gotAdded = true;
+                    break;
+                }
+            }
+        }
+        else if (!isSavedScoresModified)
+        {
+            gotAdded = true;
         }
 
-        isSavedScoresModified = true;
-        difficultyScores->erase(difficultyScores->begin() + savedScores.maxSize, difficultyScores->end());
+        if (gotAdded)
+        {
+            logStr = "NEW HIGHSCORE!";
 
-        //std::cout << "saved scores: " << difficultyScores->size() << "\n";
+            difficultyScores->emplace_back
+            (
+                scoreHitObj
+            );
+
+            std::sort
+            (
+                difficultyScores->begin(),
+                difficultyScores->end(),
+                [](const ScoreHit& a, const ScoreHit& b)
+                {
+                    return a.getFinalScore() > b.getFinalScore();
+                }
+            );
+
+            isSavedScoresModified = true;
+
+            if (difficultyScores->size() > savedScores.maxSize)
+            {
+                difficultyScores->erase(difficultyScores->begin() + savedScores.maxSize, difficultyScores->end());
+            }
+            //std::cout << "saved scores: " << difficultyScores->size() << "\n";
+        }
+
+        feed.feed.push
+        (
+            makeLog
+            (
+                {
+                    50,
+                    50
+                },
+                font,
+                themeBrightness > 186 ? sf::Color::Black : sf::Color::White,
+                logStr,
+                LOG_TIMER,
+                FADE_TIMER
+            )
+        );
 
         return;
     }
