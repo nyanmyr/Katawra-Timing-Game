@@ -17,24 +17,20 @@ enum TextFormat
 
 struct CPosition
 {
-	float x, y;
+	float x = 0.f;
+	float y = 0.f;
 };
 
 struct CTransform
 {
-	float width = 0.f, height = 0.f;
-	CTransform() = default;
-	CTransform(const float width, const float height) :
-		width(width), height(height) {
-	};
+	float width = 0.f;
+	float height = 0.f;
 };
 
 struct COrigin
 {
-	float offsetX = 0.f, offsetY = 0.f;
-	COrigin() = default;
-	COrigin(const float offsetX, const float offsetY) :
-		offsetX(offsetX), offsetY(offsetY) {};
+	float offsetX = 0.f;
+	float offsetY = 0.f;
 };
 
 struct CButton
