@@ -102,10 +102,14 @@ void playingScene
 
 	const float FEED_STARTING_Y = 25.f;
 
-	DSavedScores savedScores;
-	loadSavedScoresData_Start(savedScores);
+	DHighScores highScoresData;
+	bool isHighScoresModified = false;
+	loadHighScoresData_Start
+	(
+		highScoresData,
+		isHighScoresModified
+	);
 
-	bool isSavedScoresModified = false;
 	std::vector<Entity> scores = {};
 
 	Entity scoreHeader = makeUIText
@@ -430,6 +434,7 @@ void playingScene
 					themeColorData,
 					themeColor
 				);
+				saveHighScores_Update(highScoresData);
 				window.close();
 			}
 
@@ -455,7 +460,7 @@ void playingScene
 				{
 					hit_Control
 					(
-						isSavedScoresModified,
+						isHighScoresModified,
 						themeBrightness,
 						normalFont,
 						indicator,
@@ -464,7 +469,7 @@ void playingScene
 						feed,
 						sceneTransition,
 						difficulty,
-						savedScores
+						highScoresData
 					);
 				}
 			}
@@ -473,7 +478,7 @@ void playingScene
 		// update systems
 		scoreboard_Update
 		(
-			isSavedScoresModified,
+			isHighScoresModified,
 			scoreHeader,
 			normalFont,
 			textColor,
@@ -481,7 +486,7 @@ void playingScene
 				window.getDefaultView().getSize().x - 150.f,
 				FEED_STARTING_Y
 			},
-			savedScores,
+			highScoresData,
 			difficulty,
 			scores
 		);
@@ -577,6 +582,7 @@ void playingScene
 			themeColorData,
 			themeColor
 		);
+		nextSceneSaveHighScoresData_Update(highScoresData);
 		nextScene_Update
 		(
 			sceneTransition,

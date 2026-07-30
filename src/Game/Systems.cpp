@@ -98,18 +98,23 @@ void loadThemeColorData_Start(DThemeColor& themeColorData)
     //std::cout << "themeColor.dat found!" << "\n";
     in.read(reinterpret_cast<char*>(&themeColorData), sizeof(DThemeColor));
 }
-void loadSavedScoresData_Start(DSavedScores& savedScoresData)
+void loadHighScoresData_Start
+(
+    DHighScores& highScoresData,
+    bool& isHighScoresModified
+)
 {
-    std::ifstream in("savedScores.dat", std::ios::binary);
+    std::ifstream in("highScores.dat", std::ios::binary);
 
     if (!in)
     {
-        std::cout << "savedScores.dat not found!" << "\n";
+        //std::cout << "highScores.dat not found!" << "\n";
         return;
     }
     
-    std::cout << "savedScores.dat found!" << "\n";
-    in.read(reinterpret_cast<char*>(&savedScoresData), sizeof(DSavedScores));
+    //std::cout << "highScores.dat found!" << "\n";
+    isHighScoresModified = true;
+    in.read(reinterpret_cast<char*>(&highScoresData), sizeof(DHighScores));
 }
 void adjustSoundTextureEnum_Start
 (
@@ -608,6 +613,15 @@ void saveThemeColorData_Update
 
     out.close();
 }
+void saveHighScores_Update(DHighScores& highScoresData)
+{
+    //std::cout << "saved theme color!" << "\n";
+    std::ofstream out("highScores.dat", std::ios::binary);
+
+    out.write(reinterpret_cast<char*>(&highScoresData), sizeof(DHighScores));
+
+    out.close();
+}
 void easterEggKeyReleased
 (
     std::queue<sf::Keyboard::Scancode>& easterEggKeys,
@@ -813,34 +827,34 @@ const float LOG_SPACING_Y = 40.f;
 
 void scoreboard_Update
 (
-    bool& isSavedScoresModified,
+    bool& isHighScoresModified,
     Entity scoreHeader,
     sf::Font& normalFont,
     sf::Color textColor,
     sf::Vector2f startPos,
-    DSavedScores& savedScores,
+    DHighScores& highScores,
     const Difficulty difficulty,
     std::vector<Entity>& scores
 )
 {
-    if (!isSavedScoresModified ||
+    if (!isHighScoresModified ||
         !systemsNC.getComponentArray<CText>()->hasData(scoreHeader))
     {
         return;
     }
 
-    isSavedScoresModified = false;
+    isHighScoresModified = false;
 
     std::vector<ScoreHit>* difficultyScores;
 
     switch (difficulty)
     {
     case DIFFICULTY_HARD:
-        difficultyScores = &savedScores.hard;
+        difficultyScores = &highScores.hard;
         break;
     case DIFFICULTY_NORMAL:
     default:
-        difficultyScores = &savedScores.normal;
+        difficultyScores = &highScores.normal;
         break;
     }
 
@@ -1358,6 +1372,27 @@ void nextSceneSaveThemeColorData_Update
         themeColor
     );
 }
+void nextSceneSaveHighScoresData_Update(DHighScores& highScoresData)
+{
+    bool doSave = false;
+
+    for (auto& [entity, nextScene] : systemsNC.getComponentArray<CNextScene>()->getAll())
+    {
+        if (!nextScene.active)
+        {
+            continue;
+        }
+
+        doSave = true;
+    }
+
+    if (!doSave)
+    {
+        return;
+    }
+
+    saveHighScores_Update(highScoresData);
+}
 
 const std::uint8_t MIN_COLOR_VALUE = 25;
 const std::uint8_t MAX_COLOR_VALUE = 255 - MIN_COLOR_VALUE;
@@ -1717,7 +1752,7 @@ const float FILL_TIMER = 1.f;
 
 void hit_Control
 (
-    bool& isSavedScoresModified,
+    bool& isHighScoresModified,
     float themeBrightness,
     sf::Font& font,
     Entity indicator,
@@ -1726,7 +1761,7 @@ void hit_Control
     Entity scoreFeed,
     Entity sceneTransition,
     const Difficulty difficulty,
-    DSavedScores& savedScores
+    DHighScores& highScores
 )
 {
     if
@@ -1789,11 +1824,11 @@ void hit_Control
         switch (difficulty)
         {
         case DIFFICULTY_HARD:
-            difficultyScores = &savedScores.hard;
+            difficultyScores = &highScores.hard;
             break;
         case DIFFICULTY_NORMAL:
         default:
-            difficultyScores = &savedScores.normal;
+            difficultyScores = &highScores.normal;
             break;
         }
 
@@ -1806,14 +1841,14 @@ void hit_Control
                 scoreHitObj
             );
 
-            isSavedScoresModified = true;
+            isHighScoresModified = true;
             logStr = "NEW HIGHSCORE!";
             //std::cout << "first score saved!" << "\n";
         }
 
         bool gotAdded = false;
 
-        if (difficultyScores->size() == savedScores.maxSize)
+        if (difficultyScores->size() == highScores.maxSize)
         {
             for (const ScoreHit scoreHit : *difficultyScores)
             {
@@ -1829,7 +1864,7 @@ void hit_Control
                 }
             }
         }
-        else if (!isSavedScoresModified)
+        else if (!isHighScoresModified)
         {
             gotAdded = true;
         }
@@ -1853,11 +1888,11 @@ void hit_Control
                 }
             );
 
-            isSavedScoresModified = true;
+            isHighScoresModified = true;
 
-            if (difficultyScores->size() > savedScores.maxSize)
+            if (difficultyScores->size() > highScores.maxSize)
             {
-                difficultyScores->erase(difficultyScores->begin() + savedScores.maxSize, difficultyScores->end());
+                difficultyScores->erase(difficultyScores->begin() + highScores.maxSize, difficultyScores->end());
             }
             //std::cout << "saved scores: " << difficultyScores->size() << "\n";
         }

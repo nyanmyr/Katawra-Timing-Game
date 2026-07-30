@@ -171,7 +171,7 @@ public:
 	}
 };
 
-struct DSavedScores
+struct DHighScores
 {
 	float maxSize = 3;
 	std::vector<ScoreHit> normal = {};

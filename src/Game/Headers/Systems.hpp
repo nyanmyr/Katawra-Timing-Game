@@ -25,7 +25,11 @@ void adjustTextColor
 );
 void loadSoundStatusData_Start(DSoundStatus& soundStatusData);
 void loadThemeColorData_Start(DThemeColor& themeColorData);
-void loadSavedScoresData_Start(DSavedScores& savedScoresData);
+void loadHighScoresData_Start
+(
+	DHighScores& highScoresData,
+	bool& isHighScoresModified
+);
 void adjustSoundTextureEnum_Start
 (
 	const DSoundStatus& soundStatusData,
@@ -76,6 +80,7 @@ void saveThemeColorData_Update
 	DThemeColor& themeColorData,
 	const sf::Color themeColor
 );
+void saveHighScores_Update(DHighScores& highScoresData);
 void easterEggKeyReleased
 (
 	std::queue<sf::Keyboard::Scancode>& easterEggKeys,
@@ -98,12 +103,12 @@ void doEasterEgg_Update
 );
 void scoreboard_Update
 (
-	bool& isSavedScoresModified,
+	bool& ishighScoresModified,
 	Entity scoreHeader,
 	sf::Font& normalFont,
 	sf::Color textColor,
 	sf::Vector2f startPos,
-	DSavedScores& savedScores,
+	DHighScores& highScores,
 	const Difficulty difficulty,
 	std::vector<Entity>& scores
 );
@@ -132,6 +137,7 @@ void nextSceneSaveThemeColorData_Update
 	DThemeColor& themeColorData,
 	const sf::Color themeColor
 );
+void nextSceneSaveHighScoresData_Update(DHighScores& highScoresData);
 void doThemeColor_Update
 (
 	Entity redSliderPointer,
@@ -158,7 +164,7 @@ void playIntro_Update
 
 void hit_Control
 (
-	bool& isSavedScoresModified,
+	bool& ishighScoresModified,
 	float themeBrightness,
 	sf::Font& font,
 	Entity indicator,
@@ -167,7 +173,7 @@ void hit_Control
 	Entity scoreFeed,
 	Entity sceneTransition,
 	const Difficulty difficulty,
-	DSavedScores& savedScores
+	DHighScores& highScores
 );
 void moveIndicator_Update
 (
