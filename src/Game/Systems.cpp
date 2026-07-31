@@ -98,6 +98,21 @@ void loadThemeColorData_Start(DThemeColor& themeColorData)
     //std::cout << "themeColor.dat found!" << "\n";
     in.read(reinterpret_cast<char*>(&themeColorData), sizeof(DThemeColor));
 }
+void loadVector_Auxiliary
+(
+    std::ifstream& in,
+    std::vector<ScoreHit>& vec
+)
+{
+    size_t count = 0;
+    in.read(reinterpret_cast<char*>(&count), sizeof(count));
+
+    vec.resize(count);
+    if (count > 0)
+    {
+        in.read(reinterpret_cast<char*>(vec.data()), count * sizeof(ScoreHit));
+    }
+}
 void loadHighScoresData_Start
 (
     DHighScores& highScoresData,
@@ -106,15 +121,26 @@ void loadHighScoresData_Start
 {
     std::ifstream in("highScores.dat", std::ios::binary);
 
-    if (!in)
-    {
-        //std::cout << "highScores.dat not found!" << "\n";
-        return;
-    }
+    if (!in.is_open()) return;
     
     //std::cout << "highScores.dat found!" << "\n";
     isHighScoresModified = true;
-    in.read(reinterpret_cast<char*>(&highScoresData), sizeof(DHighScores));
+
+    in.read(reinterpret_cast<char*>(&highScoresData.maxSize), sizeof(highScoresData.maxSize));
+
+    loadVector_Auxiliary
+    (
+        in,
+        highScoresData.normal
+    );
+
+    loadVector_Auxiliary
+    (
+        in,
+        highScoresData.hard
+    );
+
+    in.close();
 }
 void adjustSoundTextureEnum_Start
 (
@@ -613,12 +639,39 @@ void saveThemeColorData_Update
 
     out.close();
 }
-void saveHighScores_Update(DHighScores& highScoresData)
+void saveVector_Auxiliary
+(
+    std::ofstream& out,
+    const std::vector<ScoreHit>& vec
+)
+{
+    size_t count = vec.size();
+    out.write(reinterpret_cast<char*>(&count), sizeof(count));
+
+    if (count > 0)
+    {
+        out.write(reinterpret_cast<const char*>(vec.data()), count * sizeof(ScoreHit));
+    }
+}
+void saveHighScores_Update(const DHighScores& highScoresData)
 {
     //std::cout << "saved theme color!" << "\n";
     std::ofstream out("highScores.dat", std::ios::binary);
 
-    out.write(reinterpret_cast<char*>(&highScoresData), sizeof(DHighScores));
+    if (!out.is_open()) return;
+
+    out.write(reinterpret_cast<const char*>(&highScoresData.maxSize), sizeof(highScoresData.maxSize));
+
+    saveVector_Auxiliary
+    (
+        out,
+        highScoresData.normal
+    );
+    saveVector_Auxiliary
+    (
+        out,
+        highScoresData.hard
+    );
 
     out.close();
 }

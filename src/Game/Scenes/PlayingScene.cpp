@@ -9,10 +9,7 @@ using sf::Clock;
 using sf::Event;
 using sf::Keyboard::Scancode;
 
-// TODO: save score (make it save when returning to menu)
-// TODO: reuse intro system to also display new highest score achieved
 // TODO: are you sure button prompt main menu button (you should be able to save your progress)
-// TODO: ask to continue if window is abruptly closed
 // TODO: make the screen actually go full screen
 // TODO: organize components registration in game.cpp
 // TODO: organize components and group them together

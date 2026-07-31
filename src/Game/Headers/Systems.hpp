@@ -80,7 +80,7 @@ void saveThemeColorData_Update
 	DThemeColor& themeColorData,
 	const sf::Color themeColor
 );
-void saveHighScores_Update(DHighScores& highScoresData);
+void saveHighScores_Update(const DHighScores& highScoresData);
 void easterEggKeyReleased
 (
 	std::queue<sf::Keyboard::Scancode>& easterEggKeys,
