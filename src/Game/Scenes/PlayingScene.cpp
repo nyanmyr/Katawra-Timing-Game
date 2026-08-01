@@ -10,7 +10,6 @@ using sf::Event;
 using sf::Keyboard::Scancode;
 
 // TODO: are you sure button prompt main menu button (you should be able to save your progress)
-// TODO: make the screen actually go full screen
 // TODO: organize components registration in game.cpp
 // TODO: organize components and group them together
 // TODO: bug fixing
@@ -20,7 +19,6 @@ using sf::Keyboard::Scancode;
 // FIX: get rid of as many magic numbers as you can
 // FIX: there's one frame where the small buttons haven't been centered or changed color
 // FIX: review const correctness for systems
-// TODO: publish
 
 void playingScene
 (
@@ -394,7 +392,7 @@ void playingScene
 	std::optional<sf::Music> music;
 
 	Entity hum = makeLoopSound(SoundEffect::HUM_SOUND_EFFECT, 6.25f);
-	 
+
 	while (window.isOpen())
 	{
 		// in this case the extra baggage is afforable :p

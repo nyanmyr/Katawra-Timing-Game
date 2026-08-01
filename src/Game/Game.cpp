@@ -4,6 +4,7 @@
 #include "Headers/Scenes.hpp"
 
 #include <iostream>
+#include <windows.h>
 
 using sf::RenderWindow;
 using sf::VideoMode;
@@ -21,6 +22,9 @@ void main() {
 	window.setFramerateLimit(MAX_FPS);
 	sf::Image icon(SPRITES_PATH "favicon_icon.png");
 	window.setIcon(icon);
+
+	HWND hwnd = window.getNativeHandle();
+	ShowWindow(hwnd, SW_MAXIMIZE);
 
 	NacreCoordinator& nc = NacreCoordinator::getInstance();
 
